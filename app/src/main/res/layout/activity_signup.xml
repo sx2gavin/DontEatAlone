@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/signup_firstname"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_firstname"
+            android:layout_margin="10dp" />
+
+        <EditText
+            android:id="@+id/signup_lastname"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_lastname"
+            android:layout_margin="10dp" />
+
+        <EditText
+            android:id="@+id/signup_age"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_age"
+            android:layout_margin="10dp" />
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_gender" />
+
+            <RadioButton
+                android:id="@+id/signup_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_male"/>
+
+            <RadioButton
+                android:id="@+id/signup_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_female"/>
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/signup_email"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_email"
+            android:layout_margin="10dp" />
+
+        <EditText
+            android:id="@+id/signup_password"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_password"
+            android:layout_margin="10dp" />
+
+        <EditText
+            android:id="@+id/signup_confirm_password"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/signup_confirm_password"
+            android:layout_margin="10dp" />
+
+        <Button
+            android:id="@+id/signup_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_signup"
+            android:layout_margin="10dp"
+            android:onClick="SubmitSignUp"/>
+
+        </LinearLayout>
+
+</LinearLayout>

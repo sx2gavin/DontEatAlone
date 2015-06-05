@@ -1,6 +1,29 @@
 <resources>
     <string name="app_name">DontEatAlone</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_find_match">Finding a match</string>
+    <string name="button_send">Send</string>
+    <string name="input_name">What\'s your name\?</string>
+
+    <!-- Login activity string -->
+    <string name="title_activity_login">Don\'t Eat Alone\!</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="button_signup">Sign up</string>
+    <string name="button_login">Log in</string>
+
+    <!-- Sign up activity string -->
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="signup_firstname">First name</string>
+    <string name="signup_lastname">Last name</string>
+    <string name="signup_age">Age</string>
+    <string name="signup_gender">Gender</string>
+    <string name="signup_male">Male</string>
+    <string name="signup_female">Female</string>
+    <string name="signup_email">Email address</string>
+    <string name="signup_password">Password</string>
+    <string name="signup_confirm_password">Confirm password</string>
+
 </resources>
