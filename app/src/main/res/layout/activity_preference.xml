@@ -119,7 +119,8 @@
             android:layout_width="@dimen/activity_edittext_layout_width"
             android:layout_height="wrap_content"
             android:text="@string/button_start_search"
-            android:layout_margin="@dimen/activity_layout_margin"/>
+            android:layout_margin="@dimen/activity_layout_margin"
+            android:onClick="startSearching"/>
 
     </LinearLayout>
 
