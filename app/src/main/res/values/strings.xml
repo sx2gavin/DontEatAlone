@@ -27,6 +27,31 @@
     <string name="signup_confirm_password">Confirm password</string>
     <string name="title_activity_preference">PreferenceActivity</string>
 
+    <!-- Preference activity string -->
+    <string name="pref_about_person">About the person</string>
+    <string name="pref_about_meetup">About the meetup</string>
+    <string name="pref_age">Age</string>
+    <string name="pref_gender">Gender</string>
+    <string name="pref_male">Male</string>
+    <string name="pref_female">Female</string>
+    <string name="pref_food">Preferred food</string>
+    <string name="pref_time_range">Preferred time range</string>
+    <string name="pref_to">to</string>
+    <string name="pref_distance">Distance (km)</string>
+    <string name="pref_start">Start</string>
+    <string name="pref_end">End</string>
+    <string name="button_start_search">Start searching</string>
+
+    <string-array name="pref_age_array">
+        <item>18-22</item>
+        <item>22-25</item>
+    </string-array>
+
+    <string-array name="pref_food_array">
+        <item>...food1</item>
+        <item>...food2</item>
+    </string-array>
+
     <string name="hello_world">Hello world!</string>
 
 </resources>
