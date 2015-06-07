@@ -4,14 +4,28 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 public class ProfileActivity extends ActionBarActivity {
+
+    // References to UI components created in activity_profile
+    protected Spinner _genderSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // set teh references
+        _genderSpinner = (Spinner)findViewById(R.id.profile_gender_spinner);
+
+        // initialize items in gender spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.profile_gender_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _genderSpinner.setAdapter(adapter);
     }
 
     @Override

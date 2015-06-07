@@ -8,4 +8,7 @@
     <dimen name="activity_layout_margin">10dp</dimen>
     <dimen name="heading_font_size">16dp</dimen>
 
+    <!-- dimensions used in profile -->
+    <dimen name="linear_layout_width">300dp</dimen>
+
 </resources>

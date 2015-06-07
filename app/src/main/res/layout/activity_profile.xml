@@ -1,12 +1,149 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.gavinluo.donteatalone.ProfileActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_first_name"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/profile_first_name"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_middle_name"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/profile_middle_name"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_last_name"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/profile_last_name"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_gender"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <Spinner
+            android:id="@+id/profile_gender_spinner"
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/activity_layout_margin"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_age"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/profile_age"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_email"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:layout_width="@dimen/activity_edittext_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/profile_email"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/pref_search_button"
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_button_edit"
+        android:gravity="center_horizontal"
+        android:layout_margin="@dimen/activity_layout_margin" />
+
+
+</LinearLayout>
