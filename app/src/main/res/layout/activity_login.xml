@@ -41,7 +41,8 @@
             android:id="@+id/button_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_login"/>
+            android:text="@string/button_login"
+            android:onClick="StartLogin"/>
     </LinearLayout>
 
 

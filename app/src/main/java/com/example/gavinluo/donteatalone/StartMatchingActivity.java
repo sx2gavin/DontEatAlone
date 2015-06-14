@@ -1,25 +1,23 @@
 package com.example.gavinluo.donteatalone;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class StartMatchingActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_start_matching);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_start_matching, menu);
         return true;
     }
 
@@ -33,24 +31,8 @@ public class LoginActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_preference){
-            startActivity(new Intent(this, PreferenceActivity.class));
-            return true;
-        } else if (id == R.id.action_profile) {
-            startActivity(new Intent(this, ProfileActivity.class));
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void StartSigningUp(View view) {
-        Intent intent = new Intent (this, SignupActivity.class);
-        startActivity(intent);
-    }
-
-    public void StartLogin(View view) {
-        Intent intent = new Intent (this, StartMatchingActivity.class);
-        startActivity(intent);
     }
 }
