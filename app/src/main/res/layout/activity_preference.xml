@@ -47,7 +47,8 @@
                 android:id="@+id/pref_sex_none"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_sex_none"/>
+                android:text="@string/pref_sex_none"
+                android:checked="true"/>
         </RadioGroup>
 
         <TextView
@@ -55,11 +56,39 @@
             android:layout_height="wrap_content"
             android:text="@string/pref_age"
             android:layout_margin="@dimen/activity_layout_margin"/>
-        <Spinner
-            android:id="@+id/pref_age_spinner"
+
+        <LinearLayout
             android:layout_width="@dimen/activity_edittext_layout_width"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_layout_margin"/>
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_layout_margin">
+
+            <EditText
+                android:id="@+id/pref_min_age"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/pref_min"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/pref_to"/>
+
+            <EditText
+                android:id="@+id/pref_max_age"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/pref_max"
+                android:inputType="number"/>
+
+        </LinearLayout>
+        <!--<Spinner-->
+            <!--android:id="@+id/pref_age_spinner"-->
+            <!--android:layout_width="@dimen/activity_edittext_layout_width"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/activity_layout_margin"/>-->
 
         <TextView
             android:layout_width="wrap_content"

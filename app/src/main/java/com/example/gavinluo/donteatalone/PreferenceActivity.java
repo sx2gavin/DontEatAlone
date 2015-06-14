@@ -39,8 +39,10 @@ public class PreferenceActivity extends ActionBarActivity
 
     // References to UI components created in activity_preference.xml
     Spinner _ageSpinner;
-    Spinner _foodSpinner;
+//    Spinner _foodSpinner;
     EditText _distanceEdit;
+    EditText _minAgeEdit;
+    EditText _maxAgeEdit;
     Button _startTimeEdit;
     Button _endTimeEdit;
     RadioGroup _genderRadios;
@@ -58,16 +60,16 @@ public class PreferenceActivity extends ActionBarActivity
         setContentView(R.layout.activity_preference);
 
         // set the references
-        _ageSpinner = (Spinner)findViewById(R.id.pref_age_spinner);
-        _foodSpinner = (Spinner)findViewById(R.id.pref_food_spinner);
+//        _foodSpinner = (Spinner)findViewById(R.id.pref_food_spinner);
         _distanceEdit = (EditText)findViewById(R.id.pref_distance);
         _startTimeEdit = (Button)findViewById(R.id.pref_start_time);
         _endTimeEdit = (Button) findViewById(R.id.pref_end_time);
         _genderRadios = (RadioGroup)findViewById(R.id.pref_gender);
         _genderNoPrefRadio = (RadioButton)findViewById(R.id.pref_sex_none);
+        _minAgeEdit = (EditText)findViewById(R.id.pref_min_age);
+        _maxAgeEdit = (EditText)findViewById(R.id.pref_max_age);
 
-        initSpinnerItems(_ageSpinner, R.array.pref_age_array);
-        initSpinnerItems(_foodSpinner, R.array.pref_food_array);
+//        initSpinnerItems(_foodSpinner, R.array.pref_food_array);
 
         buildGoogleApiClient();
     }
@@ -234,8 +236,7 @@ public class PreferenceActivity extends ActionBarActivity
         String pref_gender_selection = (String) btn.getText();
         //}
 
-        String pref_age_string = _ageSpinner.getSelectedItem().toString();
-        String pref_food_string = _foodSpinner.getSelectedItem().toString();
+//        String pref_food_string = _foodSpinner.getSelectedItem().toString();
 
         EditText pref_start_time = (EditText)findViewById(R.id.pref_start_time);
         if (pref_start_time.getText().toString().matches("")) {
@@ -270,12 +271,12 @@ public class PreferenceActivity extends ActionBarActivity
         }
         Integer pref_distance_int = Integer.parseInt(_distanceEdit.getText().toString());
 
-        Toast.makeText(this, "pref_age_string: " + pref_age_string +
-                "\npref_gender_selection: " + pref_gender_selection+
-                "\npref_food_string: " + pref_food_string+
-                "\npref_start_time_int: " + pref_start_time_int+
-                "\npref_end_time_int: " + pref_end_time_int+
-                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "pref_age_string: " + pref_age_string +
+//                "\npref_gender_selection: " + pref_gender_selection+
+//                "\npref_food_string: " + pref_food_string+
+//                "\npref_start_time_int: " + pref_start_time_int+
+//                "\npref_end_time_int: " + pref_end_time_int+
+//                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
 
     }
 }
