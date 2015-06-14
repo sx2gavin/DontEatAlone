@@ -20,6 +20,12 @@ import android.widget.Toast;
 import android.widget.RadioButton;
 
 // Location services
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -31,6 +37,8 @@ import java.util.Calendar;
 public class PreferenceActivity extends ActionBarActivity
         implements ConnectionCallbacks, OnConnectionFailedListener
 {
+    private final String TAG = "PreferenceActivity";
+
     // Provides the entry point to Google Play services.
     protected GoogleApiClient _googleApiClient;
 
@@ -43,16 +51,18 @@ public class PreferenceActivity extends ActionBarActivity
     EditText _distanceEdit;
     EditText _minAgeEdit;
     EditText _maxAgeEdit;
+    EditText _minPriceEdit;
+    EditText _maxPriceEdit;
     Button _startTimeEdit;
     Button _endTimeEdit;
     RadioGroup _genderRadios;
     RadioButton _genderNoPrefRadio;
 
     // Time components
-    private int _startHour = 0;
-    private int _startMin = 0;
-    private int _endHour = 0;
-    private int _endMin = 0;
+    private int _startHour = -1;
+    private int _startMin = -1;
+    private int _endHour = -1;
+    private int _endMin = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,8 @@ public class PreferenceActivity extends ActionBarActivity
         _genderNoPrefRadio = (RadioButton)findViewById(R.id.pref_sex_none);
         _minAgeEdit = (EditText)findViewById(R.id.pref_min_age);
         _maxAgeEdit = (EditText)findViewById(R.id.pref_max_age);
+        _minPriceEdit = (EditText)findViewById(R.id.pref_min_price);
+        _maxPriceEdit = (EditText)findViewById(R.id.pref_max_price);
 
 //        initSpinnerItems(_foodSpinner, R.array.pref_food_array);
 
@@ -156,7 +168,7 @@ public class PreferenceActivity extends ActionBarActivity
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play service was lost. Call connect() to
         // re-establish the connection
-        Log.i("GoogleMap", "Connection suspended" );
+        Log.i("GoogleMap", "Connection suspended");
         _googleApiClient.connect();
     }
 
@@ -203,8 +215,22 @@ public class PreferenceActivity extends ActionBarActivity
             ending = " pm";
         }
 
-        hour = hour %12 ;
+        hour = hour % 12 ;
+        if(hour == 0){
+            hour = 12;
+        }
         return hour + ":" + min + ending;
+    }
+
+    // Y-m-d h:i:s
+    public String toDateTimeString(int hour, int min){
+        // use the current date
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DATE);
+
+        return year + "-" + month + "-" + day + " " + hour + ":" + min + ":00";
     }
 
 
@@ -219,14 +245,14 @@ public class PreferenceActivity extends ActionBarActivity
             _lastLocation = LocationServices.FusedLocationApi.getLastLocation(_googleApiClient);
         }
 
-        if(_lastLocation != null){
-            // TODO: Remove after testing (create toast to show longitude and latitude)
-            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
-                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
-                    Toast.LENGTH_LONG).show();
-        }
+//        if(_lastLocation != null){
+//            // TODO: Remove after testing (create toast to show longitude and latitude)
+//            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
+//                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
+//        } else {
+//            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
+//                    Toast.LENGTH_LONG).show();
+//        }
 
         // angela.
         //if(pref_gender.getCheckedRadioButtonId()!=-1){
@@ -234,34 +260,44 @@ public class PreferenceActivity extends ActionBarActivity
         View radioButton = _genderRadios.findViewById(id);
         RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
         String pref_gender_selection = (String) btn.getText();
+        pref_gender_selection.substring(0, 1); // retrieve the very first letter of gender
         //}
 
 //        String pref_food_string = _foodSpinner.getSelectedItem().toString();
 
-        EditText pref_start_time = (EditText)findViewById(R.id.pref_start_time);
-        if (pref_start_time.getText().toString().matches("")) {
-            Toast.makeText(this, "You did not enter a start time", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Integer pref_start_time_int = Integer.parseInt(pref_start_time.getText().toString());
-
-
-        EditText pref_end_time = (EditText)findViewById(R.id.pref_end_time);
-        if (pref_end_time.getText().toString().matches("")) {
-            Toast.makeText(this, "You did not enter a end time ", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Integer pref_end_time_int = Integer.parseInt(pref_end_time.getText().toString());
-
         //error checking
-        if ((pref_start_time_int > 23) || (pref_start_time_int < 0) || (pref_end_time_int > 23) || (pref_end_time_int < 0)) {
-            Toast.makeText(this, "prefer time out of range",
-                    Toast.LENGTH_LONG).show();
+        if(_minAgeEdit.getText().toString().matches("")){
+            Toast.makeText(this, "Please enter the minimum age.", Toast.LENGTH_LONG).show();
             return;
         }
-        if (pref_start_time_int >= pref_end_time_int) {
-            Toast.makeText(this, "start time cannot be earlier than end time",
-                    Toast.LENGTH_LONG).show();
+
+        if(_maxAgeEdit.getText().toString().matches("")){
+            Toast.makeText(this, "Please enter the maximum age.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(_startHour == -1 ){
+            Toast.makeText(this, "Please choose the start time.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(_endHour == -1 ){
+            Toast.makeText(this, "Please choose the end time.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(_startHour>_endHour || (_startHour==_endHour&&_startMin>=_endHour)) {
+            Toast.makeText(this, "Your start time is later than your end time.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(_minPriceEdit.getText().toString().matches("")){
+            Toast.makeText(this, "Please enter the minimum price.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(_maxPriceEdit.getText().toString().matches("")){
+            Toast.makeText(this, "Please enter the maximum price.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -269,14 +305,46 @@ public class PreferenceActivity extends ActionBarActivity
             Toast.makeText(this, "You did not enter a distance", Toast.LENGTH_SHORT).show();
             return;
         }
+        Integer pref_min_age = Integer.parseInt(_minAgeEdit.getText().toString());
+        Integer pref_max_age = Integer.parseInt(_maxAgeEdit.getText().toString());
+        Integer pref_min_price = Integer.parseInt(_minPriceEdit.getText().toString());
+        Integer pref_max_price = Integer.parseInt(_maxPriceEdit.getText().toString());
         Integer pref_distance_int = Integer.parseInt(_distanceEdit.getText().toString());
 
-//        Toast.makeText(this, "pref_age_string: " + pref_age_string +
-//                "\npref_gender_selection: " + pref_gender_selection+
-//                "\npref_food_string: " + pref_food_string+
-//                "\npref_start_time_int: " + pref_start_time_int+
-//                "\npref_end_time_int: " + pref_end_time_int+
-//                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
+        // date time format (Y-m-d h:i:s)
+        String startTime = toDateTimeString(_startHour, _startMin);
+        String endTime = toDateTimeString(_endHour, _endMin);
+
+        Toast.makeText(this, "pref_min_age: " + pref_min_age +
+                "\npref_max_age: " + pref_max_age +
+                "\npref_gender_selection: " + pref_gender_selection +
+                "\npref_start_time_int: " + startTime +
+                "\npref_end_time_int: " + endTime +
+                "\npref_min_price" + pref_min_price +
+                "\npref_max_price" + pref_max_price + 
+                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
+
+        // Instantiate the RequestQueue.
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        String url ="http://donteatalone.paigelim.com/api/v1/users?email=" + emailText + "&password=" + passwordText;
+//        Log.d(TAG, url);
+//
+//        // Request a string response from the provided URL.
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // Display the first 500 characters of the response string.
+//                        Log.d(TAG, response);
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d(TAG, error.getMessage());
+//            }
+//        });
+//        // Add the request to the RequestQueue.
+//        queue.add(stringRequest);
 
     }
 }
