@@ -34,6 +34,7 @@
     <string name="pref_gender">Gender</string>
     <string name="pref_male">Male</string>
     <string name="pref_female">Female</string>
+    <string name="pref_sex_none">None</string>
     <string name="pref_food">Preferred food</string>
     <string name="pref_time_range">Preferred time range</string>
     <string name="pref_to">to</string>

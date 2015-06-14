@@ -19,16 +19,17 @@
             android:textStyle="bold"
             android:layout_margin="@dimen/activity_layout_margin"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_gender" />
+
         <RadioGroup
+            android:id="@+id/pref_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="@dimen/activity_layout_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_gender" />
 
             <RadioButton
                 android:id="@+id/pref_male"
@@ -41,6 +42,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_female"/>
+
+            <RadioButton
+                android:id="@+id/pref_sex_none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_sex_none"/>
         </RadioGroup>
 
         <TextView
@@ -62,7 +69,7 @@
             android:textStyle="bold"
             android:layout_margin="@dimen/activity_layout_margin"/>
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pref_food"
@@ -72,7 +79,7 @@
             android:id="@+id/pref_food_spinner"
             android:layout_width="@dimen/activity_edittext_layout_width"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_layout_margin"/>
+            android:layout_margin="@dimen/activity_layout_margin"/>-->
 
         <TextView
             android:layout_width="wrap_content"

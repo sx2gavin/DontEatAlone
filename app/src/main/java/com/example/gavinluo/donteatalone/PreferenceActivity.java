@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.RadioButton;
 
 // Location services
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,6 +43,8 @@ public class PreferenceActivity extends ActionBarActivity
     EditText _distanceEdit;
     Button _startTimeEdit;
     Button _endTimeEdit;
+    RadioGroup _genderRadios;
+    RadioButton _genderNoPrefRadio;
 
     // Time components
     private int _startHour = 0;
@@ -60,6 +63,8 @@ public class PreferenceActivity extends ActionBarActivity
         _distanceEdit = (EditText)findViewById(R.id.pref_distance);
         _startTimeEdit = (Button)findViewById(R.id.pref_start_time);
         _endTimeEdit = (Button) findViewById(R.id.pref_end_time);
+        _genderRadios = (RadioGroup)findViewById(R.id.pref_gender);
+        _genderNoPrefRadio = (RadioButton)findViewById(R.id.pref_sex_none);
 
         initSpinnerItems(_ageSpinner, R.array.pref_age_array);
         initSpinnerItems(_foodSpinner, R.array.pref_food_array);
@@ -220,5 +225,57 @@ public class PreferenceActivity extends ActionBarActivity
             Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
                     Toast.LENGTH_LONG).show();
         }
+
+        // angela.
+        //if(pref_gender.getCheckedRadioButtonId()!=-1){
+        int id= _genderRadios.getCheckedRadioButtonId();
+        View radioButton = _genderRadios.findViewById(id);
+        RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
+        String pref_gender_selection = (String) btn.getText();
+        //}
+
+        String pref_age_string = _ageSpinner.getSelectedItem().toString();
+        String pref_food_string = _foodSpinner.getSelectedItem().toString();
+
+        EditText pref_start_time = (EditText)findViewById(R.id.pref_start_time);
+        if (pref_start_time.getText().toString().matches("")) {
+            Toast.makeText(this, "You did not enter a start time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Integer pref_start_time_int = Integer.parseInt(pref_start_time.getText().toString());
+
+
+        EditText pref_end_time = (EditText)findViewById(R.id.pref_end_time);
+        if (pref_end_time.getText().toString().matches("")) {
+            Toast.makeText(this, "You did not enter a end time ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Integer pref_end_time_int = Integer.parseInt(pref_end_time.getText().toString());
+
+        //error checking
+        if ((pref_start_time_int > 23) || (pref_start_time_int < 0) || (pref_end_time_int > 23) || (pref_end_time_int < 0)) {
+            Toast.makeText(this, "prefer time out of range",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (pref_start_time_int >= pref_end_time_int) {
+            Toast.makeText(this, "start time cannot be earlier than end time",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (_distanceEdit.getText().toString().matches("")) {
+            Toast.makeText(this, "You did not enter a distance", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Integer pref_distance_int = Integer.parseInt(_distanceEdit.getText().toString());
+
+        Toast.makeText(this, "pref_age_string: " + pref_age_string +
+                "\npref_gender_selection: " + pref_gender_selection+
+                "\npref_food_string: " + pref_food_string+
+                "\npref_start_time_int: " + pref_start_time_int+
+                "\npref_end_time_int: " + pref_end_time_int+
+                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
+
     }
 }
