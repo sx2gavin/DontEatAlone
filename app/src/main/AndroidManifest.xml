@@ -62,8 +62,13 @@
             android:label="@string/title_activity_profile" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".StartMatchingActivity"
             android:label="@string/title_activity_start_matching" >
+=======
+            android:name=".WaitingActivity"
+            android:label="@string/title_activity_waiting" >
+>>>>>>> waitingPage
         </activity>
     </application>
 
