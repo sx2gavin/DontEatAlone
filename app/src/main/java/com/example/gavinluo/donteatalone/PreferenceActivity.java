@@ -1,6 +1,8 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.TimePickerDialog;
 import android.location.Location;
+import android.preference.Preference;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 // Location services
@@ -20,10 +25,11 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Calendar;
+
 public class PreferenceActivity extends ActionBarActivity
         implements ConnectionCallbacks, OnConnectionFailedListener
 {
-
     // Provides the entry point to Google Play services.
     protected GoogleApiClient _googleApiClient;
 
@@ -34,6 +40,14 @@ public class PreferenceActivity extends ActionBarActivity
     Spinner _ageSpinner;
     Spinner _foodSpinner;
     EditText _distanceEdit;
+    Button _startTimeEdit;
+    Button _endTimeEdit;
+
+    // Time components
+    private int _startHour = 0;
+    private int _startMin = 0;
+    private int _endHour = 0;
+    private int _endMin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +58,8 @@ public class PreferenceActivity extends ActionBarActivity
         _ageSpinner = (Spinner)findViewById(R.id.pref_age_spinner);
         _foodSpinner = (Spinner)findViewById(R.id.pref_food_spinner);
         _distanceEdit = (EditText)findViewById(R.id.pref_distance);
+        _startTimeEdit = (Button)findViewById(R.id.pref_start_time);
+        _endTimeEdit = (Button) findViewById(R.id.pref_end_time);
 
         initSpinnerItems(_ageSpinner, R.array.pref_age_array);
         initSpinnerItems(_foodSpinner, R.array.pref_food_array);
@@ -137,11 +153,60 @@ public class PreferenceActivity extends ActionBarActivity
         _googleApiClient.connect();
     }
 
+    /*
+     * OnClick Listeners
+     */
+    public void getStartTime(View view){
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                _startHour = selectedHour;
+                _startMin = selectedMinute;
+                _startTimeEdit.setText(to12HourTime(selectedHour, selectedMinute));
+            }
+        }, hour, minute, false ); // do not use the 24 hour clock
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }
+
+    public void getEndTime(View view){
+        Calendar mcurrentTime = Calendar.getInstance();
+        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = mcurrentTime.get(Calendar.MINUTE);
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute){
+                _endHour = selectedHour;
+                _endMin = selectedMinute;
+                _endTimeEdit.setText(to12HourTime(selectedHour, selectedMinute));
+            }
+        }, hour, minute, false); // use the 12 hour clock
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }
+
+    public String to12HourTime(int hour, int min){
+        String ending = " am";
+        if(hour / 12 > 0){
+            ending = " pm";
+        }
+
+        hour = hour %12 ;
+        return hour + ":" + min + ending;
+    }
+
 
     /*
      * Test code
      */
     public void startSearching(View view){
+
+
         // Re-retrieve the location if google play service is still connected
         if(_googleApiClient.isConnected()){
             _lastLocation = LocationServices.FusedLocationApi.getLastLocation(_googleApiClient);

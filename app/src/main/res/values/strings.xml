@@ -64,6 +64,7 @@
     <string-array name="profile_gender_array">
         <item>Male</item>
         <item>Female</item>
+        <item>None</item>
     </string-array>
 
     <string name="hello_world">Hello world!</string>
