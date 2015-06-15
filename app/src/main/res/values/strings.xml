@@ -15,15 +15,16 @@
 
     <!-- Sign up activity string -->
     <string name="title_activity_signup">SignupActivity</string>
-    <string name="signup_firstname">First name</string>
+    <string name="signup_firstname">First name(Required)</string>
     <string name="signup_lastname">Last name</string>
     <string name="signup_age">Age</string>
     <string name="signup_gender">Gender</string>
     <string name="signup_male">Male</string>
     <string name="signup_female">Female</string>
-    <string name="signup_email">Email address</string>
-    <string name="signup_password">Password</string>
-    <string name="signup_confirm_password">Confirm password</string>
+    <string name="signup_user_description">Description about yourself</string>
+    <string name="signup_email">Email address(Required)</string>
+    <string name="signup_password">Password(Required)</string>
+    <string name="signup_confirm_password">Confirm password(Required)</string>
     <string name="title_activity_preference">PreferenceActivity</string>
 
     <!-- Preference activity string -->
