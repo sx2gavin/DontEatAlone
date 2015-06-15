@@ -80,4 +80,9 @@
     <string name="start_matching_description">If you want to start finding a person nearby to have meal with,
     please click the button at the bottom to start your matching process.</string>
 
+    <!-- Messenger activity -->
+    <string name="title_activity_messenger">MessengerActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
 </resources>
