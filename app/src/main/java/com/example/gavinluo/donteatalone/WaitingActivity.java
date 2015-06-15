@@ -151,6 +151,7 @@ public class WaitingActivity extends ActionBarActivity {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // if this button is clicked, idk
                                                 Log.d(TAG, "positive");
+                                                startActivity(new Intent(context, MessengerActivity.class));
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

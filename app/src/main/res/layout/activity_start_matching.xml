@@ -11,12 +11,13 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/start_matching_description"
         android:layout_marginTop="50dp"
-        android:textSize="30dp" />
+        android:textSize="20dp" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_find_match"
         android:layout_gravity="center_horizontal"
+        android:onClick="StartPreference"
         android:layout_marginTop="30dp" />
 
     <!--
