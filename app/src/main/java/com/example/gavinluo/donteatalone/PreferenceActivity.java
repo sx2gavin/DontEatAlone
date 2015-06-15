@@ -1,5 +1,6 @@
 package com.example.gavinluo.donteatalone;
 
+import android.content.Intent;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -155,5 +156,7 @@ public class PreferenceActivity extends ActionBarActivity
             Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
                     Toast.LENGTH_LONG).show();
         }
+
+        startActivity(new Intent(this, WaitingActivity.class));
     }
 }
