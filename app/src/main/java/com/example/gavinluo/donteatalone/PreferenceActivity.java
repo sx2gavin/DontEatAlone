@@ -42,6 +42,7 @@ public class PreferenceActivity extends ActionBarActivity
         implements ConnectionCallbacks, OnConnectionFailedListener
 {
     private final String TAG = "Preference";
+    private int user_id = 1;
 
     // Provides the entry point to Google Play services.
     protected GoogleApiClient _googleApiClient;
@@ -155,15 +156,6 @@ public class PreferenceActivity extends ActionBarActivity
     public void onConnected(Bundle connectionHint) {
         // retrieves the most recent location currently available
         _lastLocation = LocationServices.FusedLocationApi.getLastLocation(_googleApiClient);
-
-//        if(_lastLocation != null){
-//            // TODO: Remove after testing (create toast to show longitude and latitude)
-//            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
-//                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
-//        } else {
-//            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
-//                    Toast.LENGTH_LONG).show();
-//        }
     }
 
     @Override
@@ -240,35 +232,18 @@ public class PreferenceActivity extends ActionBarActivity
         return year + "-" + month + "-" + day + " " + hour + ":" + min + ":00";
     }
 
-
-    /*
-     * Test code
-     */
     public void startSearching(View view){
-
-
         // Re-retrieve the location if google play service is still connected
         if(_googleApiClient.isConnected()){
             _lastLocation = LocationServices.FusedLocationApi.getLastLocation(_googleApiClient);
         }
 
-//        if(_lastLocation != null){
-//            // TODO: Remove after testing (create toast to show longitude and latitude)
-//            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
-//                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
-//        } else {
-//            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
-//                    Toast.LENGTH_LONG).show();
-//        }
-
         // angela.
-        //if(pref_gender.getCheckedRadioButtonId()!=-1){
         int id= _genderRadios.getCheckedRadioButtonId();
         View radioButton = _genderRadios.findViewById(id);
         RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
         String pref_gender_selection = (String) btn.getText();
         pref_gender_selection = pref_gender_selection.substring(0,1); // retrieve the very first letter of gender
-        //}
 
 //        String pref_food_string = _foodSpinner.getSelectedItem().toString();
 
@@ -324,7 +299,7 @@ public class PreferenceActivity extends ActionBarActivity
 
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://donteatalone.paigelim.com/api/v1/matches?"
-                + "user_id=1"
+                + "user_id=" + user_id
                 + "&max_distance=" + pref_distance_int
                 + "&min_age=" + pref_min_age
                 + "&max_age=" + pref_max_age
@@ -344,13 +319,47 @@ public class PreferenceActivity extends ActionBarActivity
                     public void onResponse(JSONObject response) {
                         String msg = "Response: " + response.toString();
                         Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "SUCCESS: "+msg);
+                        Log.d(TAG, "SUCCESS: " + msg);
+                        changeIntent();
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "ERROR: " + error.getMessage()+"");
+                        changeIntent(); //TODO: Remove after testing
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        queue.add(jsObjRequest);
+    }
+
+    public void changeIntent(){
+        // get the matches for the user
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://donteatalone.paigelim.com/api/v1/users/"+user_id+"/matches";
+        Log.d(TAG, url);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String msg = "Response: " + response.toString();
+                        Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "SUCCESS: "+msg);
+
+                        // the match return some result, go to matches page
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "ERROR: " + error.getMessage()+"");
+
+                        // There's no result, go to waiting page
                     }
                 });
 
