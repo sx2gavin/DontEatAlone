@@ -319,7 +319,7 @@ public class PreferenceActivity extends ActionBarActivity
                     @Override
                     public void onResponse(JSONObject response) {
                         String msg = "Response: " + response.toString();
-                        Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
+                        // Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
                         Log.d(TAG, "SUCCESS: " + msg);
                         startActivity(new Intent(_context, WaitingActivity.class));
                     }
