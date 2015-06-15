@@ -93,8 +93,11 @@ public class LoginActivity extends ActionBarActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                         DisplayMessage(message);
-                        LoginSuccessful();
+                        if (message.equals("Login successful!") ) {
+                            LoginSuccessful();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
