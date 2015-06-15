@@ -1,6 +1,7 @@
 package com.example.gavinluo.donteatalone;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.location.Location;
 import android.preference.Preference;
 import android.support.v7.app.ActionBarActivity;
@@ -24,6 +25,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,12 +34,14 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 public class PreferenceActivity extends ActionBarActivity
         implements ConnectionCallbacks, OnConnectionFailedListener
 {
-    private final String TAG = "PreferenceActivity";
+    private final String TAG = "Preference";
 
     // Provides the entry point to Google Play services.
     protected GoogleApiClient _googleApiClient;
@@ -57,6 +61,7 @@ public class PreferenceActivity extends ActionBarActivity
     Button _endTimeEdit;
     RadioGroup _genderRadios;
     RadioButton _genderNoPrefRadio;
+    Context _context;
 
     // Time components
     private int _startHour = -1;
@@ -68,6 +73,8 @@ public class PreferenceActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference);
+
+        _context = this;
 
         // set the references
 //        _foodSpinner = (Spinner)findViewById(R.id.pref_food_spinner);
@@ -149,14 +156,14 @@ public class PreferenceActivity extends ActionBarActivity
         // retrieves the most recent location currently available
         _lastLocation = LocationServices.FusedLocationApi.getLastLocation(_googleApiClient);
 
-        if(_lastLocation != null){
-            // TODO: Remove after testing (create toast to show longitude and latitude)
-            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
-                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
-                    Toast.LENGTH_LONG).show();
-        }
+//        if(_lastLocation != null){
+//            // TODO: Remove after testing (create toast to show longitude and latitude)
+//            Toast.makeText(this, "Latitude: " + _lastLocation.getLatitude() +
+//                    "\nLongitude: " + _lastLocation.getLongitude(), Toast.LENGTH_LONG).show();
+//        } else {
+//            Toast.makeText(this, "No location detected. Make sure location is enabled on your device",
+//                    Toast.LENGTH_LONG).show();
+//        }
     }
 
     @Override
@@ -260,7 +267,7 @@ public class PreferenceActivity extends ActionBarActivity
         View radioButton = _genderRadios.findViewById(id);
         RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
         String pref_gender_selection = (String) btn.getText();
-        pref_gender_selection.substring(0, 1); // retrieve the very first letter of gender
+        pref_gender_selection = pref_gender_selection.substring(0,1); // retrieve the very first letter of gender
         //}
 
 //        String pref_food_string = _foodSpinner.getSelectedItem().toString();
@@ -315,36 +322,39 @@ public class PreferenceActivity extends ActionBarActivity
         String startTime = toDateTimeString(_startHour, _startMin);
         String endTime = toDateTimeString(_endHour, _endMin);
 
-        Toast.makeText(this, "pref_min_age: " + pref_min_age +
-                "\npref_max_age: " + pref_max_age +
-                "\npref_gender_selection: " + pref_gender_selection +
-                "\npref_start_time_int: " + startTime +
-                "\npref_end_time_int: " + endTime +
-                "\npref_min_price" + pref_min_price +
-                "\npref_max_price" + pref_max_price + 
-                "\npref_distance_int: " + pref_distance_int, Toast.LENGTH_LONG).show();
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://donteatalone.paigelim.com/api/v1/matches?"
+                + "user_id=1"
+                + "&max_distance=" + pref_distance_int
+                + "&min_age=" + pref_min_age
+                + "&max_age=" + pref_max_age
+                + "&min_price=" + pref_min_price
+                + "&max_price=" + pref_max_price
+                + "&comment=none"
+                + "&gender=" + pref_gender_selection
+                + "&start_time=" + startTime
+                + "&end_time=" + endTime;
+        url = url.replace(" ", "%20");
+        Log.d(TAG, url);
 
-        // Instantiate the RequestQueue.
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        String url ="http://donteatalone.paigelim.com/api/v1/users?email=" + emailText + "&password=" + passwordText;
-//        Log.d(TAG, url);
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        // Display the first 500 characters of the response string.
-//                        Log.d(TAG, response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d(TAG, error.getMessage());
-//            }
-//        });
-//        // Add the request to the RequestQueue.
-//        queue.add(stringRequest);
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
 
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        String msg = "Response: " + response.toString();
+                        Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "SUCCESS: "+msg);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "ERROR: " + error.getMessage()+"");
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        queue.add(jsObjRequest);
     }
 }
