@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:singleLine="true"
         android:scrollHorizontally="true"
-        android:layout_marginTop="200dp" />
+        android:layout_marginTop="150dp" />
 
     <EditText
         android:id="@+id/login_password"
@@ -41,7 +41,8 @@
             android:id="@+id/button_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_login"/>
+            android:text="@string/button_login"
+            android:onClick="StartLogin"/>
     </LinearLayout>
 
 
