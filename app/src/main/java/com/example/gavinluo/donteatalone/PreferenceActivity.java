@@ -1,5 +1,6 @@
 package com.example.gavinluo.donteatalone;
 
+import android.content.Intent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.location.Location;
@@ -262,7 +263,7 @@ public class PreferenceActivity extends ActionBarActivity
             Toast.makeText(this, "Please choose the start time.", Toast.LENGTH_LONG).show();
             return;
         }
-
+        
         if(_endHour == -1 ){
             Toast.makeText(this, "Please choose the end time.", Toast.LENGTH_LONG).show();
             return;
@@ -320,14 +321,13 @@ public class PreferenceActivity extends ActionBarActivity
                         String msg = "Response: " + response.toString();
                         Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
                         Log.d(TAG, "SUCCESS: " + msg);
-                        changeIntent();
+                        startActivity(new Intent(_context, WaitingActivity.class));
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "ERROR: " + error.getMessage()+"");
-                        changeIntent(); //TODO: Remove after testing
+                        Log.d(TAG, "ERROR: " + error.getMessage() + "");
                     }
                 });
 
@@ -335,35 +335,4 @@ public class PreferenceActivity extends ActionBarActivity
         queue.add(jsObjRequest);
     }
 
-    public void changeIntent(){
-        // get the matches for the user
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://donteatalone.paigelim.com/api/v1/users/"+user_id+"/matches";
-        Log.d(TAG, url);
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        String msg = "Response: " + response.toString();
-                        Toast.makeText(_context, msg.toString() , Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "SUCCESS: "+msg);
-
-                        // the match return some result, go to matches page
-
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "ERROR: " + error.getMessage()+"");
-
-                        // There's no result, go to waiting page
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        queue.add(jsObjRequest);
-    }
 }

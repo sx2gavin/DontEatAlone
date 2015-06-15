@@ -66,8 +66,14 @@
             android:label="@string/title_activity_start_matching" >
         </activity>
         <activity
+
             android:name=".MessengerActivity"
-            android:label="@string/title_activity_messenger" >
+            android:label="@string/title_activity_messenger">
+        </activity>
+        <activity
+            android:name=".WaitingActivity"
+            android:label="@string/title_activity_waiting" >
+
         </activity>
     </application>
 
