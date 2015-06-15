@@ -33,12 +33,16 @@
     <string name="pref_gender">Gender</string>
     <string name="pref_male">Male</string>
     <string name="pref_female">Female</string>
+    <string name="pref_sex_none">None</string>
+    <string name="pref_min">Min</string>
+    <string name="pref_max">Max</string>
     <string name="pref_food">Preferred food</string>
     <string name="pref_time_range">Preferred time range</string>
     <string name="pref_to">to</string>
     <string name="pref_distance">Distance (km)</string>
     <string name="pref_start">Start</string>
     <string name="pref_end">End</string>
+    <string name="pref_price">Price</string>
     <string name="button_start_search">Start searching</string>
 
     <string-array name="pref_age_array">
@@ -63,6 +67,7 @@
     <string-array name="profile_gender_array">
         <item>Male</item>
         <item>Female</item>
+        <item>None</item>
     </string-array>
 
 
