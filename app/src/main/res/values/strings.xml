@@ -66,6 +66,13 @@
         <item>Female</item>
     </string-array>
 
+    <!-- Start Matching activity string -->
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_start_matching">StartMatchingActivity</string>
+    <string name="button_set_preference">Preference</string>
+    <string name="start_matching_description">If you want to start finding a person nearby to have meal with,
+    please click the button at the bottom to start your matching process.</string>
+
     <!-- Waiting activity string -->
     <string name="waiting1">There are no match ups at the moment. </string>
     <string name="waiting2">We will keep you in out database so that you cen be found by other users.</string>
@@ -73,7 +80,6 @@
     <string name="button_cancelSearching">Cancel Searching</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_waiting">WaitingActivity</string>
 
 </resources>
