@@ -49,7 +49,6 @@ public class MatchListActivity extends ActionBarActivity
         context = this;
         noMatchFragment = new NoMatchFragment();
         matchListFragment = new MatchListFragment();
-//        setFragment();
 
         // on default, show the matchListView
         viewMatchListFragment();
@@ -76,34 +75,8 @@ public class MatchListActivity extends ActionBarActivity
                 }
             };
             timer.start();
-
-//            viewNoMatchFragment();
-//            viewMatchListFragment();
-
-            // Create a new Fragment to be placed in the activity layout
-//            NoMatchFragment noMatchFragment = new NoMatchFragment();
-//
-//            // In case this activity was started with special instructions from an
-//            // Intent, pass the Intent's extras to the fragment as arguments
-//            noMatchFragment.setArguments(getIntent().getExtras());
-//
-//            // Add the fragment to the 'fragment_container' FrameLayout
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.fragment_container, noMatchFragment).commit();
         }
     }
-
-//    public void replaceToNFragment(){
-//        Fragment newFragment = new NoMatchFragment();
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//
-//        // Replace whatever is in the fragment_container with the new fragment
-//        transaction.replace(R.id.no_match_fragment, newFragment);
-//        transaction.addToBackStack(null);
-//
-//        // Commit the transaction
-//        transaction.commit();
-//    }
 
     public void viewMatchListFragment(){
         // In case this activity was started with special isntructions from an
@@ -121,21 +94,6 @@ public class MatchListActivity extends ActionBarActivity
 
         view = MATCH_LIST_VIEW;
     }
-
-//    public void viewMatchListFragment(){
-//        // In case this activity was started with special isntructions from an
-//        // Intent, pass the Intent's extras to the fragment as arguments
-//        matchListFragment.setArguments(getIntent().getExtras());
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//
-//        getSupportFragmentManager().beginTransaction().re
-//        // Add the fragment to the 'fragment' Frame Layout;
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.fragment_container, matchListFragment).commit();
-//
-//        view = MATCH_LIST_VIEW;
-//    }
 
     // display no match fragment
     public void viewNoMatchFragment(){
@@ -176,19 +134,6 @@ public class MatchListActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            // change the fragment
-//            MatchListFragment matchListFragment = new MatchListFragment();
-//
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//            // Replace whatever is in the fragment_container view with this fragment,
-//            // and add the transaction to the back stack so the user can navigate back
-//            transaction.replace(R.id.fragment_container, matchListFragment);
-//            transaction.addToBackStack(null);
-//
-//            // Commit the transaction
-//            transaction.commit();
-
             return true;
         }
 
