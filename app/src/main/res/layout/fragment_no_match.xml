@@ -34,14 +34,23 @@
             android:textStyle="bold"
             android:layout_margin="@dimen/activity_layout_margin"/>
 
+        <!--<Button-->
+            <!--android:id="@+id/button_cancelSearching"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:text="@string/button_create_preference"-->
+            <!--android:onClick="goToPreference"-->
+            <!--/>-->
         <Button
-            android:id="@+id/button_cancelSearching"
+            android:id="@+id/button_createPreference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:text="@string/button_create_preference"
-            android:onClick="goToPreference"/>
+            />
 
     </LinearLayout>
 

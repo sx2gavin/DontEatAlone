@@ -66,7 +66,6 @@ public class MatchListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        startActivity(new Intent(getActivity(), PreferenceActivity.class));
         return inflater.inflate(R.layout.fragment_match_list, container, false);
     }
 
