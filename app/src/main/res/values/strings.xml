@@ -92,5 +92,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_waiting">WaitingActivity</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_match_list">MatchListActivity</string>
+
 
 </resources>
