@@ -3,8 +3,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.gavinluo.donteatalone.MatchListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ExpandableListView
+        android:id="@+id/match_list_expandable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

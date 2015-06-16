@@ -9,7 +9,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+/**
+ * A nice example of a expandable list fragment
+ * https://gist.github.com/bowmanb/4052030
+ */
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +41,8 @@ public class MatchListFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    ExpandableListView matchListExpand;
 
     /**
      * Use this factory method to create a new instance of
@@ -66,7 +79,10 @@ public class MatchListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_match_list, container, false);
+        View view =  inflater.inflate(R.layout.fragment_match_list, container, false);
+        matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
+        matchListExpand.setAdapter(new MatchListAdapter());
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,6 +107,78 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     * The list adapter for expandable list
+     */
+    public class MatchListAdapter extends BaseExpandableListAdapter {
+        private ArrayList<String> groups;
+        private ArrayList<ArrayList<String>> children;
+
+        public MatchListAdapter(){
+            super();
+            groups = new ArrayList<String>(Arrays.asList("Requests from", "Matches"));
+            children = new ArrayList<ArrayList<String>>();
+
+            // remove list items after test
+            children.add(new ArrayList<String>(Arrays.asList("testing", "testing2")));
+            children.add(new ArrayList<String>(Arrays.asList("testing3", "testing4")));
+        }
+
+        @Override
+        public int getGroupCount() {
+            return groups.size();
+        }
+
+        @Override
+        public int getChildrenCount(int i){
+            return children.get(i).size();
+        }
+
+        @Override
+        public Object getGroup(int i){
+            return groups.get(i);
+        }
+
+        @Override
+        public Object getChild(int i, int j){
+            return children.get(i).get(j);
+        }
+
+        @Override
+        public long getGroupId(int i){
+            return i;
+        }
+
+        @Override
+        public long getChildId(int i, int j){
+             return j;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+            TextView textView = new TextView(MatchListFragment.this.getActivity());
+            textView.setText(getGroup(i).toString());
+            return textView;
+        }
+
+        @Override
+        public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+            TextView textView = new TextView(MatchListFragment.this.getActivity());
+            textView.setText(getChild(i, i1).toString());
+            return textView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int i, int i1) {
+            return true;
+        }
     }
 
     /**

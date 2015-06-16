@@ -32,7 +32,7 @@ public class MatchListActivity extends ActionBarActivity
     private static final int MATCH_LIST_VIEW = 1;
     private static final String TAG = "MatchList";
 
-    int user_id = 1000;
+    int user_id = 1;
     int view;
     Context context;
     NoMatchFragment noMatchFragment;
