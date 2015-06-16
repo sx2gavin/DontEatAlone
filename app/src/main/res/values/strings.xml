@@ -92,5 +92,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_waiting">WaitingActivity</string>
 
-
+    <!-- Facebook -->
+    <string name="facebook_app_id">107383156263699</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.gavinluo.donteatalone;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +35,99 @@ import org.json.JSONObject;
 
 public class LoginActivity extends ActionBarActivity {
 
+    CallbackManager callbackManager;
+    Profile profile;
+
+    private static final String FIELDS = "fields";
+    private static final String NAME = "name";
+    private static final String ID = "id";
+    //private static final String PICTURE = "picture";
+    private static final String GENDER = "gender";
+    private static final String EMAIL = "email";
+    private static final String USER_FRIENDS = "friends";
+
+    private static final String REQUEST_FIELDS =
+            TextUtils.join(",", new String[]{ID, NAME, GENDER, EMAIL, USER_FRIENDS});
+    private JSONObject user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_login);
+
+        /*profile = Profile.getCurrentProfile();
+        if(profile != null){
+            updateUI();
+        }*/
+        LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                /*TextView info = (TextView) findViewById(R.id.info);
+                info.setText("User ID: " + loginResult.getAccessToken().getUserId() + "\n" +
+                        "AuthToken: " + loginResult.getAccessToken().getToken() + "\n" +
+                        "ToString: " + loginResult.getAccessToken().toString());
+
+                updateUI();*/
+
+                final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                if (accessToken != null) {
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(JSONObject me, GraphResponse response) {
+                                    user = me;
+                                    profile = Profile.getCurrentProfile();
+
+                                    String output = "";
+                                    output = "ID: " + profile.getId() +"\n";
+                                    output += "FirstName: " + profile.getFirstName() + "\n";
+                                    output += "MiddleName: " + profile.getMiddleName() + "\n";
+                                    output += "LastName: " + profile.getLastName() + "\n";
+                                    output += "ProfilePic: " + profile.getProfilePictureUri(100, 100) + "\n";
+
+                                    if(user == null){
+                                        output += "User: null \n";
+                                    } else {
+                                        output += "User: " + user.toString() + "\n";
+                                    }
+
+                                    DisplayMessage(output);
+                                    LoginSuccessful();
+                                    //ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
+                                    //profilePictureView.setProfileId(profile.getId());
+                                }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString(FIELDS, REQUEST_FIELDS);
+                    request.setParameters(parameters);
+                    GraphRequest.executeBatchAsync(request);
+                } else {
+                    user = null;
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                DisplayMessage("Login attempt canceled");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                DisplayMessage("Login attempt failed" + exception.toString());
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
