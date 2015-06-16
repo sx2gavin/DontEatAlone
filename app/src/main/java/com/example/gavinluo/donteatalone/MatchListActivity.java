@@ -2,6 +2,7 @@ package com.example.gavinluo.donteatalone;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -90,7 +92,7 @@ public class MatchListActivity extends ActionBarActivity
             transaction.addToBackStack(null);
 
             // Commit the transaction
-            transaction.commit(); 
+            transaction.commit();
 
             return true;
         }
@@ -114,4 +116,10 @@ public class MatchListActivity extends ActionBarActivity
     public void onFragmentInteraction(Uri uri){
         // do nothing for now
     }
+
+    public void goToPreference(View view){
+        startActivity(new Intent(this, PreferenceActivity.class));
+    }
+
+
 }

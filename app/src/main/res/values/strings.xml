@@ -88,6 +88,7 @@
     <string name="waiting2">We will keep you in out database so that you cen be found by other users.</string>
     <string name="waiting3">If you would like to cancel the match up, please click "Cancel searching"</string>
     <string name="button_cancelSearching">Cancel Searching</string>
+    <string name="button_create_preference">Set New Preference</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_waiting">WaitingActivity</string>

@@ -1,6 +1,8 @@
 package com.example.gavinluo.donteatalone;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -64,6 +66,7 @@ public class MatchListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        startActivity(new Intent(getActivity(), PreferenceActivity.class));
         return inflater.inflate(R.layout.fragment_match_list2, container, false);
     }
 
@@ -104,7 +107,6 @@ public class MatchListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
-
     }
 
 }
