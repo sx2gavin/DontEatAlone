@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,18 +35,19 @@ import java.util.Arrays;
  * create an instance of this fragment.
  */
 public class MatchListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+    private final String TAG = "MatchListFragment";
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    ExpandableListView matchListExpand;
+    private ExpandableListView matchListExpand;
+    private MatchListAdapter listAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -52,7 +57,6 @@ public class MatchListFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MatchListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MatchListFragment newInstance(String param1, String param2) {
         MatchListFragment fragment = new MatchListFragment();
         Bundle args = new Bundle();
@@ -81,11 +85,42 @@ public class MatchListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_match_list, container, false);
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
-        matchListExpand.setAdapter(new MatchListAdapter());
+        listAdapter = new MatchListAdapter();
+        matchListExpand.setAdapter(listAdapter);
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    public void updateData(JSONObject response){
+        // TODO: Parse the data and add that to the list adapter
+
+        final String MATCHES = "matches";
+        final String ID = "id";
+
+        // remove this after testing
+        try {
+            listAdapter.clearMatches(); // clear things in adapter TODO: remove and add element as necessary
+
+            // Getting all the matches
+            JSONArray matches = response.getJSONArray(MATCHES);
+
+            // Add the IDs to the adapter
+            for(int i=0; i<matches.length(); i++){
+                JSONObject match = matches.getJSONObject(i);
+
+                // TODO: Remove this after testing
+                listAdapter.addMatches("id: " + match.getString(ID));
+                Log.d(TAG, "id: " + match.getString(ID));
+            }
+            Log.d(TAG, "no matches?") ;
+        } catch (Exception e){
+            Log.d(TAG, e.toString());
+        }
+    }
+
+    public MatchListAdapter getListAdapter(){
+        return listAdapter;
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -113,17 +148,33 @@ public class MatchListFragment extends Fragment {
      * The list adapter for expandable list
      */
     public class MatchListAdapter extends BaseExpandableListAdapter {
+        private int INDEX_REQUESTS ;
+        private int INDEX_MATCHES ;
+
+        private static final String GROUP_REQUESTS = "Requests from";
+        private static final String GROUP_MATCHES = "Matches";
+
         private ArrayList<String> groups;
         private ArrayList<ArrayList<String>> children;
 
         public MatchListAdapter(){
             super();
-            groups = new ArrayList<String>(Arrays.asList("Requests from", "Matches"));
+            groups = new ArrayList<String>(Arrays.asList(GROUP_REQUESTS, GROUP_MATCHES));
             children = new ArrayList<ArrayList<String>>();
 
-            // remove list items after test
-            children.add(new ArrayList<String>(Arrays.asList("testing", "testing2")));
-            children.add(new ArrayList<String>(Arrays.asList("testing3", "testing4")));
+            children.add(new ArrayList<String>());
+            children.add(new ArrayList<String>());
+
+            INDEX_REQUESTS = groups.indexOf(GROUP_REQUESTS);
+            INDEX_MATCHES = groups.indexOf(GROUP_MATCHES);
+        }
+
+        public void addMatches(String s){
+            children.get(INDEX_MATCHES).add(s);
+        }
+
+        public void clearMatches(){
+            children.set(INDEX_MATCHES, new ArrayList<String>());
         }
 
         @Override
@@ -192,7 +243,6 @@ public class MatchListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
