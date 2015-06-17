@@ -153,6 +153,9 @@ public class LoginActivity extends ActionBarActivity {
         } else if (id == R.id.action_profile) {
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
+        } else if (id == R.id.action_matchlist) {
+            startActivity(new Intent(this, MatchListActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
