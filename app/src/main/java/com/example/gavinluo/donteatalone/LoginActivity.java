@@ -1,7 +1,12 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.camera2.params.Face;
 import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -49,9 +54,12 @@ public class LoginActivity extends ActionBarActivity {
     private static final String REQUEST_FIELDS =
             TextUtils.join(",", new String[]{ID, NAME, GENDER, EMAIL, USER_FRIENDS});
     private JSONObject user;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        context = this;
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -85,13 +93,13 @@ public class LoginActivity extends ActionBarActivity {
                                     profile = Profile.getCurrentProfile();
 
                                     String output = "";
-                                    output = "ID: " + profile.getId() +"\n";
+                                    output = "ID: " + profile.getId() + "\n";
                                     output += "FirstName: " + profile.getFirstName() + "\n";
                                     output += "MiddleName: " + profile.getMiddleName() + "\n";
                                     output += "LastName: " + profile.getLastName() + "\n";
                                     output += "ProfilePic: " + profile.getProfilePictureUri(100, 100) + "\n";
 
-                                    if(user == null){
+                                    if (user == null) {
                                         output += "User: null \n";
                                     } else {
                                         output += "User: " + user.toString() + "\n";
@@ -167,7 +175,40 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void StartLogin(View view) {
+        Log.d(FacadeModule.TAG, "StartLogin called");
 
+        if (! FacadeModule.getFacadeModule(context).isNetworkAvailable()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+            // set title
+            alertDialogBuilder.setTitle("Warning");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Internet connection unavailable, please turn on data service or WIFI.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Log.d(FacadeModule.TAG, "positive");
+                            dialog.cancel();
+
+                        }
+                    });
+//                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // if this button is clicked, just close
+//                            // the dialog box and do nothing
+//                            dialog.cancel();
+//                        }
+//                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+            return;
+        }
         EditText email = (EditText)findViewById(R.id.login_email);
         String email_text = email.getText().toString();
 
@@ -187,41 +228,79 @@ public class LoginActivity extends ActionBarActivity {
                 "email=" + email_text +
                 "&password=" + password_text;
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {String message = "";
-                        try {
-                            message = (String) response.get("message");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        DisplayMessage("Waiting for the server to respond...");
+        JSONObject response = null;
+        String responseString;
 
-                        DisplayMessage(message);
-                        if (message.equals("Login successful!") ) {
-                            LoginSuccessful();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                NetworkResponse response = error.networkResponse;
-                if(response != null && response.data != null){
-                    String message = new String(response.data);
-                    String errorMessage;
+        // try {
+        FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    // do stuff in a separate thread
                     try {
-                        JSONObject jsObj = new JSONObject(message);
-                        errorMessage = jsObj.getString("message");
-                    } catch(JSONException e) {
+                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+                            // DisplayMessage("Login successfully!");
+                            LoginSuccessful();
+                            running = false;
+                        }
+                        Thread.sleep(10000);
+                        Log.d(FacadeModule.TAG, "awake");
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
-                        return;
+                        running = false;
+                        Thread.currentThread().interrupt();
                     }
-                    DisplayMessage(errorMessage);
                 }
             }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(jsObjRequest);
+        };
+        checker.start();
+
+
+        // DisplayMessage(responseString);
+        // Log.d(FacadeModule.TAG, responseString);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+
+//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {String message = "";
+//                        try {
+//                            message = (String) response.get("message");
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        DisplayMessage(message);
+//                        if (message.equals("Login successful!") ) {
+//                            LoginSuccessful();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                NetworkResponse response = error.networkResponse;
+//                if(response != null && response.data != null){
+//                    String message = new String(response.data);
+//                    String errorMessage;
+//                    try {
+//                        JSONObject jsObj = new JSONObject(message);
+//                        errorMessage = jsObj.getString("message");
+//                    } catch(JSONException e) {
+//                        e.printStackTrace();
+//                        return;
+//                    }
+//                    DisplayMessage(errorMessage);
+//                }
+//            }
+//        });
+//        // Add the request to the RequestQueue.
+//        queue.add(jsObjRequest);
     }
 
     public void DisplayMessage(String message) {
@@ -229,6 +308,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void LoginSuccessful() {
+        DisplayMessage("Login Successfully!");
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }

@@ -105,46 +105,64 @@ public class SignupActivity extends ActionBarActivity {
                 "&name=" + first_name_text +
                 "&age=" + age_text;
 
+
+        DisplayMessage("Waiting for response...");
+        JSONObject response = null;
+
+        String message = "";
+
+//        try {
+            FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.POST);
+            // message = (String) response.get("message");
+            Log.d(TAG, response.toString());
+            DisplayMessage(response.toString());
+            LoginSuccessful();
+//        } catch (JSONException e) {
+//            Log.d(TAG, "There is an JSON exception.");
+//            e.printStackTrace();
+//        }
+
+
         // final SignupActivity signup = this;
 
 // Request a JsonObject response from the provided URL.
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        String message = "";
-                        try {
-                            Log.d(TAG, "Getting the message.");
-                            message = (String) response.get("message");
-                        } catch (JSONException e) {
-                            Log.d(TAG, "There is an JSON exception.");
-                            e.printStackTrace();
-                        }
-                        Log.d(TAG, message);
-                        DisplayMessage(message);
-                        LoginSuccessful();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                NetworkResponse response = error.networkResponse;
-                if(response != null && response.data != null){
-                    String message = new String(response.data);
-                    String errorMessage;
-                    try {
-                        JSONObject jsObj = new JSONObject(message);
-                        errorMessage = jsObj.getString("message");
-                    } catch(JSONException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    DisplayMessage(errorMessage);
-                    Log.d(TAG, message);
-                }
-            }
-        });
+//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        String message = "";
+//                        try {
+//                            Log.d(TAG, "Getting the message.");
+//                            message = (String) response.get("message");
+//                        } catch (JSONException e) {
+//                            Log.d(TAG, "There is an JSON exception.");
+//                            e.printStackTrace();
+//                        }
+//                        Log.d(TAG, message);
+//                        DisplayMessage(message);
+//                        LoginSuccessful();
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                NetworkResponse response = error.networkResponse;
+//                if(response != null && response.data != null){
+//                    String message = new String(response.data);
+//                    String errorMessage;
+//                    try {
+//                        JSONObject jsObj = new JSONObject(message);
+//                        errorMessage = jsObj.getString("message");
+//                    } catch(JSONException e) {
+//                        e.printStackTrace();
+//                        return;
+//                    }
+//                    DisplayMessage(errorMessage);
+//                    Log.d(TAG, message);
+//                }
+//            }
+//        });
 // Add the request to the RequestQueue.
-        queue.add(jsObjRequest);
+// queue.add(jsObjRequest);
     }
 
     public void DisplayMessage(String message) {
