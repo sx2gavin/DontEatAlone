@@ -62,14 +62,27 @@
             android:label="@string/title_activity_profile" >
         </activity>
         <activity
-<<<<<<< HEAD
             android:name=".StartMatchingActivity"
             android:label="@string/title_activity_start_matching" >
-=======
+        </activity>
+        <activity
+            android:name=".MessengerActivity"
+            android:label="@string/title_activity_messenger" >
+        </activity>
+        <activity
             android:name=".WaitingActivity"
             android:label="@string/title_activity_waiting" >
->>>>>>> waitingPage
         </activity>
+        <activity
+            android:name=".MatchListActivity"
+            android:label="@string/title_activity_match_list" >
+        </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

@@ -4,88 +4,109 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
-
-        <EditText
-            android:id="@+id/signup_firstname"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_firstname"
-            android:layout_margin="10dp" />
-
-        <EditText
-            android:id="@+id/signup_lastname"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_lastname"
-            android:layout_margin="10dp" />
-
-        <EditText
-            android:id="@+id/signup_age"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_age"
-            android:layout_margin="10dp" />
-
-
-        <RadioGroup
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+
+            <EditText
+                android:id="@+id/signup_firstname"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/signup_firstname"
+                android:layout_margin="10dp" />
+
+            <EditText
+                android:id="@+id/signup_lastname"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/signup_lastname"
+                android:layout_margin="10dp" />
+
+            <EditText
+                android:id="@+id/signup_age"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/signup_age"
+                android:layout_margin="10dp" />
 
 
-            <TextView
+            <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/signup_gender" />
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
 
-            <RadioButton
-                android:id="@+id/signup_male"
-                android:layout_width="wrap_content"
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signup_gender" />
+
+                <RadioButton
+                    android:id="@+id/signup_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signup_male"/>
+
+                <RadioButton
+                    android:id="@+id/signup_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signup_female"/>
+            </RadioGroup>
+
+            <!--
+            <EditText
+                android:id="@+id/signup_user_description"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:hint="@string/signup_user_description"
+                android:layout_margin="10dp"/>
+                -->
+
+            <EditText
+                android:id="@+id/signup_email"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:text="@string/signup_male"/>
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                android:hint="@string/signup_email"
+                android:layout_margin="10dp" />
 
-            <RadioButton
-                android:id="@+id/signup_female"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/signup_password"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:text="@string/signup_female"/>
-        </RadioGroup>
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:hint="@string/signup_password"
+                android:layout_margin="10dp" />
 
-        <EditText
-            android:id="@+id/signup_email"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_email"
-            android:layout_margin="10dp" />
+            <EditText
+                android:id="@+id/signup_confirm_password"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:hint="@string/signup_confirm_password"
+                android:layout_margin="10dp" />
 
-        <EditText
-            android:id="@+id/signup_password"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_password"
-            android:layout_margin="10dp" />
+            <Button
+                android:id="@+id/signup_button"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="@string/button_signup"
+                android:layout_margin="10dp"
+                android:onClick="SubmitSignUp"/>
 
-        <EditText
-            android:id="@+id/signup_confirm_password"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_confirm_password"
-            android:layout_margin="10dp" />
-
-        <Button
-            android:id="@+id/signup_button"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="@string/button_signup"
-            android:layout_margin="10dp"
-            android:onClick="SubmitSignUp"/>
-
-        </LinearLayout>
-
+            </LinearLayout>
+    </ScrollView>
 </LinearLayout>
