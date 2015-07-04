@@ -11,10 +11,10 @@
         android:src="@drawable/ic_launcher"/>
 
     <TextView
+        android:id="@+id/mess_debug1"
         android:layout_width="match_parent"
         android:layout_height="31dp"
         android:text="Hey, would you like to have lunch together?"
-        android:id="@+id/textView"
         android:layout_marginLeft="20dp" />
 
     <ImageView
@@ -37,6 +37,7 @@
         android:layout_gravity="left" />
 
     <TextView
+        android:id="@+id/mess_debug2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Let's meet up at XXXX."
@@ -50,6 +51,7 @@
         android:layout_gravity="right" />
 
     <TextView
+        android:id="@+id/mess_debug3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sure, I will see you there then!"
@@ -62,6 +64,14 @@
         android:layout_marginTop="180dp"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/messenger_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/messenger_place"
+            android:onClick="onPickButtonClick"/>
+
+
         <EditText
             android:layout_width="186dp"
             android:layout_height="wrap_content"
@@ -73,10 +83,10 @@
             android:layout_height="wrap_content"
             android:text="@string/button_send"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Finish"/>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Finish"/>-->
 
     </LinearLayout>
 

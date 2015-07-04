@@ -82,6 +82,7 @@
 
     <!-- Messenger activity -->
     <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="messenger_place">Pick a place</string>
 
     <!-- Waiting activity string -->
     <string name="waiting1">There are no match ups at the moment. </string>
@@ -98,5 +99,6 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_match_list">MatchListActivity</string>
+    <string name="title_activity_matches">MatchesActivity</string>
 
 </resources>

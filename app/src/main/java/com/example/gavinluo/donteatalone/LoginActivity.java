@@ -166,7 +166,7 @@ public class LoginActivity extends ActionBarActivity {
             return true;
         } else if (id == R.id.action_messenger) {
             startActivity(new Intent(this, MessengerActivity.class));
-            return true; 
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
