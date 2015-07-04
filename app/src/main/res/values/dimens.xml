@@ -10,5 +10,6 @@
 
     <!-- dimensions used in profile -->
     <dimen name="linear_layout_width">300dp</dimen>
+    <dimen name="label_textview_width">45dp</dimen>
 
 </resources>

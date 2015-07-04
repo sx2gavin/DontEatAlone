@@ -16,22 +16,22 @@ public class ProfileActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        //setContentView(R.layout.activity_profile);
 
         // set teh references
-        _genderSpinner = (Spinner)findViewById(R.id.profile_gender_spinner);
+        //_genderSpinner = (Spinner)findViewById(R.id.profile_gender_spinner);
 
         // initialize items in gender spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        /*ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.profile_gender_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        _genderSpinner.setAdapter(adapter);
+        _genderSpinner.setAdapter(adapter);*/
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        //getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
 

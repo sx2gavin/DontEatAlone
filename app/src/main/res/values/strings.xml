@@ -57,19 +57,13 @@
     </string-array>
 
     <!-- Profile activity string -->
-    <string name="profile_last_name">Last Name: </string>
-    <string name="profile_middle_name">Middle Name: </string>
-    <string name="profile_first_name">First Name: </string>
+    <string name="profile_name">Name: </string>
     <string name="profile_gender">Gender: </string>
     <string name="profile_age">Age: </string>
     <string name="profile_email">Email: </string>
+    <string name="profile_description">Description: </string>
     <string name="profile_button_edit">Edit</string>
     <string name="profile_button_save">Save</string>
-    <string-array name="profile_gender_array">
-        <item>Male</item>
-        <item>Female</item>
-        <item>None</item>
-    </string-array>
 
     <!-- Start Matching activity string -->
     <string name="title_activity_profile">ProfileActivity</string>
