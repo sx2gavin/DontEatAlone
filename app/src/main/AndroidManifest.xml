@@ -90,6 +90,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <activity
+            android:name=".MatchesActivity"
+            android:label="@string/title_activity_matches" >
+        </activity>
     </application>
 
 </manifest>
