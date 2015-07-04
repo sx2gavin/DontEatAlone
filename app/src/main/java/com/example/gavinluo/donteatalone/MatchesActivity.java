@@ -1,5 +1,7 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,20 +9,21 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import 	android.support.design.widget.TabLayout;
 
 // Reference : http://developer.android.com/training/implementing-navigation/lateral.html#tabs
 
 public class MatchesActivity extends ActionBarActivity
         implements NoMatchFragment.OnFragmentInteractionListener,
-        MatchListFragment.OnFragmentInteractionListener
+        MatchListFragment.OnFragmentInteractionListener,
+        ActionBar.TabListener
 {
-
-
-
     MatchesPagerAdapter mMatchesPageAdapter;
     ViewPager mViewPager;
+    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +33,15 @@ public class MatchesActivity extends ActionBarActivity
         // ViewPager and its adapter use support library
         // fragments, so use getSupportFragmentManager.
         mMatchesPageAdapter = new MatchesPagerAdapter(getSupportFragmentManager());
+        mTabLayout = (TabLayout)findViewById(R.id.matches_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.matches_pager);
+
         mViewPager.setAdapter(mMatchesPageAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        // Set a toolbar to replace the action bar.
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.matches_toolbar);
+//        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -54,6 +64,21 @@ public class MatchesActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        // When the given tab is selected, switch to the corresponding page in
+        // the ViewPager.
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
     @Override
