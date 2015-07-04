@@ -2,6 +2,7 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -10,11 +11,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class MessengerActivity extends ActionBarActivity
@@ -56,20 +60,34 @@ public class MessengerActivity extends ActionBarActivity
 
     // Pick the place
     public void onPickButtonClick(View view){
+        // Google Map
+        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?q=restaurants");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+
+//        mapIntent.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//
+//            @Override
+//            public void onMapClick(LatLng point) {
+//                Toast.makeText(getApplicationContext(), point.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
         // Construct an intent for the place picker
-        try {
-            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-
-            Intent intent = intentBuilder.build(this);
-
-            // Start the intent by requesting a result ,
-            // identified by a request code.
-            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.d(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e){
-            Log.d(TAG, e.toString());
-        }
+//        try {
+//            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+//
+//            Intent intent = intentBuilder.build(this);
+//
+//            // Start the intent by requesting a result ,
+//            // identified by a request code.
+//            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+//        } catch (GooglePlayServicesRepairableException e) {
+//            Log.d(TAG, e.toString());
+//        } catch (GooglePlayServicesNotAvailableException e){
+//            Log.d(TAG, e.toString());
+//        }
     }
 
     @Override
