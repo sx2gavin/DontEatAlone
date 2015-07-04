@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 public class FacadeModule {
 
-    public final static String TAG = "TAG";
+    public final static String TAG = "FacadeModule";
     private static FacadeModule mInstance;
     private MySingleton mMySingleton;
     // private FacadeModule mContext;

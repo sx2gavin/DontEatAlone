@@ -242,6 +242,8 @@ public class LoginActivity extends ActionBarActivity {
                     // do stuff in a separate thread
                     try {
                         if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+
+
                             // DisplayMessage("Login successfully!");
                             LoginSuccessful();
                             running = false;
@@ -304,11 +306,17 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void DisplayMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.d("displayMessage", message);
     }
 
     public void LoginSuccessful() {
         DisplayMessage("Login Successfully!");
+
+        // Start IntentService to register this application with GCM.
+        Intent RegistrationIntent = new Intent(this, RegistrationIntentService.class);
+        startService(RegistrationIntent);
+
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }

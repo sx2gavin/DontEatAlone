@@ -103,19 +103,25 @@
             </intent-filter>
         </receiver>
         <service
-            android:name="com.example.MyGcmListenerService"
+            android:name="com.example.gavinluo.donteatalone.MyGcmListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.example.MyInstanceIDListenerService"
+            android:name="com.example.gavinluo.donteatalone.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
         </service>
+        <service
+            android:name="com.example.gavinluo.donteatalone.RegistrationIntentService"
+            android:exported="false">
+        </service>
+        <!-- End GCM -->
+
     </application>
 
 </manifest>
