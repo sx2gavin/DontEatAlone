@@ -10,4 +10,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_matchlist" android:title="MatchList"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_messenger" android:title="Messenger"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
