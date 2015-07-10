@@ -39,6 +39,8 @@ public class MatchesActivity extends ActionBarActivity
         mViewPager.setAdapter(mMatchesPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
+        mTabLayout.setBottom(200);
+        mTabLayout.setBottom(200);
         // Set a toolbar to replace the action bar.
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.matches_toolbar);
 //        setSupportActionBar(toolbar);

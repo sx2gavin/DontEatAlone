@@ -66,13 +66,18 @@ public class MessengerActivity extends ActionBarActivity
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
 
+//        https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=API_KEY
+
+
+
+
 //        mapIntent.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 //
 //            @Override
 //            public void onMapClick(LatLng point) {
 //                Toast.makeText(getApplicationContext(), point.toString(), Toast.LENGTH_SHORT).show();
 //            }
-//        });
+//        })
 
         // Construct an intent for the place picker
 //        try {
