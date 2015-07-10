@@ -119,7 +119,23 @@ public class MatchesActivity extends ActionBarActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "position: " + (position+1);
+            String retVal ;
+            switch(position){
+                case 0:
+                    retVal =  "Preference";
+                    break;
+                case 1:
+                    retVal = "Match List";
+                    break;
+                case 2:
+                    retVal = "Request List";
+                    break;
+                default:
+                    retVal = "position: " + (position+1);
+                    break;
+            }
+
+            return retVal;
         }
     }
 }
