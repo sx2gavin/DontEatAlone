@@ -44,6 +44,7 @@
     <string name="pref_start">Start</string>
     <string name="pref_end">End</string>
     <string name="pref_price">Price</string>
+    <string name="pref_comment">Comment</string>
     <string name="button_start_search">Start searching</string>
 
     <string-array name="pref_age_array">

@@ -19,6 +19,7 @@ import 	android.support.design.widget.TabLayout;
 public class MatchesActivity extends ActionBarActivity
         implements NoMatchFragment.OnFragmentInteractionListener,
         MatchListFragment.OnFragmentInteractionListener,
+        PreferenceFragment.OnFragmentInteractionListener,
         ActionBar.TabListener
 {
     MatchesPagerAdapter mMatchesPageAdapter;
@@ -102,7 +103,7 @@ public class MatchesActivity extends ActionBarActivity
         public Fragment getItem(int position) {
             // TODO: change the fragment to be the correct ones
             if(position == PAGE_SEARCH) {
-                return new NoMatchFragment();
+                return new PreferenceFragment();
             } else if (position == PAGE_MATCHES) {
                 return new MatchListFragment();
             } else if (position == PAGE_REQUESTS){
