@@ -1,134 +1,156 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/default_profile_picture"
-            android:id="@+id/imageView"
-            android:layout_centerHorizontal="true" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
-
-        <TextView
-            android:layout_width="@dimen/label_textview_width"
-            android:layout_height="wrap_content"
-            android:text="@string/profile_name"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
-
-        <EditText
-            android:layout_width="@dimen/activity_edittext_layout_width"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:id="@+id/profile_name"/>
-
-    </RelativeLayout>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <LinearLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
 
-        <TextView
-                android:layout_width="@dimen/label_textview_width"
-                android:layout_height="wrap_content"
-                android:text="@string/profile_email"
-                android:layout_margin="@dimen/activity_horizontal_margin"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="abcd@gmail.com"
+                android:src="@drawable/default_profile_picture"
+                android:id="@+id/imageView"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
+
+            <TextView
+                android:layout_width="@dimen/label_textview_width"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_name"
                 android:layout_margin="@dimen/activity_horizontal_margin"/>
 
-    </LinearLayout>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="loading..."
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/profile_name"/>
 
-    <LinearLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="@dimen/label_textview_width"
+        <LinearLayout
+            android:layout_width="@dimen/linear_layout_width"
             android:layout_height="wrap_content"
-            android:text="@string/profile_gender"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
 
-        <TextView
+            <TextView
+                    android:layout_width="@dimen/label_textview_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_email"
+                    android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="loading..."
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:id="@+id/profile_email"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
+
+            <TextView
+                android:layout_width="@dimen/label_textview_width"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_gender"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="loading..."
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/profile_gender"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal" >
+
+            <TextView
+                android:layout_width="@dimen/label_textview_width"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_age"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="loading..."
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/profile_age"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/linear_layout_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_description"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="loading..."
+                android:layout_marginLeft="20dp"
+                android:id="@+id/profile_description"/>
+        </LinearLayout>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/fblogin_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="female"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:layout_marginTop="30dp" />
 
         <TextView
-            android:layout_width="@dimen/label_textview_width"
-            android:layout_height="wrap_content"
-            android:text="@string/profile_age"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
-
-        <TextView
+            android:id="@+id/fblogin_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="18"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
-    </LinearLayout>
+            android:text="loading..."/>
 
-    <LinearLayout
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
-
-        <TextView
-            android:layout_width="@dimen/label_textview_width"
+        <Button
+            android:id="@+id/profile_update_button"
+            android:layout_width="@dimen/linear_layout_width"
             android:layout_height="wrap_content"
-            android:text="@string/profile_description"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
+            android:text="@string/profile_button_edit"
+            android:gravity="center_horizontal"
+            android:layout_margin="@dimen/activity_layout_margin"
+            android:onClick="updateProfile" />
 
-        <EditText
-            android:layout_width="@dimen/activity_edittext_layout_width"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:id="@+id/profile_description"/>
+
     </LinearLayout>
-
-
-
-    <Button
-        android:id="@+id/pref_search_button"
-        android:layout_width="@dimen/linear_layout_width"
-        android:layout_height="wrap_content"
-        android:text="@string/profile_button_edit"
-        android:gravity="center_horizontal"
-        android:layout_margin="@dimen/activity_layout_margin" />
-
-
-</LinearLayout>
+</ScrollView>

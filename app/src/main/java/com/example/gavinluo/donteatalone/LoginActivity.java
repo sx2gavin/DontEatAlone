@@ -62,8 +62,7 @@ public class LoginActivity extends ActionBarActivity {
         context = this;
         super.onCreate(savedInstanceState);
 
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
+
 
         setContentView(R.layout.activity_login);
 
@@ -71,7 +70,7 @@ public class LoginActivity extends ActionBarActivity {
         if(profile != null){
             updateUI();
         }*/
-        LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
+        /*LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -83,7 +82,7 @@ public class LoginActivity extends ActionBarActivity {
 
                 updateUI();*/
 
-                final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                /*final AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken != null) {
                     GraphRequest request = GraphRequest.newMeRequest(
                             accessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -129,14 +128,10 @@ public class LoginActivity extends ActionBarActivity {
             public void onError(FacebookException exception) {
                 DisplayMessage("Login attempt failed" + exception.toString());
             }
-        });
+        });*/
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -304,7 +299,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void DisplayMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     public void LoginSuccessful() {
