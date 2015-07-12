@@ -16,6 +16,17 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +63,8 @@ public class PreferenceFragment extends Fragment {
     Button _endTimeEdit;
     RadioGroup _genderRadios;
     RadioButton _genderNoPrefRadio;
+    Button _prefButton;
+
     Context _context;
 
     // Time components
@@ -112,26 +125,10 @@ public class PreferenceFragment extends Fragment {
         _maxAgeEdit = (EditText)view.findViewById(R.id.pref_max_age);
         _minPriceEdit = (EditText)view.findViewById(R.id.pref_min_price);
         _maxPriceEdit = (EditText)view.findViewById(R.id.pref_max_price);
+        _prefButton = (Button)view.findViewById(R.id.pref_search_button);
+
 
         // attach the button click listeners
-//        Button button = (Button)view.findViewById(R.id.button_createPreference);
-//        button.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View v){
-//                switch(v.getId()){
-//                    case R.id.pref_start_time:
-//                        Log.d(TAG, "start time button fired");
-//                        getStartTime(_startTimeEdit);
-//                        break;
-//                    case R.id.pref_end_time:
-//                        Log.d(TAG, "end time button fired");
-//                        getEndTime(_endTimeEdit);
-//                        break;
-//                }
-//            }
-//        });
-
         _startTimeEdit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -155,6 +152,20 @@ public class PreferenceFragment extends Fragment {
                 }
             }
         });
+
+        _prefButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                switch(v.getId()){
+                    case R.id.pref_search_button:
+                        Log.d(TAG, "search button clicked");
+                        if(checkInput()) {
+                            // TODO: call facade to submit request
+                        }
+                        break;
+                }
+            }
+        }); 
 
         return view;
     }
@@ -230,8 +241,66 @@ public class PreferenceFragment extends Fragment {
         if(hour == 0){
             hour = 12;
         }
+
+        if(min/10 == 0){
+            return hour + ":0" + min + ending;
+        }
+
         return hour + ":" + min + ending;
     }
+
+    public boolean checkInput(){
+        // angela.
+        int id= _genderRadios.getCheckedRadioButtonId();
+        View radioButton = _genderRadios.findViewById(id);
+        RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
+        String pref_gender_selection = (String) btn.getText();
+        pref_gender_selection = pref_gender_selection.substring(0,1); // retrieve the very first letter of gender
+
+        //error checking
+        if(_minAgeEdit.getText().toString().matches("")){
+            Toast.makeText(_context, "Please enter the minimum age.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_maxAgeEdit.getText().toString().matches("")){
+            Toast.makeText(_context, "Please enter the maximum age.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_startHour == -1 ){
+            Toast.makeText(_context, "Please choose the start time.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_endHour == -1 ){
+            Toast.makeText(_context, "Please choose the end time.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_startHour>_endHour || (_startHour==_endHour&&_startMin>=_endHour)) {
+            Toast.makeText(_context, "Your start time is later than your end time.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_minPriceEdit.getText().toString().matches("")){
+            Toast.makeText(_context, "Please enter the minimum price.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(_maxPriceEdit.getText().toString().matches("")){
+            Toast.makeText(_context, "Please enter the maximum price.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (_distanceEdit.getText().toString().matches("")) {
+            Toast.makeText(_context, "You did not enter a distance", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
