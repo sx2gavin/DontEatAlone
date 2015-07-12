@@ -3,8 +3,10 @@ package com.example.gavinluo.donteatalone;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,8 @@ public class PreferenceFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private static final String TAG = "PreferenceFragment";
 
     // UI Components
     EditText _distanceEdit;
@@ -108,6 +112,49 @@ public class PreferenceFragment extends Fragment {
         _maxAgeEdit = (EditText)view.findViewById(R.id.pref_max_age);
         _minPriceEdit = (EditText)view.findViewById(R.id.pref_min_price);
         _maxPriceEdit = (EditText)view.findViewById(R.id.pref_max_price);
+
+        // attach the button click listeners
+//        Button button = (Button)view.findViewById(R.id.button_createPreference);
+//        button.setOnClickListener(new View.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View v){
+//                switch(v.getId()){
+//                    case R.id.pref_start_time:
+//                        Log.d(TAG, "start time button fired");
+//                        getStartTime(_startTimeEdit);
+//                        break;
+//                    case R.id.pref_end_time:
+//                        Log.d(TAG, "end time button fired");
+//                        getEndTime(_endTimeEdit);
+//                        break;
+//                }
+//            }
+//        });
+
+        _startTimeEdit.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                switch(v.getId()){
+                    case R.id.pref_start_time:
+                        Log.d(TAG, "strt time button fired");
+                        getStartTime(_startTimeEdit);
+                        break;
+                }
+            }
+        });
+
+        _endTimeEdit.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                switch(v.getId()){
+                    case R.id.pref_end_time:
+                        Log.d(TAG, "end time button fired");
+                        getEndTime(_endTimeEdit);
+                        break;
+                }
+            }
+        });
 
         return view;
     }
