@@ -136,9 +136,7 @@
     <orderEntry type="library" exported="" name="play-services-appstate-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-identity-7.5.0" level="project" />
-
     <orderEntry type="library" exported="" name="design-22.2.0" level="project" />
-
     <orderEntry type="library" exported="" name="play-services-maps-7.5.0" level="project" />
     <orderEntry type="module" module-name="facebook" exported="" />
     <orderEntry type="module" module-name="volley" exported="" />
