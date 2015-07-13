@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Layout that contians the profile picture -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/default_profile_picture"
+            android:id="@+id/imageView"
+            android:layout_centerHorizontal="true" />
+
+    </LinearLayout>
+
+    <!-- Layout that contains basic user info -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!-- Layout that contains user name, age, gender -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Layout that contains the invite button -->
+</LinearLayout>

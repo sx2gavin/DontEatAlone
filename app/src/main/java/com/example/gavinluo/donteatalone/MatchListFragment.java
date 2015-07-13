@@ -3,6 +3,7 @@ package com.example.gavinluo.donteatalone;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,7 @@ public class MatchListFragment extends Fragment {
 
     private ExpandableListView matchListExpand;
     private MatchListAdapter listAdapter;
+    private Context context;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,11 +84,17 @@ public class MatchListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = this.getActivity();
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_match_list, container, false);
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
+
+        // add a test match
+        listAdapter.addMatches("id: test match 1" );
+        listAdapter.addMatches("id: test match 2" );
         return view;
     }
 
@@ -169,6 +177,10 @@ public class MatchListFragment extends Fragment {
             INDEX_MATCHES = groups.indexOf(GROUP_MATCHES);
         }
 
+        public void addUser(String s){
+
+        }
+
         public void addMatches(String s){
             children.get(INDEX_MATCHES).add(s);
         }
@@ -221,9 +233,32 @@ public class MatchListFragment extends Fragment {
 
         @Override
         public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-            TextView textView = new TextView(MatchListFragment.this.getActivity());
-            textView.setText(getChild(i, i1).toString());
-            return textView;
+//            TextView textView = new TextView(MatchListFragment.this.getActivity());
+//            textView.setText(getChild(i, i1).toString());
+            if(view == null){
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.matcheschildrow, null);
+            }
+
+            TextView distView = (TextView) view.findViewById(R.id.matches_distance);
+            TextView timeView = (TextView) view.findViewById(R.id.matches_time);
+            TextView priceView = (TextView) view.findViewById(R.id.matches_price);
+            TextView commentView = (TextView) view.findViewById(R.id.matches_comment);
+
+            // format the strings
+            Resources res = context.getResources();
+            String distText = String.format(res.getString(R.string.matches_distance), 10);
+            String timeText = String.format(res.getString(R.string.matches_time), 10, 20);
+            String priceText = String.format(res.getString(R.string.matches_price), 20, 20);
+            String commentText = String.format(res.getString(R.string.matches_comment), "testing testing");
+
+            // set the text
+            distView.setText(distText);
+            timeView.setText(timeText);
+            priceView.setText(priceText);
+            commentView.setText(commentText);
+
+            return view;
         }
 
         @Override
