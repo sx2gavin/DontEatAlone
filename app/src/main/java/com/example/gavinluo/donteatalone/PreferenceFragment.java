@@ -165,7 +165,7 @@ public class PreferenceFragment extends Fragment {
                         break;
                 }
             }
-        }); 
+        });
 
         return view;
     }
