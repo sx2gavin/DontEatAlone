@@ -109,5 +109,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_match_list">MatchListActivity</string>
     <string name="title_activity_matches">MatchesActivity</string>
+    <string name="title_activity_restaurant_list">RestaurantListActivity</string>
+
+
+    <!-- Restaurant List -->
+    <string name="rest_custom_loc">Set Location</string>
+
+    <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
 
 </resources>

@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 
 /**
@@ -164,6 +165,9 @@ public class MatchListFragment extends Fragment {
 
         private ArrayList<String> groups;
         private ArrayList<ArrayList<String>> children;
+
+        private HashMap<Integer, String> matchesMap;
+
 
         public MatchListAdapter(){
             super();

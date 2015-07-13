@@ -61,10 +61,14 @@ public class MessengerActivity extends ActionBarActivity
     // Pick the place
     public void onPickButtonClick(View view){
         // Google Map
-        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?q=restaurants");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+//        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?q=restaurants");
+//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//        mapIntent.setPackage("com.google.android.apps.maps");
+//        startActivity(mapIntent);
+
+        // Change the Intent
+        Intent intent = new Intent(this, RestaurantListActivity.class);
+        startActivity(intent);
 
 //        https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=API_KEY
 
