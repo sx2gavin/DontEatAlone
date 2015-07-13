@@ -3,6 +3,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_profile">Profile</string>
+    <string name="action_end">End</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="input_name">What\'s your name\?</string>
@@ -83,6 +85,10 @@
     <!-- Messenger activity -->
     <string name="title_activity_messenger">MessengerActivity</string>
     <string name="messenger_place">Pick a place</string>
+    <string name="messenger_endDialog_msg">Please rate your company to end this meeting.</string>
+    <string name="messenger_endDialog_title">Rating</string>
+    <string name="messenger_endDialog_like">Like</string>
+    <string name="messenger_endDialog_dislike">Dislike</string>
 
     <!-- Waiting activity string -->
     <string name="waiting1">There are no match ups at the moment. </string>

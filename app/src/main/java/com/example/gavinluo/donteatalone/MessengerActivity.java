@@ -1,6 +1,8 @@
 package com.example.gavinluo.donteatalone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -51,7 +53,24 @@ public class MessengerActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_end) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.messenger_endDialog_msg)
+                    .setTitle(R.string.messenger_endDialog_title);
+            // Add the buttons
+            builder.setPositiveButton(R.string.messenger_endDialog_like, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //TODO: like
+                }
+            });
+            builder.setNegativeButton(R.string.messenger_endDialog_dislike, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //TODO: dislike
+                }
+            });
+            // Create the AlertDialog
+            builder.create();
+            builder.show();
             return true;
         }
 

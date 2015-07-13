@@ -139,6 +139,7 @@ public class ProfileActivity extends ActionBarActivity {
             // Create the AlertDialog
             builder.create();
             builder.show();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

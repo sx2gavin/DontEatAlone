@@ -2,6 +2,7 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import 	android.support.design.widget.TabLayout;
+import android.view.View;
 
 // Reference : http://developer.android.com/training/implementing-navigation/lateral.html#tabs
 
@@ -62,7 +64,9 @@ public class MatchesActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_profile) {
+            Intent intent = new Intent (this, ProfileActivity.class);
+            startActivity(intent);
             return true;
         }
 
