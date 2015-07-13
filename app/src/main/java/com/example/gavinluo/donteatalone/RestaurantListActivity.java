@@ -38,6 +38,8 @@ public class RestaurantListActivity extends ActionBarActivity {
      */
     private static final int REQUEST_PLACE_PICKER = 1;
 
+    private int PLACE_PICKER_REQUEST;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +54,55 @@ public class RestaurantListActivity extends ActionBarActivity {
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.custom_loc_button:
-                        pickPlace();
+//                        pickPlace();
+                        try {
+                            launchPlace();
+                        } catch(Exception e){
+                            Log.d(TAG, e.toString());
+                        }
                         Log.d(TAG, "Set location clicked!");
                         break;
                 }
             }
         });
+    }
+
+    // Start Google Place Picker Code **************************************************************
+    public void launchPlace() throws GooglePlayServicesNotAvailableException,
+            GooglePlayServicesRepairableException {
+        PLACE_PICKER_REQUEST = 1;
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        Context context = this;
+        startActivityForResult(builder.build(context), PLACE_PICKER_REQUEST);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String badLocation = "That location is not valid for this app, please select a valid location";
+
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                if (place.getPlaceTypes().contains(34)) {
+                    if (place.getPlaceTypes().contains(9) || place.getPlaceTypes().contains(15) ||
+                            place.getPlaceTypes().contains(38) ||
+                            place.getPlaceTypes().contains(67) ||
+                            place.getPlaceTypes().contains(79)) {
+//                        where.setText(place.getName());
+//                        loc = true;
+                    } else {
+                        Toast.makeText(this,
+                                badLocation, Toast.LENGTH_LONG).show();
+                        try {
+                            launchPlace();
+                        } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -128,78 +173,78 @@ public class RestaurantListActivity extends ActionBarActivity {
      * @param resultCode
      * @param data
      */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "Enter onActivityResult");
-        // BEGIN_INCLUDE(activity_result)
-        if (requestCode == REQUEST_PLACE_PICKER) {
-            // This result is from the PlacePicker dialog.
-
-            // Enable the picker option
-//            showPickAction(true);
-
-            if (resultCode == Activity.RESULT_OK) {
-                /* User has picked a place, extract data.
-                   Data is extracted from the returned intent by retrieving a Place object from
-                   the PlacePicker.
-                 */
-                final Place place = PlacePicker.getPlace(data, this);
-
-                /* A Place object contains details about that place, such as its name, address
-                and phone number. Extract the name, address, phone number, place ID and place types.
-                 */
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                final CharSequence phone = place.getPhoneNumber();
-                final String placeId = place.getId();
-
-                String attribution = PlacePicker.getAttributions(data);
-                if(attribution == null){
-                    attribution = "";
-                }
-
-                // add more details
-                final int priceLevel = place.getPriceLevel();
-                final float rating = place.getRating();
-                final Uri website = place.getWebsiteUri();
-                final LatLngBounds viewport = place.getViewport();
-                final LatLng latLng = place.getLatLng();
-                final Locale locale = place.getLocale();
-                final List<Integer> placeTypes = place.getPlaceTypes();
-
-                // show then in the log cat
-                Log.d(CARD_DETAIL, "place id: " + placeId);
-                Log.d(CARD_DETAIL, "price level: " + priceLevel);
-                Log.d(CARD_DETAIL, "rating: " + rating);
-                Log.d(CARD_DETAIL, "website: " + website);
-                Log.d(CARD_DETAIL, "viewport: " + viewport);
-                Log.d(CARD_DETAIL, "latLng: " + latLng);
-                Log.d(CARD_DETAIL, "locale: " + locale);
-                Log.d(CARD_DETAIL, "placeTypes: " + placeTypes);
-                Log.d(CARD_DETAIL, "attribution: " + attribution);
-                Log.d(CARD_DETAIL, "attribution html: " + Html.fromHtml(attribution));
-
-                // Update data on card.
-//                getCardStream().getCard(CARD_DETAIL)
-//                        .setTitle(name.toString())
-//                        .setDescription(getString(R.string.detail_text, placeId, address, phone,
-//                                attribution));
-
-
-                // Print data to debug log
-                Log.d(TAG, "Place selected: " + placeId + " (" + name.toString() + ")");
-
-                // Show the card.
-//                getCardStream().showCard(CARD_DETAIL);
-
-            } else {
-                // User has not selected a place, hide the card.
-//                getCardStream().hideCard(CARD_DETAIL);
-            }
-
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-        // END_INCLUDE(activity_result)
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.d(TAG, "Enter onActivityResult");
+//        // BEGIN_INCLUDE(activity_result)
+//        if (requestCode == REQUEST_PLACE_PICKER) {
+//            // This result is from the PlacePicker dialog.
+//
+//            // Enable the picker option
+////            showPickAction(true);
+//
+//            if (resultCode == Activity.RESULT_OK) {
+//                /* User has picked a place, extract data.
+//                   Data is extracted from the returned intent by retrieving a Place object from
+//                   the PlacePicker.
+//                 */
+//                final Place place = PlacePicker.getPlace(data, this);
+//
+//                /* A Place object contains details about that place, such as its name, address
+//                and phone number. Extract the name, address, phone number, place ID and place types.
+//                 */
+//                final CharSequence name = place.getName();
+//                final CharSequence address = place.getAddress();
+//                final CharSequence phone = place.getPhoneNumber();
+//                final String placeId = place.getId();
+//
+//                String attribution = PlacePicker.getAttributions(data);
+//                if(attribution == null){
+//                    attribution = "";
+//                }
+//
+//                // add more details
+//                final int priceLevel = place.getPriceLevel();
+//                final float rating = place.getRating();
+//                final Uri website = place.getWebsiteUri();
+//                final LatLngBounds viewport = place.getViewport();
+//                final LatLng latLng = place.getLatLng();
+//                final Locale locale = place.getLocale();
+//                final List<Integer> placeTypes = place.getPlaceTypes();
+//
+//                // show then in the log cat
+//                Log.d(CARD_DETAIL, "place id: " + placeId);
+//                Log.d(CARD_DETAIL, "price level: " + priceLevel);
+//                Log.d(CARD_DETAIL, "rating: " + rating);
+//                Log.d(CARD_DETAIL, "website: " + website);
+//                Log.d(CARD_DETAIL, "viewport: " + viewport);
+//                Log.d(CARD_DETAIL, "latLng: " + latLng);
+//                Log.d(CARD_DETAIL, "locale: " + locale);
+//                Log.d(CARD_DETAIL, "placeTypes: " + placeTypes);
+//                Log.d(CARD_DETAIL, "attribution: " + attribution);
+//                Log.d(CARD_DETAIL, "attribution html: " + Html.fromHtml(attribution));
+//
+//                // Update data on card.
+////                getCardStream().getCard(CARD_DETAIL)
+////                        .setTitle(name.toString())
+////                        .setDescription(getString(R.string.detail_text, placeId, address, phone,
+////                                attribution));
+//
+//
+//                // Print data to debug log
+//                Log.d(TAG, "Place selected: " + placeId + " (" + name.toString() + ")");
+//
+//                // Show the card.
+////                getCardStream().showCard(CARD_DETAIL);
+//
+//            } else {
+//                // User has not selected a place, hide the card.
+////                getCardStream().hideCard(CARD_DETAIL);
+//            }
+//
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//        // END_INCLUDE(activity_result)
+//    }
 }
