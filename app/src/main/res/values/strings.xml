@@ -2,6 +2,7 @@
     <string name="app_name">DontEatAlone</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Log Out</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="input_name">What\'s your name\?</string>
@@ -58,19 +59,17 @@
     </string-array>
 
     <!-- Profile activity string -->
-    <string name="profile_last_name">Last Name: </string>
-    <string name="profile_middle_name">Middle Name: </string>
-    <string name="profile_first_name">First Name: </string>
+    <string name="profile_name">Name: </string>
     <string name="profile_gender">Gender: </string>
     <string name="profile_age">Age: </string>
     <string name="profile_email">Email: </string>
-    <string name="profile_button_edit">Edit</string>
-    <string name="profile_button_save">Save</string>
-    <string-array name="profile_gender_array">
-        <item>Male</item>
-        <item>Female</item>
-        <item>None</item>
-    </string-array>
+    <string name="profile_description">Description: </string>
+    <string name="profile_button_edit">Update My Profile</string>
+    <string name="profile_button_save">Save My Profile</string>
+    <string name="profile_logoutDialog_title">Log Out</string>
+    <string name="profile_logoutDialog_message">Are you sure you want to log out?</string>
+    <string name="profile_logoutDialog_yes">Yes</string>
+    <string name="profile_logoutDialog_no">No</string>
 
     <!-- Start Matching activity string -->
     <string name="title_activity_profile">ProfileActivity</string>
