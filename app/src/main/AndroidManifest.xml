@@ -12,7 +12,7 @@
     <!-- To retrieve the location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +26,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE" />
+
 
         <activity
             android:name=".MainActivity"
@@ -93,6 +94,10 @@
         <activity
             android:name=".MatchesActivity"
             android:label="@string/title_activity_matches" >
+        </activity>
+        <activity
+            android:name=".RestaurantListActivity"
+            android:label="@string/title_activity_restaurant_list" >
         </activity>
     </application>
 

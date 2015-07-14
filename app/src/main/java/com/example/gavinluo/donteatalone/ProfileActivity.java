@@ -122,7 +122,7 @@ public class ProfileActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            //TODO:¡¡Logout and go back to login page
+            //TODO:Logout and go back to login page
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.profile_logoutDialog_message)
                     .setTitle(R.string.profile_logoutDialog_title);
