@@ -112,7 +112,7 @@ public class SignupActivity extends ActionBarActivity {
         String message = "";
 
 //        try {
-            FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.POST);
+            // FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.POST);
             // message = (String) response.get("message");
             Log.d(TAG, response.toString());
             DisplayMessage(response.toString());

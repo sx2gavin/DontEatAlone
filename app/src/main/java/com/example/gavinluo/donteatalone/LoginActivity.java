@@ -236,7 +236,7 @@ public class LoginActivity extends ActionBarActivity {
         String responseString;
 
         // try {
-        FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
+        // FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
 
         ArrayList<User> matchList = FacadeModule.getFacadeModule(this).GetMatchList();
 

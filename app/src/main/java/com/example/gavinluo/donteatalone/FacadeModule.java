@@ -57,7 +57,7 @@ public class FacadeModule {
 		mUserId = -1;
     }
 
-    public void SendRequest(String url, int method, RequestMode request)
+    public void SendRequest(String url, int method, final RequestMode request)
     {
         Log.d(TAG, "SendRequest called");
 
