@@ -37,6 +37,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -236,72 +238,33 @@ public class LoginActivity extends ActionBarActivity {
         // try {
         FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
 
-        Thread checker = new Thread() {
-            public void run () {
-                boolean running = true;
-                while (running == true) {
-                    // do stuff in a separate thread
-                    try {
-                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
-                            // DisplayMessage("Login successfully!");
-                            LoginSuccessful();
-                            running = false;
-                        }
-                        Thread.sleep(10000);
-                        Log.d(FacadeModule.TAG, "awake");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        running = false;
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            }
-        };
-        checker.start();
+        ArrayList<User> matchList = FacadeModule.getFacadeModule(this).GetMatchList();
+
+        matchList.get(0).LogUserInfo();
 
 
-        // DisplayMessage(responseString);
-        // Log.d(FacadeModule.TAG, responseString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            return;
-//        }
-
-//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {String message = "";
-//                        try {
-//                            message = (String) response.get("message");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        DisplayMessage(message);
-//                        if (message.equals("Login successful!") ) {
-//                            LoginSuccessful();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                NetworkResponse response = error.networkResponse;
-//                if(response != null && response.data != null){
-//                    String message = new String(response.data);
-//                    String errorMessage;
+//        Thread checker = new Thread() {
+//            public void run () {
+//                boolean running = true;
+//                while (running == true) {
+//                    // do stuff in a separate thread
 //                    try {
-//                        JSONObject jsObj = new JSONObject(message);
-//                        errorMessage = jsObj.getString("message");
-//                    } catch(JSONException e) {
+//                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+//                            // DisplayMessage("Login successfully!");
+//                            LoginSuccessful();
+//                            running = false;
+//                        }
+//                        Thread.sleep(10000);
+//                        Log.d(FacadeModule.TAG, "awake");
+//                    } catch (InterruptedException e) {
 //                        e.printStackTrace();
-//                        return;
+//                        running = false;
+//                        Thread.currentThread().interrupt();
 //                    }
-//                    DisplayMessage(errorMessage);
 //                }
 //            }
-//        });
-//        // Add the request to the RequestQueue.
-//        queue.add(jsObjRequest);
+//        };
+//        checker.start();
     }
 
     public void DisplayMessage(String message) {
@@ -309,7 +272,6 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void LoginSuccessful() {
-        DisplayMessage("Login Successfully!");
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }
