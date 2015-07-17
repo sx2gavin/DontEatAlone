@@ -104,7 +104,7 @@ public class MatchListFragment extends Fragment {
 
     public void updateData(){
         ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
-        this.listAdapter.setMatches(matchList);
+        this.listAdapter.setUserList(matchList);
     }
 
     // add 2 test users
@@ -143,35 +143,35 @@ public class MatchListFragment extends Fragment {
         user2.setLikes(12);
         user2.setDislikes(234);
 
-        this.listAdapter.addMatches(user1);
-        this.listAdapter.addMatches(user2);
+        this.listAdapter.addUser(user1);
+        this.listAdapter.addUser(user2);
     }
 
     public void updateData(JSONObject response){
         // TODO: Parse the data and add that to the list adapter
-
-        final String MATCHES = "matches";
-        final String ID = "id";
-
-        // remove this after testing
-        try {
-            listAdapter.clearMatches(); // clear things in adapter TODO: remove and add element as necessary
-
-            // Getting all the matches
-            JSONArray matches = response.getJSONArray(MATCHES);
-
-            // Add the IDs to the adapter
-            for(int i=0; i<matches.length(); i++){
-                JSONObject match = matches.getJSONObject(i);
-
-                // TODO: Remove this after testing
-                listAdapter.addMatches("id: " + match.getString(ID));
-                Log.d(TAG, "id: " + match.getString(ID));
-            }
-            Log.d(TAG, "no matches?") ;
-        } catch (Exception e){
-            Log.d(TAG, e.toString());
-        }
+//
+//        final String MATCHES = "matches";
+//        final String ID = "id";
+//
+//        // remove this after testing
+//        try {
+//            listAdapter.clearMatches(); // clear things in adapter TODO: remove and add element as necessary
+//
+//            // Getting all the matches
+//            JSONArray matches = response.getJSONArray(MATCHES);
+//
+//            // Add the IDs to the adapter
+//            for(int i=0; i<matches.length(); i++){
+//                JSONObject match = matches.getJSONObject(i);
+//
+//                // TODO: Remove this after testing
+//                listAdapter.addMatches("id: " + match.getString(ID));
+//                Log.d(TAG, "id: " + match.getString(ID));
+//            }
+//            Log.d(TAG, "no matches?") ;
+//        } catch (Exception e){
+//            Log.d(TAG, e.toString());
+//        }
     }
 
     public MatchListAdapter getListAdapter(){
@@ -204,85 +204,21 @@ public class MatchListFragment extends Fragment {
     /**
      * The list adapter for expandable list
      */
-    public class MatchListAdapter extends BaseExpandableListAdapter {
-        private ArrayList<User> userList;
+    public class MatchListAdapter extends UserListAdapter {
 
         public MatchListAdapter(){
             super();
-            this.userList = new ArrayList<User>();
-        }
-
-        public void addUser(User user){
-            this.userList.add(user);
-        }
-
-        public void addMatches(String s){
-
-        }
-
-        public void addMatches(User user){
-            this.userList.add(user);
-        }
-
-        public void setMatches(ArrayList<User> matchList){
-            this.userList = matchList;
-        }
-
-        public void clearMatches(){
-            // clear the user list
-            this.userList = new ArrayList<User>();
-        }
-
-        @Override
-        public int getGroupCount() {
-            return this.userList.size();
-        }
-
-        @Override
-        public int getChildrenCount(int index){
-            if(index >=0 && index < this.userList.size()){
-                return 1;
-            }
-            return 0;
-        }
-
-        @Override
-        public Object getGroup(int i){
-            return this.userList.get(i);
-        }
-
-        @Override
-        public Object getChild(int i, int j){
-            return this.userList.get(i);
-        }
-
-        @Override
-        public long getGroupId(int i){
-            return i;
-        }
-
-        @Override
-        public long getChildId(int i, int j){
-             return j;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
         }
 
         @Override
         public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-//            TextView textView = new TextView(MatchListFragment.this.getActivity());
-//            textView.setText(getGroup(i).toString());
-//            textView.setText("test string");
             if(view == null){
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.matchesgrouprow, null);
             }
 
             // get the user object
-            User user = this.userList.get(i);
+            User user = this.getGroup(i);
 
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
@@ -324,7 +260,7 @@ public class MatchListFragment extends Fragment {
             }
 
             // get the user object
-            User user = this.userList.get(i);
+            User user = this.getGroup(i);
 
             TextView distView = (TextView) view.findViewById(R.id.matches_distance);
             TextView timeView = (TextView) view.findViewById(R.id.matches_time);

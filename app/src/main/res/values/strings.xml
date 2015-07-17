@@ -69,6 +69,7 @@
     <string name="matches_price">Price: %1$f to %2$f</string>
     <string name="matches_comment">Comment: %1$s</string>
     <string name="matches_invite">Invite</string>
+    <string name="request_accept">Accept</string>
 
     <!-- Profile activity string -->
     <string name="profile_name">Name: </string>
