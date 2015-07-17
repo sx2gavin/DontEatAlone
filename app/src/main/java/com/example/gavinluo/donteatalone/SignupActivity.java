@@ -1,5 +1,6 @@
 package com.example.gavinluo.donteatalone;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import org.json.JSONObject;
 public class SignupActivity extends ActionBarActivity {
 
     private final String TAG = "TAG";
+	private final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,16 +97,19 @@ public class SignupActivity extends ActionBarActivity {
 			Toast.makeText(this, "Password and confirmation need to match.", Toast.LENGTH_LONG).show();
 			return;
 		}	
-			
+
+
+        FacadeModule.getFacadeModule(this).SendRequestSignUp(email_text, password_text, password_confirm_text, first_name_text, age_text);
+
 
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://donteatalone.paigelim.com/api/v1/users?" +
-                "email=" + email_text +
-                "&password=" + password_text +
-                "&password_confirmation=" + password_confirm_text +
-                "&name=" + first_name_text +
-                "&age=" + age_text;
+        //RequestQueue queue = Volley.newRequestQueue(this);
+        //String url ="http://donteatalone.paigelim.com/api/v1/users?" +
+                //"email=" + email_text +
+                //"&password=" + password_text +
+                //"&password_confirmation=" + password_confirm_text +
+                //"&name=" + first_name_text +
+                //"&age=" + age_text;
 
 
         DisplayMessage("Waiting for response...");
@@ -111,62 +117,37 @@ public class SignupActivity extends ActionBarActivity {
 
         String message = "";
 
-//        try {
-            // FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.POST);
-            // message = (String) response.get("message");
-            Log.d(TAG, response.toString());
-            DisplayMessage(response.toString());
-            LoginSuccessful();
-//        } catch (JSONException e) {
-//            Log.d(TAG, "There is an JSON exception.");
-//            e.printStackTrace();
-//        }
+		Thread checker = new Thread() {
+			public void run () {
+				boolean running = true;
+                while(running) {
+                    try {
+                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                        if (response == "User successfully created.") {
+                            running = false;
+                            DisplayMessage("User successfully created.");
+                            LoginSuccessful();
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+			}
+		};
+        checker.start();
 
-
-        // final SignupActivity signup = this;
-
-// Request a JsonObject response from the provided URL.
-//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, null,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        String message = "";
-//                        try {
-//                            Log.d(TAG, "Getting the message.");
-//                            message = (String) response.get("message");
-//                        } catch (JSONException e) {
-//                            Log.d(TAG, "There is an JSON exception.");
-//                            e.printStackTrace();
-//                        }
-//                        Log.d(TAG, message);
-//                        DisplayMessage(message);
-//                        LoginSuccessful();
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                NetworkResponse response = error.networkResponse;
-//                if(response != null && response.data != null){
-//                    String message = new String(response.data);
-//                    String errorMessage;
-//                    try {
-//                        JSONObject jsObj = new JSONObject(message);
-//                        errorMessage = jsObj.getString("message");
-//                    } catch(JSONException e) {
-//                        e.printStackTrace();
-//                        return;
-//                    }
-//                    DisplayMessage(errorMessage);
-//                    Log.d(TAG, message);
-//                }
-//            }
-//        });
-// Add the request to the RequestQueue.
-// queue.add(jsObjRequest);
     }
 
-    public void DisplayMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    public void DisplayMessage(final String message) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void LoginSuccessful() {
