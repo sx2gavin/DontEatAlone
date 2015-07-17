@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -278,10 +279,43 @@ public class MatchListFragment extends Fragment {
 
         @Override
         public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-            TextView textView = new TextView(MatchListFragment.this.getActivity());
+//            TextView textView = new TextView(MatchListFragment.this.getActivity());
 //            textView.setText(getGroup(i).toString());
-            textView.setText("test string");
-            return textView;
+//            textView.setText("test string");
+            if(view == null){
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.matchesgrouprow, null);
+            }
+
+            // get the user object
+            User user = this.userList.get(i);
+
+            TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
+            Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
+
+            // format the strings
+            Resources res = context.getResources();
+            String basicInfoText = String.format(res.getString(R.string.matches_user_basic_info),
+                    user.getName(), 32);
+            // TODO: change the age or remove it
+
+            // set the text
+            basicInfoView.setText(basicInfoText);
+
+            // add event listener to the invite button
+            inviteButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.matches_group_invite:
+                            Log.d(TAG, "invite button event fired");
+                            break;
+                    }
+                }
+            });
+
+            return view;
         }
 
         @Override
