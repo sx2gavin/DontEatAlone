@@ -36,6 +36,7 @@ public class FacadeModule {
 	private enum RequestMode {
 		LOGIN, LOGOUT, SIGNUP, UPDATE_PROFILE, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
 	}
+
     private static FacadeModule mInstance;
     private MySingleton mMySingleton;
     // private FacadeModule mContext;
