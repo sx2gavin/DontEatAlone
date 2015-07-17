@@ -13,10 +13,10 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/group_profile_image_size"
+            android:layout_height="@dimen/group_profile_image_size"
             android:src="@drawable/default_profile_picture"
-            android:id="@+id/imageView"
+            android:id="@+id/group_profile_image"
             android:layout_centerHorizontal="true" />
 
     </LinearLayout>

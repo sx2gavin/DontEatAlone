@@ -38,7 +38,7 @@ import java.util.HashMap;
  * create an instance of this fragment.
  */
 public class RequestListFragment extends Fragment {
-    private final String TAG = "MatchListFragment";
+    private final String TAG = "RequestListFragment";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -216,6 +216,9 @@ public class RequestListFragment extends Fragment {
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.matches_group_invite:
+                            // go to the messenger
+                            Intent intent = new Intent (context, MessengerActivity.class);
+                            startActivity(intent);
                             Log.d(TAG, "invite button event fired");
                             break;
                     }

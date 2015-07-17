@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +16,16 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -184,6 +191,7 @@ public class MatchListFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -231,10 +239,12 @@ public class MatchListFragment extends Fragment {
                     user.getName());
             // TODO: change the age or remove it
 
+            final View wholeView = view;
+
             // set the text
             basicInfoView.setText(basicInfoText);
-            thumbsUpView.setText(user.getLikes()+"");
-            thumbsDownView.setText(user.getDislikes()+"");
+            thumbsUpView.setText(user.getLikes() + "");
+            thumbsDownView.setText(user.getDislikes() + "");
 
             // add event listener to the invite button
             inviteButton.setOnClickListener(new View.OnClickListener() {
@@ -243,6 +253,10 @@ public class MatchListFragment extends Fragment {
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.matches_group_invite:
+                            ImageView image = (ImageView) wholeView.findViewById(R.id.group_profile_image);
+//                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
+                            String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
+                            new DownloadImageTask((ImageView)image).execute(url);
                             Log.d(TAG, "invite button event fired");
                             break;
                     }

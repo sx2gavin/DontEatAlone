@@ -10,6 +10,7 @@
     <dimen name="thumb_image_size">20dp</dimen>
     <dimen name="group_matches_font_size">18dp</dimen>
     <dimen name="group_matches_button_font_size">12dp</dimen>
+    <dimen name="group_profile_image_size">64dp</dimen>
     <dimen name="child_matches_layout_margin">10dp</dimen>
     <dimen name="child_matches_layout_padding">3dp</dimen>
 
