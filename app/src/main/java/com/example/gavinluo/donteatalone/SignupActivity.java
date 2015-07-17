@@ -99,23 +99,9 @@ public class SignupActivity extends ActionBarActivity {
 		}	
 
 
-        FacadeModule.getFacadeModule(this).SendRequestSignUp(email_text, password_text, password_confirm_text, first_name_text, age_text);
-
-
-        // Instantiate the RequestQueue.
-        //RequestQueue queue = Volley.newRequestQueue(this);
-        //String url ="http://donteatalone.paigelim.com/api/v1/users?" +
-                //"email=" + email_text +
-                //"&password=" + password_text +
-                //"&password_confirmation=" + password_confirm_text +
-                //"&name=" + first_name_text +
-                //"&age=" + age_text;
-
+        FacadeModule.getFacadeModule(this).SendRequestSignUp(email_text, password_text, password_confirm_text, first_name_text + last_name_text, age_text);
 
         DisplayMessage("Waiting for response...");
-        JSONObject response = null;
-
-        String message = "";
 
 		Thread checker = new Thread() {
 			public void run () {
@@ -123,10 +109,14 @@ public class SignupActivity extends ActionBarActivity {
                 while(running) {
                     try {
                         String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
-                        if (response == "User successfully created.") {
-                            running = false;
+                        Log.d(FacadeModule.TAG, response);
+                        if (response.equals("User successfully created.")) {
                             DisplayMessage("User successfully created.");
                             LoginSuccessful();
+                            running = false;
+                        } else if (!response.equals("")) {
+							DisplayMessage(response); 
+							running = false;
                         }
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -151,7 +141,7 @@ public class SignupActivity extends ActionBarActivity {
     }
 
     public void LoginSuccessful() {
-        Intent intent = new Intent (this, StartMatchingActivity.class);
+        Intent intent = new Intent (context, StartMatchingActivity.class);
         startActivity(intent);
     }
 }
