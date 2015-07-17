@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <!-- Layout that contians the profile picture -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="22"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -24,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="53"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
         <!-- Layout that contains user name, age, gender -->
@@ -34,8 +37,8 @@
             <TextView
                 android:id="@+id/matches_group_basic_info"
                 android:layout_width="wrap_content"
-                android:layout_weight="0.7"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/group_matches_font_size"/>
 
 
         </LinearLayout>
@@ -43,7 +46,31 @@
         <!-- Layout that contains the like and dislikes -->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/thumb_image_size"
+                android:layout_height="@dimen/thumb_image_size"
+                android:src="@drawable/thumb_up" />
+
+            <TextView
+                android:id="@+id/matches_group_thumb_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/group_matches_font_size"/>
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="@dimen/thumb_image_size"
+                android:layout_height="@dimen/thumb_image_size"
+                android:src="@drawable/thumb_down" />
+
+            <TextView
+                android:id="@+id/matches_group_thumb_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/group_matches_font_size"/>
 
         </LinearLayout>
 
@@ -53,14 +80,16 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="25"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/matches_group_invite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="@string/matches_invite"/>
+            android:text="@string/matches_invite"
+            android:textSize="@dimen/group_matches_button_font_size"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 

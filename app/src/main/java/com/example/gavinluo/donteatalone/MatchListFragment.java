@@ -96,12 +96,6 @@ public class MatchListFragment extends Fragment {
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
 
-        // add a test match
-//        listAdapter.addMatches("id: test match 1" );
-//        listAdapter.addMatches("id: test match 2" );
-
-
-
 //        updateData();
         addTestData();
 
@@ -291,6 +285,8 @@ public class MatchListFragment extends Fragment {
             User user = this.userList.get(i);
 
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
+            TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
+            TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
             Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
@@ -301,6 +297,8 @@ public class MatchListFragment extends Fragment {
 
             // set the text
             basicInfoView.setText(basicInfoText);
+            thumbsUpView.setText(user.getLikes()+"");
+            thumbsDownView.setText(user.getDislikes()+"");
 
             // add event listener to the invite button
             inviteButton.setOnClickListener(new View.OnClickListener() {
