@@ -128,6 +128,7 @@ public class FacadeModule {
             //e.printStackTrace();
             //return;
         //}
+		mSavedJSON = null;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
 					@Override
@@ -237,6 +238,7 @@ public class FacadeModule {
 
     public Profile GetUserProfile()
     {
+		// TODO
         return mUserProfile;
     }
 
@@ -334,6 +336,7 @@ public class FacadeModule {
 					mUserProfile.SetDescription(userProfile.getString("description"));
 					mUserProfile.LogProfile();
 				} else if (request == RequestMode.LOGIN) {
+					mUserId = mSavedJSON.getJSONObject("data").getJSONObject("user").getInt("id");
 					mGCMToken = mSavedJSON.getJSONObject("data").getJSONObject("user").getString("gcm_token");
 					Log.d(FacadeModule.TAG, mGCMToken);
 				}
@@ -387,4 +390,16 @@ public class FacadeModule {
         }
         return mInstance;
     }
+
+	public void UpdateGCMToken(String token)
+	{
+		Log.d(FacadeModule.TAG, "UpdateGCMToken called.");
+		Log.d(FacadeModule.TAG, Integer.toString(mUserId));
+
+		mGCMToken = token;
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserId) +
+				"?gcm_token=" + token;
+
+		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
+	}
 }

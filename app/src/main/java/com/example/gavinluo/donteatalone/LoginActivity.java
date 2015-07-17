@@ -246,15 +246,17 @@ public class LoginActivity extends ActionBarActivity {
             public void run () {
                 boolean running = true;
                 while (running == true) {
-                    // do stuff in a separate thread
+                    String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                     try {
                         if (FacadeModule.getFacadeModule(context).LoggedIn()) {
                             DisplayMessage("Login successfully!");
                             LoginSuccessful();
                             running = false;
+                        } else if (response != "") {
+                            DisplayMessage(response);
+                            running = false;
                         }
                         Thread.sleep(1000);
-                        Log.d(FacadeModule.TAG, "awake");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         running = false;
