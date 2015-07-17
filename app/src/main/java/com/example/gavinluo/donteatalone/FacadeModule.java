@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
+		LOGIN, LOGOUT, SIGNUP, UPDATE_PROFILE, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
 	}
     private static FacadeModule mInstance;
     private MySingleton mMySingleton;
@@ -42,8 +42,9 @@ public class FacadeModule {
     private Context mContext;
     private int mUserId;
 	private int mMatchId;
+	private int mFacebookToken;
     private JSONObject mSavedJSON;
-    private User mUserProfile;
+    private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
 
     // constructor
@@ -53,6 +54,7 @@ public class FacadeModule {
         mSavedJSON = null;
         mMySingleton = MySingleton.getMySingleton(context);
         mMatchList = new ArrayList<User> ();
+		mUserProfile = new Profile();
 		mMatchId = -1;
 		mUserId = -1;
     }
@@ -137,7 +139,6 @@ public class FacadeModule {
 								Log.d(TAG, "mSavedJSON is null");
 							} else {
 								Log.d(TAG, response.toString());
-								Log.d(TAG, message);
 								ParseResponse(request);
 							}
 						} catch (JSONException e) {
@@ -206,6 +207,25 @@ public class FacadeModule {
 		}
 	}
 
+	public void SendRequestLogIn(String email, String password)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/login?" +
+			"email=" + email +
+			"&password=" + password;
+		SendRequest(url, Request.Method.GET, RequestMode.LOGIN);
+	}
+	
+	public void SendRequestSignUp(String email, String password, String password_confirm, String name, String age)
+	{
+        String url ="http://donteatalone.paigelim.com/api/v1/users?" +
+                "email=" + email +
+                "&password=" + password +
+                "&password_confirmation=" + password_confirm +
+                "&name=" + name +
+                "&age=" + age;
+		SendRequest(url, Request.Method.POST, RequestMode.SIGNUP);
+	}	
+
     public void SendRequestLogOut()
     {
         
@@ -213,19 +233,29 @@ public class FacadeModule {
 		SendRequest(url, Request.Method.GET, RequestMode.LOGOUT);
     }
 
-    public User GetUserProfile()
+    public Profile GetUserProfile()
     {
         return mUserProfile;
     }
 
-    public void UpdateUserProfile(User user)
+    public void UpdateUserProfile(Profile newProfile)
     {
-        mUserProfile = user;
+        mUserProfile = newProfile;
+
+		String url = "http://donteatalone.paigelim.com/api/v1/profiles/" + Integer.toString(mUserId) +
+			"?name=" + mUserProfile.GetName() +
+			"&image_url=" + mUserProfile.GetImageUrl() +
+			"&gender=" + mUserProfile.GetGender() +
+			"&age=" + Integer.toString(mUserProfile.GetAge()) +
+			"&description=" + mUserProfile.GetDescription();
+		
+		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
-    public void LinkToFacebook()
+    public void LinkToFacebook(int facebookToken)
     {
         // TODO: LINK TO FACEBOOK
+		mFacebookToken = facebookToken;
     }
 
     public int GetUserId()
@@ -241,6 +271,24 @@ public class FacadeModule {
             return mSavedJSON.toString();
         }
     }
+
+	public String GetResponseMessage()
+	{
+		if (mSavedJSON == null) {
+			return "";
+		} else if (mSavedJSON.has("message")) {
+
+			try {
+				String message = mSavedJSON.getString("message");
+				return message;
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return "";
+			}
+		} else {
+			return "";
+		}
+	}
 
 	public int ParseResponse(RequestMode request)
 	{
@@ -272,6 +320,17 @@ public class FacadeModule {
 					}
 				} else if (request == RequestMode.CREATE_PREFERENCE) {
 					mMatchId = mSavedJSON.getJSONObject("match").getInt("id");
+				} else if (request == RequestMode.LOGIN) {
+					Log.d(TAG, "LOGIN parsing");
+					JSONObject userProfile = mSavedJSON.getJSONObject("data").getJSONObject("user");
+					mUserProfile.SetId(userProfile.getInt("id"));
+					mUserProfile.SetName(userProfile.getString("name"));
+					mUserProfile.SetEmail(userProfile.getString("email"));
+					mUserProfile.SetImageUrl(userProfile.getString("image_url"));
+					mUserProfile.SetGender(userProfile.getString("gender"));
+					mUserProfile.SetAge(userProfile.getInt("age"));
+					mUserProfile.SetDescription(userProfile.getString("description"));
+					mUserProfile.LogProfile();
 				}
             } catch (JSONException e) {
                 e.printStackTrace();

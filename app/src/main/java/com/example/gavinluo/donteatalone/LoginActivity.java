@@ -226,49 +226,53 @@ public class LoginActivity extends ActionBarActivity {
             return;
         }
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://donteatalone.paigelim.com/api/v1/login?" +
-                "email=" + email_text +
-                "&password=" + password_text;
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        String url ="http://donteatalone.paigelim.com/api/v1/login?" +
+//                "email=" + email_text +
+//                "&password=" + password_text;
 
         DisplayMessage("Waiting for the server to respond...");
         JSONObject response = null;
         String responseString;
 
-        // try {
+
         // FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
 
-        ArrayList<User> matchList = FacadeModule.getFacadeModule(this).GetMatchList();
+        FacadeModule.getFacadeModule(this).SendRequestLogIn(email_text, password_text);
 
-        matchList.get(0).LogUserInfo();
+        // ArrayList<User> matchList = FacadeModule.getFacadeModule(this).GetMatchList();
 
-
-//        Thread checker = new Thread() {
-//            public void run () {
-//                boolean running = true;
-//                while (running == true) {
-//                    // do stuff in a separate thread
-//                    try {
-//                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
-//                            // DisplayMessage("Login successfully!");
-//                            LoginSuccessful();
-//                            running = false;
-//                        }
-//                        Thread.sleep(10000);
-//                        Log.d(FacadeModule.TAG, "awake");
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                        running = false;
-//                        Thread.currentThread().interrupt();
-//                    }
-//                }
-//            }
-//        };
-//        checker.start();
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    // do stuff in a separate thread
+                    try {
+                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+                            DisplayMessage("Login successfully!");
+                            LoginSuccessful();
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                        Log.d(FacadeModule.TAG, "awake");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
     }
 
-    public void DisplayMessage(String message) {
-        //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    public void DisplayMessage(final String message) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void LoginSuccessful() {
