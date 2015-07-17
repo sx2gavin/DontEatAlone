@@ -29,7 +29,10 @@ import com.google.android.gms.location.LocationServices;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +56,11 @@ public class PreferenceFragment extends Fragment {
 
     private static final String TAG = "PreferenceFragment";
 
+    // keep track of the state of the preference page
+    private static final int READ_MODE= 1;      // A preference already exists for the user
+    private static final int EDIT_MODE = 2;     // No preference exists, the user is creating one
+    private int state;
+
     // UI Components
     EditText _distanceEdit;
     EditText _minAgeEdit;
@@ -68,10 +76,8 @@ public class PreferenceFragment extends Fragment {
     Context _context;
 
     // Time components
-    private int _startHour = -1;
-    private int _startMin = -1;
-    private int _endHour = -1;
-    private int _endMin = -1;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     /**
      * Use this factory method to create a new instance of
@@ -104,9 +110,6 @@ public class PreferenceFragment extends Fragment {
         }
 
         _context = this.getActivity();
-
-
-
     }
 
     @Override
@@ -127,6 +130,8 @@ public class PreferenceFragment extends Fragment {
         _maxPriceEdit = (EditText)view.findViewById(R.id.pref_max_price);
         _prefButton = (Button)view.findViewById(R.id.pref_search_button);
 
+        startTime = null;
+        endTime = null;
 
         // attach the button click listeners
         _startTimeEdit.setOnClickListener(new View.OnClickListener(){
@@ -134,7 +139,7 @@ public class PreferenceFragment extends Fragment {
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.pref_start_time:
-                        Log.d(TAG, "strt time button fired");
+                        Log.d(TAG, "start time button fired");
                         getStartTime(_startTimeEdit);
                         break;
                 }
@@ -177,6 +182,21 @@ public class PreferenceFragment extends Fragment {
         }
     }
 
+    // Convert today's date with the input hour and minute to long
+    public long toMilliSecond(int hour, int min){
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date d1 = c.getTime(); //the midnight, that's the first second of the day.
+
+        long milliSec = d1.getTime();
+        milliSec += hour * 3600000;
+        milliSec += min * 60000;
+
+        return milliSec;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -205,9 +225,10 @@ public class PreferenceFragment extends Fragment {
         mTimePicker = new TimePickerDialog(_context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                _startHour = selectedHour;
-                _startMin = selectedMinute;
-                _startTimeEdit.setText(to12HourTime(selectedHour, selectedMinute));
+                long milliSec = toMilliSecond(selectedHour, selectedMinute);
+                startTime = new Timestamp(milliSec);
+                String startTimeString = new SimpleDateFormat("hh:mm aa").format(startTime);
+                _startTimeEdit.setText(startTimeString);
             }
         }, hour, minute, false ); // do not use the 24 hour clock
         mTimePicker.setTitle("Select Time");
@@ -222,31 +243,14 @@ public class PreferenceFragment extends Fragment {
         mTimePicker = new TimePickerDialog(_context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute){
-                _endHour = selectedHour;
-                _endMin = selectedMinute;
-                _endTimeEdit.setText(to12HourTime(selectedHour, selectedMinute));
+                long milliSec = toMilliSecond(selectedHour, selectedMinute);
+                endTime = new Timestamp(milliSec);
+                String startTimeString = new SimpleDateFormat("hh:mm aa").format(endTime);
+                _endTimeEdit.setText(startTimeString);
             }
         }, hour, minute, false); // use the 12 hour clock
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
-    }
-
-    public String to12HourTime(int hour, int min){
-        String ending = " am";
-        if(hour / 12 > 0){
-            ending = " pm";
-        }
-
-        hour = hour % 12 ;
-        if(hour == 0){
-            hour = 12;
-        }
-
-        if(min/10 == 0){
-            return hour + ":0" + min + ending;
-        }
-
-        return hour + ":" + min + ending;
     }
 
     public boolean checkInput(){
@@ -268,18 +272,18 @@ public class PreferenceFragment extends Fragment {
             return false;
         }
 
-        if(_startHour == -1 ){
+        if(startTime == null){
             Toast.makeText(_context, "Please choose the start time.", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        if(_endHour == -1 ){
+        if(endTime == null){
             Toast.makeText(_context, "Please choose the end time.", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        if(_startHour>_endHour || (_startHour==_endHour&&_startMin>=_endHour)) {
-            Toast.makeText(_context, "Your start time is later than your end time.", Toast.LENGTH_LONG).show();
+        if(startTime.compareTo(endTime) >= 0){
+            Toast.makeText(_context, "The start time is later or equal to the end time.", Toast.LENGTH_LONG).show();
             return false;
         }
 
