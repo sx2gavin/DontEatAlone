@@ -228,7 +228,7 @@ public class MatchListFragment extends Fragment {
             // format the strings
             Resources res = context.getResources();
             String basicInfoText = String.format(res.getString(R.string.matches_user_basic_info),
-                    user.getName(), 32);
+                    user.getName());
             // TODO: change the age or remove it
 
             // set the text

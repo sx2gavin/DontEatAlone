@@ -200,14 +200,14 @@ public class RequestListFragment extends Fragment {
             // format the strings
             Resources res = context.getResources();
             String basicInfoText = String.format(res.getString(R.string.matches_user_basic_info),
-                    user.getName(), 32);
+                    user.getName());
             // TODO: change the age or remove it
 
             // set the text
             basicInfoView.setText(basicInfoText);
             thumbsUpView.setText(user.getLikes()+"");
             thumbsDownView.setText(user.getDislikes()+"");
-            acceptButton.setText(res.getString(R.string.request_accept)); 
+            acceptButton.setText(res.getString(R.string.request_accept));
 
             // add event listener to the invite button
             acceptButton.setOnClickListener(new View.OnClickListener() {

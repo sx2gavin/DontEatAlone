@@ -63,7 +63,7 @@
     <!-- Matches expandable list -->
 
     <!-- The first param is the display name, the second param is the age -->
-    <string name="matches_user_basic_info">%1$s (%2$d) </string>
+    <string name="matches_user_basic_info">%1$s</string>
     <string name="matches_distance">Distance: %1$f</string>
     <string name="matches_time">Time: %1$s to %2$s</string>
     <string name="matches_price">Price: %1$f to %2$f</string>
