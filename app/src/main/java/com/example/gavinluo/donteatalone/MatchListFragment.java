@@ -52,6 +52,8 @@ public class MatchListFragment extends Fragment {
     private MatchListAdapter listAdapter;
     private Context context;
 
+    private FacadeModule facade;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -94,9 +96,60 @@ public class MatchListFragment extends Fragment {
         matchListExpand.setAdapter(listAdapter);
 
         // add a test match
-        listAdapter.addMatches("id: test match 1" );
-        listAdapter.addMatches("id: test match 2" );
+//        listAdapter.addMatches("id: test match 1" );
+//        listAdapter.addMatches("id: test match 2" );
+
+
+
+//        updateData();
+        addTestData();
+
         return view;
+    }
+
+    public void updateData(){
+        ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
+        this.listAdapter.setMatches(matchList);
+    }
+
+    // add 2 test users
+    public void addTestData(){
+        User user1 = new User();
+        user1.setId(1);
+        user1.setName("test user 1");
+        user1.setGender("male");
+        user1.setMaxDistance(3);
+        user1.setLatitude(23);
+        user1.setLongitude(32);
+        user1.setDistance(3);
+        user1.setMinAge(10);
+        user1.setMaxAge(100);
+        user1.setMinPrice(1);
+        user1.setMaxPrice(1000);
+        user1.setStartTime("10:30am");
+        user1.setEndTime("11:59pm");
+        user1.setLikes(110);
+        user1.setDislikes(2);
+
+        User user2 = new User();
+        user2.setId(2);
+        user2.setName("test user 2");
+        user2.setGender("male");
+        user2.setMaxDistance(5);
+        user2.setLatitude(54);
+        user2.setLongitude(32);
+        user2.setDistance(4);
+        user2.setMinAge(20);
+        user2.setMaxAge(200);
+        user2.setMinPrice(2);
+        user2.setMaxPrice(2000);
+        user2.setStartTime("12:30am");
+        user2.setEndTime("10:59pm");
+        user2.setLikes(12);
+        user2.setDislikes(234);
+
+        this.listAdapter.addMatches(user1);
+        this.listAdapter.addMatches(user2);
     }
 
     public void updateData(JSONObject response){
@@ -157,60 +210,55 @@ public class MatchListFragment extends Fragment {
      * The list adapter for expandable list
      */
     public class MatchListAdapter extends BaseExpandableListAdapter {
-        private int INDEX_REQUESTS ;
-        private int INDEX_MATCHES ;
-
-        private static final String GROUP_REQUESTS = "Requests from";
-        private static final String GROUP_MATCHES = "Matches";
-
-        private ArrayList<String> groups;
-        private ArrayList<ArrayList<String>> children;
-
-        private HashMap<Integer, String> matchesMap;
-
+        private ArrayList<User> userList;
 
         public MatchListAdapter(){
             super();
-            groups = new ArrayList<String>(Arrays.asList(GROUP_REQUESTS, GROUP_MATCHES));
-            children = new ArrayList<ArrayList<String>>();
-
-            children.add(new ArrayList<String>());
-            children.add(new ArrayList<String>());
-
-            INDEX_REQUESTS = groups.indexOf(GROUP_REQUESTS);
-            INDEX_MATCHES = groups.indexOf(GROUP_MATCHES);
+            this.userList = new ArrayList<User>();
         }
 
-        public void addUser(String s){
-
+        public void addUser(User user){
+            this.userList.add(user);
         }
 
         public void addMatches(String s){
-            children.get(INDEX_MATCHES).add(s);
+
+        }
+
+        public void addMatches(User user){
+            this.userList.add(user);
+        }
+
+        public void setMatches(ArrayList<User> matchList){
+            this.userList = matchList;
         }
 
         public void clearMatches(){
-            children.set(INDEX_MATCHES, new ArrayList<String>());
+            // clear the user list
+            this.userList = new ArrayList<User>();
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return this.userList.size();
         }
 
         @Override
-        public int getChildrenCount(int i){
-            return children.get(i).size();
+        public int getChildrenCount(int index){
+            if(index >=0 && index < this.userList.size()){
+                return 1;
+            }
+            return 0;
         }
 
         @Override
         public Object getGroup(int i){
-            return groups.get(i);
+            return this.userList.get(i);
         }
 
         @Override
         public Object getChild(int i, int j){
-            return children.get(i).get(j);
+            return this.userList.get(i);
         }
 
         @Override
@@ -231,18 +279,20 @@ public class MatchListFragment extends Fragment {
         @Override
         public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
             TextView textView = new TextView(MatchListFragment.this.getActivity());
-            textView.setText(getGroup(i).toString());
+//            textView.setText(getGroup(i).toString());
+            textView.setText("test string");
             return textView;
         }
 
         @Override
         public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-//            TextView textView = new TextView(MatchListFragment.this.getActivity());
-//            textView.setText(getChild(i, i1).toString());
             if(view == null){
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.matcheschildrow, null);
             }
+
+            // get the user object
+            User user = this.userList.get(i);
 
             TextView distView = (TextView) view.findViewById(R.id.matches_distance);
             TextView timeView = (TextView) view.findViewById(R.id.matches_time);
@@ -251,9 +301,9 @@ public class MatchListFragment extends Fragment {
 
             // format the strings
             Resources res = context.getResources();
-            String distText = String.format(res.getString(R.string.matches_distance), 10);
-            String timeText = String.format(res.getString(R.string.matches_time), 10, 20);
-            String priceText = String.format(res.getString(R.string.matches_price), 20, 20);
+            String distText = String.format(res.getString(R.string.matches_distance), user.getDistance());
+            String timeText = String.format(res.getString(R.string.matches_time), user.getStartTime(), user.getEndTime());
+            String priceText = String.format(res.getString(R.string.matches_price), user.getMinPrice(), user.getMaxPrice());
             String commentText = String.format(res.getString(R.string.matches_comment), "testing testing");
 
             // set the text
