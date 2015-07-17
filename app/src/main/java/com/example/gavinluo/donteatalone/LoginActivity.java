@@ -276,6 +276,14 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void LoginSuccessful() {
+        // Start IntentService to register this application with GCM.
+        Intent RegistrationIntent = new Intent(this, RegistrationIntentService.class);
+        startService(RegistrationIntent);
+
+        // Listen for incoming messages
+        Intent GCMListenerIntent = new Intent(this, MyGcmListenerService.class);
+        startService(GCMListenerIntent);
+
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }
