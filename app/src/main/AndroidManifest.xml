@@ -20,7 +20,8 @@
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/dea_launcher"
@@ -31,6 +32,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE" />
+
 
         <activity
             android:name=".MainActivity"
@@ -121,7 +126,24 @@
             android:exported="false">
         </service>
         <!-- End GCM -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".MatchesActivity"
+            android:label="@string/title_activity_matches" >
+        </activity>
+        <activity
+            android:name=".RestaurantListActivity"
+            android:label="@string/title_activity_restaurant_list" >
+        </activity>
     </application>
 
 </manifest>

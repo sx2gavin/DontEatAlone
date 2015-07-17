@@ -37,6 +37,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -62,8 +64,7 @@ public class LoginActivity extends ActionBarActivity {
         context = this;
         super.onCreate(savedInstanceState);
 
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
+
 
         setContentView(R.layout.activity_login);
 
@@ -71,7 +72,7 @@ public class LoginActivity extends ActionBarActivity {
         if(profile != null){
             updateUI();
         }*/
-        LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
+        /*LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -83,7 +84,7 @@ public class LoginActivity extends ActionBarActivity {
 
                 updateUI();*/
 
-                final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                /*final AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken != null) {
                     GraphRequest request = GraphRequest.newMeRequest(
                             accessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -129,14 +130,10 @@ public class LoginActivity extends ActionBarActivity {
             public void onError(FacebookException exception) {
                 DisplayMessage("Login attempt failed" + exception.toString());
             }
-        });
+        });*/
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,6 +160,12 @@ public class LoginActivity extends ActionBarActivity {
             return true;
         } else if (id == R.id.action_matchlist) {
             startActivity(new Intent(this, MatchListActivity.class));
+            return true;
+        } else if (id == R.id.action_messenger) {
+            startActivity(new Intent(this, MessengerActivity.class));
+            return true;
+        } else if (id == R.id.action_matches) {
+            startActivity(new Intent(this, MatchesActivity.class));
             return true;
         }
 
@@ -233,94 +236,42 @@ public class LoginActivity extends ActionBarActivity {
         String responseString;
 
         // try {
-        FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
+        // FacadeModule.getFacadeModule(this).SendRequest(url, Request.Method.GET);
 
-        Thread checker = new Thread() {
-            public void run () {
-                boolean running = true;
-                while (running == true) {
-                    // do stuff in a separate thread
-                    try {
-                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+        ArrayList<User> matchList = FacadeModule.getFacadeModule(this).GetMatchList();
+
+        matchList.get(0).LogUserInfo();
 
 
-                            // DisplayMessage("Login successfully!");
-                            LoginSuccessful();
-                            running = false;
-                        }
-                        Thread.sleep(10000);
-                        Log.d(FacadeModule.TAG, "awake");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        running = false;
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            }
-        };
-        checker.start();
-
-
-        // DisplayMessage(responseString);
-        // Log.d(FacadeModule.TAG, responseString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            return;
-//        }
-
-//        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {String message = "";
-//                        try {
-//                            message = (String) response.get("message");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        DisplayMessage(message);
-//                        if (message.equals("Login successful!") ) {
-//                            LoginSuccessful();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                NetworkResponse response = error.networkResponse;
-//                if(response != null && response.data != null){
-//                    String message = new String(response.data);
-//                    String errorMessage;
+//        Thread checker = new Thread() {
+//            public void run () {
+//                boolean running = true;
+//                while (running == true) {
+//                    // do stuff in a separate thread
 //                    try {
-//                        JSONObject jsObj = new JSONObject(message);
-//                        errorMessage = jsObj.getString("message");
-//                    } catch(JSONException e) {
+//                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+//                            // DisplayMessage("Login successfully!");
+//                            LoginSuccessful();
+//                            running = false;
+//                        }
+//                        Thread.sleep(10000);
+//                        Log.d(FacadeModule.TAG, "awake");
+//                    } catch (InterruptedException e) {
 //                        e.printStackTrace();
-//                        return;
+//                        running = false;
+//                        Thread.currentThread().interrupt();
 //                    }
-//                    DisplayMessage(errorMessage);
 //                }
 //            }
-//        });
-//        // Add the request to the RequestQueue.
-//        queue.add(jsObjRequest);
+//        };
+//        checker.start();
     }
 
     public void DisplayMessage(String message) {
-//        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        Log.d("displayMessage", message);
+        //Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     public void LoginSuccessful() {
-        DisplayMessage("Login Successfully!");
-
-        // Start IntentService to register this application with GCM.
-        Intent RegistrationIntent = new Intent(this, RegistrationIntentService.class);
-        startService(RegistrationIntent);
-
-        // Listen for incoming messages
-        Intent GCMListenerIntent = new Intent(this, MyGcmListenerService.class);
-        startService(GCMListenerIntent);
-
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }

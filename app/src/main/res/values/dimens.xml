@@ -10,5 +10,9 @@
 
     <!-- dimensions used in profile -->
     <dimen name="linear_layout_width">300dp</dimen>
+    <dimen name="label_textview_width">45dp</dimen>
 
+    <dimen name="tab_fragment_height">1000px</dimen>
+    <dimen name="restaurant_list_height">1000px</dimen>
+    <dimen name="restaurant_button_width">300dp</dimen>
 </resources>
