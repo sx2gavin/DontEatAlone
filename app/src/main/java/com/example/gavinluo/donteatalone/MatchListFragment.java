@@ -103,6 +103,7 @@ public class MatchListFragment extends Fragment {
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
         facade = FacadeModule.getFacadeModule(this.context);
+
 //        updateData();
         addTestData();
 
@@ -110,9 +111,44 @@ public class MatchListFragment extends Fragment {
     }
 
     public void updateData(){
-        ArrayList<User> matchList = facade.GetMatchList();
-        this.listAdapter.setUserList(matchList);
-        Log.d("list-size", "matchlist-size: " + matchList.size());
+//        Thread looper = new Thread() {
+//            public void run() {
+//                boolean newRequest = true;
+//
+//                // infinite loop to keep checking for new matches
+//                while(true) {
+//                    if(newRequest){
+//                        facade.SendRequestForMatchList();
+//                        newRequest = false;
+//                    }
+//                    Thread checker = new Thread() {
+//                        public void run() {
+//                            boolean running = true;
+//                            while (running == true) {
+//                                String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+//                                try {
+//                                    // Get the match list
+//                                    if (facade.GetResponse().compareTo("") != 0) {
+//                                        // TODO: check if the request succeeds
+//                                        ArrayList matches = facade.GetMatchList();
+//                                        listAdapter.setUserList(matches);
+//                                        running = false;
+//                                    }
+//
+//                                    Thread.sleep(1000);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                    running = false;
+//                                    Thread.currentThread().interrupt();
+//                                }
+//                            }
+//                        }
+//                    };
+//                    checker.start();
+//                }
+//            }
+//        };
+//        looper.start();
     }
 
     // add 2 test users
