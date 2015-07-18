@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/child_matches_layout_margin">
+
+    <TextView
+        android:id="@+id/restaurant_address"
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/heading_font_size"
+        android:layout_margin="@dimen/child_matches_layout_padding"/>
+
+    <TextView
+        android:id="@+id/restaurant_phone"
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_about_meetup"
+        android:textSize="@dimen/heading_font_size"
+        android:layout_margin="@dimen/child_matches_layout_padding"/>
+
+    <TextView
+        android:id="@+id/restaurant_website"
+        android:layout_width="@dimen/linear_layout_width"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_about_meetup"
+        android:textSize="@dimen/heading_font_size"
+        android:layout_margin="@dimen/child_matches_layout_padding"/>
+
+    <Button
+        android:id="@+id/restaurant_direction_button"
+        android:layout_width="@dimen/restaurant_button_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/rest_get_direction"/>
+
+</LinearLayout>

@@ -14,6 +14,9 @@
     <dimen name="child_matches_layout_margin">10dp</dimen>
     <dimen name="child_matches_layout_padding">3dp</dimen>
 
+    <!-- dimensions used in restaurant -->
+    <dimen name="restaurant_child_button_size">200dp</dimen>
+
     <!-- dimensions used in profile -->
     <dimen name="linear_layout_width">300dp</dimen>
     <dimen name="label_textview_width">45dp</dimen>

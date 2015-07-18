@@ -3,15 +3,23 @@ package com.example.gavinluo.donteatalone;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -22,6 +30,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,12 +42,17 @@ public class RestaurantListActivity extends ActionBarActivity {
     private Button customLocButton;
     private Context context;
 
+    private RestaurantListAdapter listAdapter ;
+
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
      */
     private static final int REQUEST_PLACE_PICKER = 1;
 
     private int PLACE_PICKER_REQUEST;
+
+    private ExpandableListView restaurantListExpand;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +74,20 @@ public class RestaurantListActivity extends ActionBarActivity {
                 }
             }
         });
+
+
+        // Inflate the layout for this fragment
+        restaurantListExpand = (ExpandableListView) findViewById(R.id.match_list_expandable);
+        listAdapter = new RestaurantListAdapter();
+        restaurantListExpand.setAdapter(listAdapter);
+
+        // TODO: remove after testing
+        addTestData();
+    }
+
+    public void addTestData(){
+        listAdapter.addRestaurant("Restaurant 1");
+        listAdapter.addRestaurant("Restaurant 2");
     }
 
     @Override
@@ -185,5 +213,151 @@ public class RestaurantListActivity extends ActionBarActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
         // END_INCLUDE(activity_result)
+    }
+
+    /**
+     * The list adapter for expandable list
+     */
+    public class RestaurantListAdapter extends BaseExpandableListAdapter {
+
+        private ArrayList<String> restaurantList;
+
+        public RestaurantListAdapter(){
+            super();
+            this.restaurantList = new ArrayList<String>();
+        }
+
+        public void addRestaurant(String name){
+            restaurantList.add(name);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return this.restaurantList.size();
+        }
+
+        @Override
+        public int getChildrenCount(int index){
+            if(index >=0 && index < this.restaurantList.size()){
+                return 1;
+            }
+            return 0;
+        }
+
+        @Override
+        public Object getGroup(int i){
+            return this.restaurantList.get(i);
+        }
+
+        @Override
+        public Object getChild(int i, int j){
+            return this.restaurantList.get(i);
+        }
+
+        @Override
+        public long getGroupId(int i){
+            return i;
+        }
+
+        @Override
+        public long getChildId(int i, int j){
+            return j;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public boolean isChildSelectable(int i, int i1) {
+            return true;
+        }
+
+        @Override
+        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+            if(view == null){
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.restaurantgrouprow, null);
+            }
+
+            // TODO: get the restaurant object
+
+            TextView nameView = (TextView) view.findViewById(R.id.restaurant_name);
+            RatingBar ratingView = (RatingBar) view.findViewById(R.id.restaurant_rating);
+
+            nameView.setText("Restaurant name1");
+            ratingView.setRating(3.1f);
+
+            return view;
+        }
+
+        @Override
+        public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
+            if(view == null){
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.restaurantchildrow, null);
+            }
+
+            // TODO: get the restaurant object
+
+            TextView addressView = (TextView) view.findViewById(R.id.restaurant_address);
+            TextView phoneView = (TextView) view.findViewById(R.id.restaurant_phone);
+            TextView webView = (TextView) view.findViewById(R.id.restaurant_website);
+            Button directionBtn = (Button) view.findViewById(R.id.restaurant_direction_button);
+
+            // format the strings
+            Resources res = context.getResources();
+            String addressText = String.format(res.getString(R.string.rest_address), "test avenue");
+            String phoneText = String.format(res.getString(R.string.rest_phone), "(432)-321-3293");
+
+            // set the text
+            addressView.setText(addressText+"test");
+            phoneView.setText(phoneText+"test");
+            final String website = "http://www.google.com.au/";
+            webView.setText(website);
+
+            final View wholeView = view;
+
+            // add event listener to the invite button
+            directionBtn.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.restaurant_direction_button:
+                            // Open google map in internet
+                            String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+
+                            Log.d(TAG, "direction button event fired");
+                            break;
+                    }
+                }
+            });
+
+            // add event listener to the website
+            webView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.restaurant_website:
+                            // Open google map in internet
+//                            String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(website));
+                            startActivity(i);
+
+                            Log.d(TAG, "direction button event fired");
+                            break;
+                    }
+                }
+            });
+
+            return view;
+        }
     }
 }
