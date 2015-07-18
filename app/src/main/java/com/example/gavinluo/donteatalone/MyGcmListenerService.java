@@ -1,5 +1,6 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -73,13 +74,20 @@ public class MyGcmListenerService extends GcmListenerService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        // TODO: Add PendingIntents for Like and Dislike buttons on notification
+        NotificationCompat.Action likeAction = new NotificationCompat.Action(0, "like", null);
+        NotificationCompat.Action dislikeAction = new NotificationCompat.Action(0, "dislike", null);
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.dea_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .addAction(likeAction)
+                .addAction(dislikeAction);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
