@@ -35,12 +35,20 @@ public abstract class UserListAdapter extends BaseExpandableListAdapter {
     }
 
     public void setUserList(ArrayList<User> matchList){
-        this.userList = matchList;
+//        this.userList = matchList;
+//        mList.clear(); mList.addAll(newDataList);
+        this.userList.clear();
+        this.userList.addAll(matchList);
+    }
+
+    public ArrayList<User> getUserList(){
+        return this.userList;
     }
 
     public void clearList(){
         // clear the user list
-        this.userList = new ArrayList<User>();
+//        this.userList = new ArrayList<User>();
+        this.userList.clear();
     }
 
     @Override
