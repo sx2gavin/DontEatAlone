@@ -61,6 +61,7 @@ public class MatchListFragment extends Fragment {
     private Context context;
 
     private FacadeModule facade;
+    private boolean stopFetching = false;
 
     /**
      * Use this factory method to create a new instance of
@@ -116,7 +117,7 @@ public class MatchListFragment extends Fragment {
                 String response = "";
 
                 // infinite loop to keep checking for new matches
-                while(true) {
+                while(!stopFetching) {
                     // create a new thread if the response is empty
                     if(response.compareTo("")==0){
                         try {
@@ -255,6 +256,13 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        stopFetching = true;
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        stopFetching = true;
     }
 
     /**
@@ -285,7 +293,6 @@ public class MatchListFragment extends Fragment {
             Resources res = context.getResources();
             String basicInfoText = String.format(res.getString(R.string.matches_user_basic_info),
                     user.getName());
-            // TODO: change the age or remove it
 
             final View wholeView = view;
 
