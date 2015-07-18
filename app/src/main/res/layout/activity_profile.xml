@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="loading..."
                 android:layout_margin="@dimen/activity_horizontal_margin"
+                android:maxLength="20"
                 android:id="@+id/profile_name"/>
 
         </LinearLayout>
