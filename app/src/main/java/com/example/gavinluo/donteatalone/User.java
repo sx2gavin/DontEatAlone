@@ -7,6 +7,8 @@ import android.util.Log;
  */
 public class User {
     private int m_id;
+	// used only for requests.
+	private int m_request_id;
     private String m_name;
 	private String m_gender;
     private float m_max_distance;
@@ -32,9 +34,15 @@ public class User {
 
     }
 	
+
     public int getId() 
 	{
 		return m_id;		
+	}
+
+	public int getRequestId()
+	{
+		return m_request_id;
 	}
 
     public String getName()
@@ -111,6 +119,11 @@ public class User {
 	public void setId(int id)
 	{
 		m_id = id;
+	}
+
+	public void setRequestId(int request_id)
+	{
+		m_request_id = request_id;
 	}
 
 	public void setName(String name)

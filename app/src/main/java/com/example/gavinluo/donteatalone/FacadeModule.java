@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, OTHER
 	}
 
     private static FacadeModule mInstance;
@@ -42,12 +42,14 @@ public class FacadeModule {
     // private FacadeModule mContext;
     private Context mContext;
 	private int mMatchId;
-	private int mFacebookId;
+	private String mFacebookId;
 	private String mGCMToken;
     private JSONObject mSavedJSON;
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
+	private ArrayList<User> mRequestList;
 	private Preference mPreference;
+	private GPSTracker mGPS;
 
     // constructor
     private FacadeModule(Context context)
@@ -55,78 +57,14 @@ public class FacadeModule {
         mContext = context;
         mSavedJSON = null;
         mMySingleton = MySingleton.getMySingleton(context);
-        mMatchList = new ArrayList<User> ();
 		mUserProfile = new Profile();
 		mMatchId = -1;
+		mGPS = new GPSTracker(context);
     }
 
     public void SendRequest(String url, int method, final RequestMode request)
     {
         Log.d(TAG, "SendRequest called");
-
-        //try {
-            //mSavedJSON = new JSONObject("{" +
-                    //"\"matches\": [" +
-                    //"{\"id\": \"413\"," +
-                    //"	\"user_id\": \"413\"," +
-                    //"	\"max_distance\": \"5153\"," +
-                    //"	\"latitude\": \"-71.794353\"," +
-                    //"	\"longitude\": \"-135.657826\"," +
-                    //"	\"distance\": 2271.6234775433," +
-                    //"	\"min_age\": \"13\"," +
-                    //"	\"max_age\": \"32\"," +
-                    //"	\"min_price\": \"1\"," +
-                    //"	\"max_price\": \"34\"," +
-                    //"	\"comment\": \"Quo voluptate et enim soluta omnis accusantium alias autem cupiditate cupiditate.\"," +
-                    //"	\"gender\": \"M\"," +
-                    //"	\"start_time\": \"2015-06-16 03:56:54\"," +
-                    //"	\"end_time\": \"2015-06-16 05:16:28\"," +
-                    //"	\"profile\": {" +
-                    //"		\"id\": \"413\"," +
-                    //"		\"user_id\": \"413\"," +
-                    //"		\"name\": \"Dr. Don Collier\"," +
-                    //"		\"image_url\": \"http://lorempixel.com/640/480/cats/?95650\"," +
-                    //"		\"gender\": \"M\"," +
-                    //"		\"likes\": \"100\"," +
-                    //"		\"dislikes\": \"85\" " +
-                    //"}" +
-                    //"}," +
-                    //"{" +
-                    //"		\"id\": \"925\"," +
-                    //"		\"user_id\": \"925\"," +
-                    //"		\"max_distance\": \"8074\"," +
-                    //"		\"latitude\": \"-60.298905\"," +
-                    //"		\"longitude\": \"-43.911683\"," +
-                    //"		\"distance\": 2953.9484421482," +
-                    //"		\"min_age\": \"17\"," +
-                    //"		\"max_age\": \"53\"," +
-                    //"		\"min_price\": \"9\"," +
-                    //"		\"max_price\": \"30\"," +
-                    //"		\"comment\": \"Laudantium repudiandae dolore assumenda mollitia ullam quae cupiditate neque est.\"," +
-                    //"		\"gender\": \"M\"," +
-                    //"		\"start_time\": \"2015-06-16 03:56:54\"," +
-                    //"		\"end_time\": \"2015-06-16 07:18:57\"," +
-                    //"		\"profile\": {" +
-                    //"			\"id\": \"925\"," +
-                    //"			\"user_id\": \"925\"," +
-                    //"			\"name\": \"Dillon Swift V\"," +
-                    //"			\"image_url\": \"http://lorempixel.com/640/480/cats/?40699\"," +
-                    //"			\"gender\": \"M\"," +
-                    //"			\"likes\": \"31\"," +
-                    //"			\"dislikes\": \"17\"" +
-                    //"		}" +
-                    //"	}" +
-                    //"]," +
-                    //"\"paginator\": {" +
-                    //"	\"total_count\": 2" +
-                    //"}" +
-                    //"}");
-            //ParseResponse();
-
-        //} catch (JSONException e) {
-            //e.printStackTrace();
-            //return;
-        //}
 		mSavedJSON = null;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
@@ -175,18 +113,60 @@ public class FacadeModule {
 
 	public void SendRequestForMatchList() 
 	{
+		mMatchList = new ArrayList<User> ();
 		String url = "http://donteatalone.paigelim.com/api/v1/users/" + mUserProfile.GetId() + "/matches";
 		SendRequest(url, Request.Method.GET, RequestMode.GET_MATCHLIST);
 	}
 
-    public void CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, String gender, String comment, Timestamp start_time, Timestamp end_time)
+	public void SendRequestForRequestList()
+	{
+		mRequestList = new ArrayList<User> ();
+		String url = "http://donteatalone.paigelim.com/api/v1/requests/" + mUserProfile.GetId() + "/retrieved";
+		SendRequest(url, Request.Method.GET, RequestMode.GET_REQUESTLIST);
+	}
+
+	public void SendRequestInviteUser(int otherUserId)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/requests?" + 
+			"user_id=" + mUserProfile.GetId() +
+			"&to_user_id=" + Integer.toString(otherUserId) +
+			"&match_id=" + Integer.toString(mMatchId);
+
+		SendRequest(url, Request.Method.POST, RequestMode.INVITE_USER);
+	}
+
+	public void AcceptUserRequest(int requestId)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/requests/" + Integer.toString(requestId) + "/accept";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);	
+	}
+
+	public void DeleteUserRequest(int requestId)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/requests/" + Integer.toString(requestId);
+		SendRequest(url, Request.Method.DELETE, RequestMode.OTHER);
+	}
+
+    public int CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, String gender, String comment, Timestamp start_time, Timestamp end_time)
     {
         String start_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(start_time);
         String end_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(end_time);
 
+		double latitude;
+		double longitude;
+
+		if (mGPS.canGetLocation()) {
+			latitude = mGPS.getLatitude();
+			longitude = mGPS.getLongitude();
+		} else {
+			return 0;
+		}
+
 		mPreference = new Preference(user_id, max_distance, min_age, max_age, min_price, max_price, gender, comment, start_time, end_time);
         String url = "http://donteatalone.paigelim.com/api/v1/matches?" +
 					 "user_id=" + Integer.toString(user_id) +
+					 "&latitude=" + Double.toString(latitude) +
+					 "&longtitude=" + Double.toString(longitude) +
 					 "&max_distance=" + Integer.toString(max_distance) +
 					 "&min_age=" + Integer.toString(min_age) +
 					 "&max_age=" + Integer.toString(max_age) +
@@ -197,6 +177,7 @@ public class FacadeModule {
 					 "&start_time=" + start_time_string +
 					 "&end_time=" + end_time_string;
 		SendRequest(url, Request.Method.POST, RequestMode.CREATE_PREFERENCE);
+		return 1;
 	}
 
 	// return value 0: error: Preference has not been initialized.
@@ -329,6 +310,28 @@ public class FacadeModule {
 						newUser.setDislikes(Integer.parseInt(userInfo.getJSONObject("profile").getString("dislikes")));
 						mMatchList.add(newUser);
 					}
+				} else if (request == RequestMode.GET_REQUESTLIST) {
+					JSONArray requestList = mSavedJSON.getJSONArray("requests");
+					for (int i = 0; i < requestList.length(); i++) {
+						User newUser = new User();
+						JSONObject userInfo = requestList.getJSONObject(i);
+						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
+						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
+						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
+						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
+						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
+						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
+						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
+						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
+						newUser.setMaxPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("max_price")));
+						newUser.setStartTime(userInfo.getJSONObject("match").getString("start_time"));
+						newUser.setEndTime(userInfo.getJSONObject("match").getString("end_time"));
+						newUser.setLikes(Integer.parseInt(userInfo.getJSONObject("profile").getString("likes")));
+						newUser.setDislikes(Integer.parseInt(userInfo.getJSONObject("profile").getString("dislikes")));
+						mRequestList.add(newUser);	
+					}	
 				} else if (request == RequestMode.CREATE_PREFERENCE) {
 					mMatchId = mSavedJSON.getJSONObject("match").getInt("id");
 				} else if (request == RequestMode.GET_PROFILE) {
@@ -410,11 +413,11 @@ public class FacadeModule {
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
 	}
 
-	public void UpdateFacebookId(int facebookId)
+	public void UpdateFacebookId(String facebookId)
 	{
 		mFacebookId = facebookId;
 		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) +
-				"?facebook_id=" + Integer.toString(facebookId);
+				"?facebook_id=" + facebookId;
 
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
 	}
