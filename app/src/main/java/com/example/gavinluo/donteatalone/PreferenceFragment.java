@@ -260,7 +260,7 @@ public class PreferenceFragment extends Fragment {
         checker.start();
     }
 
-    public void readPreference(final Preference p) {
+    public void loadPreference(final Preference p) {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -306,7 +306,6 @@ public class PreferenceFragment extends Fragment {
         _startTimeEdit.setText("START");
         _endTimeEdit.setText("END");
 
-        int id= _genderRadios.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton) _genderRadios.findViewById(R.id.pref_sex_none);
         radioButton.setChecked(true);
     }
@@ -316,7 +315,6 @@ public class PreferenceFragment extends Fragment {
 
         if(newState == READ_MODE){
             setEnabledAllComponents(false);
-//            setDefault();
             // change the button label
             _prefButton.setText(res.getString(R.string.pref_delete_pref));
         } else if (newState == EDIT_MODE){
