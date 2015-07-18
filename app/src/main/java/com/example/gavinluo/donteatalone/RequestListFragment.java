@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,16 +14,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,13 +32,13 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MatchListFragment.OnFragmentInteractionListener} interface
+ * {@link RequestListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MatchListFragment#newInstance} factory method to
+ * Use the {@link RequestListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MatchListFragment extends Fragment {
-    private final String TAG = "MatchListFragment";
+public class RequestListFragment extends Fragment {
+    private final String TAG = "RequestListFragment";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,11 +49,9 @@ public class MatchListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private ExpandableListView matchListExpand;
-    private MatchListAdapter listAdapter;
+    private ExpandableListView requestListExpand;
+    private RequestListAdapter listAdapter;
     private Context context;
-
-    private FacadeModule facade;
 
     /**
      * Use this factory method to create a new instance of
@@ -70,8 +61,8 @@ public class MatchListFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MatchListFragment.
      */
-    public static MatchListFragment newInstance(String param1, String param2) {
-        MatchListFragment fragment = new MatchListFragment();
+    public static RequestListFragment newInstance(String param1, String param2) {
+        RequestListFragment fragment = new RequestListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -79,7 +70,7 @@ public class MatchListFragment extends Fragment {
         return fragment;
     }
 
-    public MatchListFragment() {
+    public RequestListFragment() {
         // Required empty public constructor
     }
 
@@ -99,9 +90,9 @@ public class MatchListFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_match_list, container, false);
-        matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
-        listAdapter = new MatchListAdapter();
-        matchListExpand.setAdapter(listAdapter);
+        requestListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
+        listAdapter = new RequestListAdapter();
+        requestListExpand.setAdapter(listAdapter);
 
 //        updateData();
         addTestData();
@@ -117,9 +108,9 @@ public class MatchListFragment extends Fragment {
     // add 2 test users
     public void addTestData(){
         User user1 = new User();
-        user1.setId(1);
-        user1.setName("test user 1");
-        user1.setGender("male");
+        user1.setId(3);
+        user1.setName("test user 3");
+        user1.setGender("female");
         user1.setMaxDistance(3);
         user1.setLatitude(23);
         user1.setLongitude(32);
@@ -134,15 +125,15 @@ public class MatchListFragment extends Fragment {
         user1.setDislikes(2);
 
         User user2 = new User();
-        user2.setId(2);
-        user2.setName("test user 2");
+        user2.setId(4);
+        user2.setName("test user 4");
         user2.setGender("male");
-        user2.setMaxDistance(5);
-        user2.setLatitude(54);
-        user2.setLongitude(32);
-        user2.setDistance(4);
-        user2.setMinAge(20);
-        user2.setMaxAge(200);
+        user2.setMaxDistance(35);
+        user2.setLatitude(52);
+        user2.setLongitude(12);
+        user2.setDistance(3);
+        user2.setMinAge(42);
+        user2.setMaxAge(10);
         user2.setMinPrice(2);
         user2.setMaxPrice(2000);
         user2.setStartTime("12:30am");
@@ -154,34 +145,8 @@ public class MatchListFragment extends Fragment {
         this.listAdapter.addUser(user2);
     }
 
-    public void updateData(JSONObject response){
-        // TODO: Parse the data and add that to the list adapter
-//
-//        final String MATCHES = "matches";
-//        final String ID = "id";
-//
-//        // remove this after testing
-//        try {
-//            listAdapter.clearMatches(); // clear things in adapter TODO: remove and add element as necessary
-//
-//            // Getting all the matches
-//            JSONArray matches = response.getJSONArray(MATCHES);
-//
-//            // Add the IDs to the adapter
-//            for(int i=0; i<matches.length(); i++){
-//                JSONObject match = matches.getJSONObject(i);
-//
-//                // TODO: Remove this after testing
-//                listAdapter.addMatches("id: " + match.getString(ID));
-//                Log.d(TAG, "id: " + match.getString(ID));
-//            }
-//            Log.d(TAG, "no matches?") ;
-//        } catch (Exception e){
-//            Log.d(TAG, e.toString());
-//        }
-    }
 
-    public MatchListAdapter getListAdapter(){
+    public RequestListAdapter getListAdapter(){
         return listAdapter;
     }
 
@@ -190,7 +155,6 @@ public class MatchListFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -212,9 +176,9 @@ public class MatchListFragment extends Fragment {
     /**
      * The list adapter for expandable list
      */
-    public class MatchListAdapter extends UserListAdapter {
+    public class RequestListAdapter extends UserListAdapter {
 
-        public MatchListAdapter(){
+        public RequestListAdapter(){
             super();
         }
 
@@ -231,7 +195,7 @@ public class MatchListFragment extends Fragment {
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
             TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
-            Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
+            Button acceptButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
             Resources res = context.getResources();
@@ -239,24 +203,22 @@ public class MatchListFragment extends Fragment {
                     user.getName());
             // TODO: change the age or remove it
 
-            final View wholeView = view;
-
             // set the text
             basicInfoView.setText(basicInfoText);
-            thumbsUpView.setText(user.getLikes() + "");
-            thumbsDownView.setText(user.getDislikes() + "");
+            thumbsUpView.setText(user.getLikes()+"");
+            thumbsDownView.setText(user.getDislikes()+"");
+            acceptButton.setText(res.getString(R.string.request_accept));
 
             // add event listener to the invite button
-            inviteButton.setOnClickListener(new View.OnClickListener() {
+            acceptButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.matches_group_invite:
-                            ImageView image = (ImageView) wholeView.findViewById(R.id.group_profile_image);
-//                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
-                            String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
-                            new DownloadImageTask((ImageView)image).execute(url);
+                            // go to the messenger
+                            Intent intent = new Intent (context, MessengerActivity.class);
+                            startActivity(intent);
                             Log.d(TAG, "invite button event fired");
                             break;
                     }
