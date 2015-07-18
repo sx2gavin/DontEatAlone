@@ -245,9 +245,9 @@ public class RequestListFragment extends Fragment {
 
             // format the strings
             Resources res = context.getResources();
-            String distText = String.format(res.getString(R.string.matches_distance), user.getDistance());
+            String distText = String.format(res.getString(R.string.matches_distance), String.format("%.1f", user.getDistance()));
             String timeText = String.format(res.getString(R.string.matches_time), user.getStartTime(), user.getEndTime());
-            String priceText = String.format(res.getString(R.string.matches_price), user.getMinPrice(), user.getMaxPrice());
+            String priceText = String.format(res.getString(R.string.matches_price), String.format("%.2f", user.getMinPrice()), String.format("%.2f", user.getMaxPrice()));
             String commentText = String.format(res.getString(R.string.matches_comment), "testing testing");
 
             // set the text
