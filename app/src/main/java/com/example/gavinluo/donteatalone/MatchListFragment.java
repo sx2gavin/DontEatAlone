@@ -103,8 +103,8 @@ public class MatchListFragment extends Fragment {
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
 
-        updateData();
-//        addTestData();
+//        updateData();
+        addTestData();
 
         return view;
     }
@@ -248,6 +248,7 @@ public class MatchListFragment extends Fragment {
             thumbsDownView.setText(user.getDislikes() + "");
 
             // add event listener to the invite button
+            final Button listenerBtn = inviteButton;
             inviteButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -258,6 +259,10 @@ public class MatchListFragment extends Fragment {
 //                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
                             String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
                             new DownloadImageTask((ImageView)image).execute(url);
+
+                            // disable button when clicked
+                            listenerBtn.setEnabled(false);
+
                             Log.d(TAG, "invite button event fired");
                             break;
                     }
