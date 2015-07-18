@@ -60,12 +60,12 @@ public class MyGcmListenerService extends GcmListenerService {
     private void sendNotification(String type, String title, String message) {
         Intent intent = new Intent();
         Log.d(TAG, "type: " + type);
-        if (type.equals("request")) {
+        if (type.equals("request") || type.equals("end_meeting")) {
             intent = new Intent(this, MatchListActivity.class);
-        } else if (type.equals("msg")) {
+        } else if (type.equals("msg") || type.equals("meeting")) {
             intent = new Intent(this, MessengerActivity.class);
         } else {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, MatchListActivity.class);
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
