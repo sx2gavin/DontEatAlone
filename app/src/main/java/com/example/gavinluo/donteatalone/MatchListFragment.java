@@ -102,7 +102,7 @@ public class MatchListFragment extends Fragment {
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
-
+        facade = FacadeModule.getFacadeModule(this.context);
 //        updateData();
         addTestData();
 
@@ -110,8 +110,9 @@ public class MatchListFragment extends Fragment {
     }
 
     public void updateData(){
-        ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
+        ArrayList<User> matchList = facade.GetMatchList();
         this.listAdapter.setUserList(matchList);
+        Log.d("list-size", "matchlist-size: " + matchList.size());
     }
 
     // add 2 test users
@@ -247,6 +248,7 @@ public class MatchListFragment extends Fragment {
             thumbsDownView.setText(user.getDislikes() + "");
 
             // add event listener to the invite button
+            final Button listenerBtn = inviteButton;
             inviteButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -257,6 +259,10 @@ public class MatchListFragment extends Fragment {
 //                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
                             String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
                             new DownloadImageTask((ImageView)image).execute(url);
+
+                            // disable button when clicked
+                            listenerBtn.setEnabled(false);
+
                             Log.d(TAG, "invite button event fired");
                             break;
                     }
@@ -283,9 +289,9 @@ public class MatchListFragment extends Fragment {
 
             // format the strings
             Resources res = context.getResources();
-            String distText = String.format(res.getString(R.string.matches_distance), user.getDistance());
+            String distText = String.format(res.getString(R.string.matches_distance), String.format("%.1f", user.getDistance()));
             String timeText = String.format(res.getString(R.string.matches_time), user.getStartTime(), user.getEndTime());
-            String priceText = String.format(res.getString(R.string.matches_price), user.getMinPrice(), user.getMaxPrice());
+            String priceText = String.format(res.getString(R.string.matches_price), String.format("%.2f", user.getMinPrice()), String.format("%.2f", user.getMaxPrice()));
             String commentText = String.format(res.getString(R.string.matches_comment), "testing testing");
 
             // set the text

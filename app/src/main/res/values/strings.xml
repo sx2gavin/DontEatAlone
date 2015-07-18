@@ -64,9 +64,9 @@
 
     <!-- The first param is the display name, the second param is the age -->
     <string name="matches_user_basic_info">%1$s</string>
-    <string name="matches_distance">Distance: %1$f</string>
+    <string name="matches_distance">Distance: %1$s km</string>
     <string name="matches_time">Time: %1$s to %2$s</string>
-    <string name="matches_price">Price: %1$f to %2$f</string>
+    <string name="matches_price">Price: $%1$s to $%2$s</string>
     <string name="matches_comment">Comment: %1$s</string>
     <string name="matches_invite">Invite</string>
     <string name="request_accept">Accept</string>
@@ -121,7 +121,12 @@
 
 
     <!-- Restaurant List -->
+    <string name="rest_send_button">Send</string>
     <string name="rest_custom_loc">Set Location</string>
+    <string name="rest_get_direction">Get Direction</string>
+    <string name="rest_address">Address: %1$s</string>
+    <string name="rest_phone">Phone: %1$s</string>
+
 
     <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
 
