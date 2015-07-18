@@ -21,6 +21,7 @@ import android.view.View;
 public class MatchesActivity extends ActionBarActivity
         implements NoMatchFragment.OnFragmentInteractionListener,
         MatchListFragment.OnFragmentInteractionListener,
+        RequestListFragment.OnFragmentInteractionListener,
         PreferenceFragment.OnFragmentInteractionListener,
         ActionBar.TabListener
 {
@@ -111,7 +112,7 @@ public class MatchesActivity extends ActionBarActivity
             } else if (position == PAGE_MATCHES) {
                 return new MatchListFragment();
             } else if (position == PAGE_REQUESTS){
-                return new MatchListFragment();
+                return new RequestListFragment();
             }
 
             return new NoMatchFragment();
@@ -127,7 +128,7 @@ public class MatchesActivity extends ActionBarActivity
             String retVal ;
             switch(position){
                 case 0:
-                    retVal =  "Preference";
+                    retVal = "Preference";
                     break;
                 case 1:
                     retVal = "Match List";

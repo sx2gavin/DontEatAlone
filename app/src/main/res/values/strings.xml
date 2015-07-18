@@ -63,11 +63,13 @@
     <!-- Matches expandable list -->
 
     <!-- The first param is the display name, the second param is the age -->
-    <string name="matches_user_basic_info">%1$s (%2$d) </string>
-    <string name="matches_distance">Distance: %1$d</string>
+    <string name="matches_user_basic_info">%1$s</string>
+    <string name="matches_distance">Distance: %1$f</string>
     <string name="matches_time">Time: %1$s to %2$s</string>
-    <string name="matches_price">Price: %1$d to %2$d</string>
+    <string name="matches_price">Price: %1$f to %2$f</string>
     <string name="matches_comment">Comment: %1$s</string>
+    <string name="matches_invite">Invite</string>
+    <string name="request_accept">Accept</string>
 
     <!-- Profile activity string -->
     <string name="profile_name">Name: </string>

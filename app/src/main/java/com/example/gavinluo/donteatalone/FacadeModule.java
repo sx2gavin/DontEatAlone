@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, UPDATE_PROFILE, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
 	}
 
     private static FacadeModule mInstance;
@@ -43,7 +43,8 @@ public class FacadeModule {
     private Context mContext;
     private int mUserId;
 	private int mMatchId;
-	private int mFacebookToken;
+	private int mFacebookId;
+	private String mGCMToken;
     private JSONObject mSavedJSON;
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
@@ -127,6 +128,7 @@ public class FacadeModule {
             //e.printStackTrace();
             //return;
         //}
+		mSavedJSON = null;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
 					@Override
@@ -236,6 +238,7 @@ public class FacadeModule {
 
     public Profile GetUserProfile()
     {
+		// TODO
         return mUserProfile;
     }
 
@@ -253,10 +256,10 @@ public class FacadeModule {
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
-    public void LinkToFacebook(int facebookToken)
+    public void LinkToFacebook(int facebookId)
     {
         // TODO: LINK TO FACEBOOK
-		mFacebookToken = facebookToken;
+		mFacebookId = facebookId;
     }
 
     public int GetUserId()
@@ -321,7 +324,7 @@ public class FacadeModule {
 					}
 				} else if (request == RequestMode.CREATE_PREFERENCE) {
 					mMatchId = mSavedJSON.getJSONObject("match").getInt("id");
-				} else if (request == RequestMode.LOGIN) {
+				} else if (request == RequestMode.GET_PROFILE) {
 					Log.d(TAG, "LOGIN parsing");
 					JSONObject userProfile = mSavedJSON.getJSONObject("data").getJSONObject("user");
 					mUserProfile.SetId(userProfile.getInt("id"));
@@ -332,9 +335,14 @@ public class FacadeModule {
 					mUserProfile.SetAge(userProfile.getInt("age"));
 					mUserProfile.SetDescription(userProfile.getString("description"));
 					mUserProfile.LogProfile();
+				} else if (request == RequestMode.LOGIN) {
+					mUserId = mSavedJSON.getJSONObject("data").getJSONObject("user").getInt("id");
+					mGCMToken = mSavedJSON.getJSONObject("data").getJSONObject("user").getString("gcm_token");
+					Log.d(FacadeModule.TAG, mGCMToken);
 				}
             } catch (JSONException e) {
                 e.printStackTrace();
+				Log.d(FacadeModule.TAG, "There are JSONExceptions.");
                 return 0;
             }
 
@@ -382,4 +390,16 @@ public class FacadeModule {
         }
         return mInstance;
     }
+
+	public void UpdateGCMToken(String token)
+	{
+		Log.d(FacadeModule.TAG, "UpdateGCMToken called.");
+		Log.d(FacadeModule.TAG, Integer.toString(mUserId));
+
+		mGCMToken = token;
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserId) +
+				"?gcm_token=" + token;
+
+		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
+	}
 }

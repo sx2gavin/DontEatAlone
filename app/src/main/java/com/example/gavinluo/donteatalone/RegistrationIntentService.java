@@ -66,6 +66,7 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
-        // TODO: Use FacadeModule
+        Log.d(FacadeModule.TAG, "sendRegistrationToServer");
+        FacadeModule.getFacadeModule(this).UpdateGCMToken(token);
     }
 }
