@@ -6,14 +6,14 @@ import java.sql.Timestamp;
  * Created by GavinLuo on 15-07-17.
  */
 public class Preference {
-	public int m_user_id;
-	public int m_max_distance;
-	public int m_min_age;
-	public int m_max_age;
-	public int m_min_price;
-	public int m_max_price;
-	public String m_comment;
-	public String m_gender;
+	public int m_user_id = 0;
+	public int m_max_distance = 0;
+	public int m_min_age = 0;
+	public int m_max_age = 0;
+	public int m_min_price = 0;
+	public int m_max_price = 0;
+	public String m_comment = "";
+	public String m_gender = "";
 	public Timestamp m_start_time;
 	public Timestamp m_end_time;
 

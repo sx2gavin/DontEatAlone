@@ -259,7 +259,9 @@ public class FacadeModule {
     {
         if (mSavedJSON == null) {
             return "";
-        } else {
+        } else if(mSavedJSON.has("error")) {
+			return "error";
+		} else {
             return mSavedJSON.toString();
         }
     }
