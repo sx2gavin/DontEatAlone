@@ -102,7 +102,7 @@ public class MatchListFragment extends Fragment {
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
-
+        facade = FacadeModule.getFacadeModule(this.context);
 //        updateData();
         addTestData();
 
@@ -110,7 +110,7 @@ public class MatchListFragment extends Fragment {
     }
 
     public void updateData(){
-        ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
+        ArrayList<User> matchList = facade.GetMatchList();
         this.listAdapter.setUserList(matchList);
         Log.d("list-size", "matchlist-size: " + matchList.size());
     }

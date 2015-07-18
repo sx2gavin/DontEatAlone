@@ -314,6 +314,8 @@ public class RestaurantListActivity extends ActionBarActivity {
             // set the text
             addressView.setText(addressText+"test");
             phoneView.setText(phoneText+"test");
+            final String website = "http://www.google.com.au/";
+            webView.setText(website);
 
             final View wholeView = view;
 
@@ -328,6 +330,25 @@ public class RestaurantListActivity extends ActionBarActivity {
                             String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             i.setData(Uri.parse(url));
+                            startActivity(i);
+
+                            Log.d(TAG, "direction button event fired");
+                            break;
+                    }
+                }
+            });
+
+            // add event listener to the website
+            webView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.restaurant_website:
+                            // Open google map in internet
+//                            String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(website));
                             startActivity(i);
 
                             Log.d(TAG, "direction button event fired");
