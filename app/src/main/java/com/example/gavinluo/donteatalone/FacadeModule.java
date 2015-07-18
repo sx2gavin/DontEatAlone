@@ -34,20 +34,20 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST
 	}
 
     private static FacadeModule mInstance;
     private MySingleton mMySingleton;
     // private FacadeModule mContext;
     private Context mContext;
-    private int mUserId;
 	private int mMatchId;
 	private int mFacebookId;
 	private String mGCMToken;
     private JSONObject mSavedJSON;
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
+	private Preference mPreference;
 
     // constructor
     private FacadeModule(Context context)
@@ -58,7 +58,6 @@ public class FacadeModule {
         mMatchList = new ArrayList<User> ();
 		mUserProfile = new Profile();
 		mMatchId = -1;
-		mUserId = -1;
     }
 
     public void SendRequest(String url, int method, final RequestMode request)
@@ -176,14 +175,16 @@ public class FacadeModule {
 
 	public void SendRequestForMatchList() 
 	{
-		String url = "http://donteatalone.paigelim.com/api/v1/users/" + mUserId + "/matches";
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + mUserProfile.GetId() + "/matches";
 		SendRequest(url, Request.Method.GET, RequestMode.GET_MATCHLIST);
 	}
 
-    public void CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, char gender, Timestamp start_time, Timestamp end_time)
+    public void CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, String gender, String comment, Timestamp start_time, Timestamp end_time)
     {
         String start_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(start_time);
         String end_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(end_time);
+
+		mPreference = new Preference(user_id, max_distance, min_age, max_age, min_price, max_price, gender, comment, start_time, end_time);
         String url = "http://donteatalone.paigelim.com/api/v1/matches?" +
 					 "user_id=" + Integer.toString(user_id) +
 					 "&max_distance=" + Integer.toString(max_distance) +
@@ -192,6 +193,7 @@ public class FacadeModule {
 					 "&min_price=" + Integer.toString(min_price) +
 					 "&max_price=" + Integer.toString(max_price) +
 					 "&gender=" + gender +
+					 "&comment=" + comment +
 					 "&start_time=" + start_time_string +
 					 "&end_time=" + end_time_string;
 		SendRequest(url, Request.Method.POST, RequestMode.CREATE_PREFERENCE);
@@ -201,6 +203,7 @@ public class FacadeModule {
 	// return value 1: Delete the current preference.
 	public int DeletePreference()
 	{
+		mPreference = null;
 		if (mMatchId == -1) {
 			return 0;
 		} else {
@@ -210,12 +213,23 @@ public class FacadeModule {
 		}
 	}
 
+	public Preference GetPreference()
+	{
+		return mPreference;
+	}
+
 	public void SendRequestLogIn(String email, String password)
 	{
 		String url = "http://donteatalone.paigelim.com/api/v1/login?" +
 			"email=" + email +
 			"&password=" + password;
 		SendRequest(url, Request.Method.GET, RequestMode.LOGIN);
+	}
+
+	public void SendRequestGetProfile(int user_id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(user_id);
+		SendRequest(url, Request.Method.GET, RequestMode.GET_PROFILE);
 	}
 	
 	public void SendRequestSignUp(String email, String password, String password_confirm, String name, String age)
@@ -238,7 +252,6 @@ public class FacadeModule {
 
     public Profile GetUserProfile()
     {
-		// TODO
         return mUserProfile;
     }
 
@@ -246,7 +259,7 @@ public class FacadeModule {
     {
         mUserProfile = newProfile;
 
-		String url = "http://donteatalone.paigelim.com/api/v1/profiles/" + Integer.toString(mUserId) +
+		String url = "http://donteatalone.paigelim.com/api/v1/profiles/" + Integer.toString(mUserProfile.GetId()) +
 			"?name=" + mUserProfile.GetName() +
 			"&image_url=" + mUserProfile.GetImageUrl() +
 			"&gender=" + mUserProfile.GetGender() +
@@ -256,15 +269,9 @@ public class FacadeModule {
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
-    public void LinkToFacebook(int facebookId)
-    {
-        // TODO: LINK TO FACEBOOK
-		mFacebookId = facebookId;
-    }
-
     public int GetUserId()
     {
-        return mUserId;
+        return mUserProfile.GetId();
     }
 
     public String GetResponse()
@@ -326,17 +333,17 @@ public class FacadeModule {
 					mMatchId = mSavedJSON.getJSONObject("match").getInt("id");
 				} else if (request == RequestMode.GET_PROFILE) {
 					Log.d(TAG, "LOGIN parsing");
-					JSONObject userProfile = mSavedJSON.getJSONObject("data").getJSONObject("user");
+					JSONObject userProfile = mSavedJSON.getJSONObject("user").getJSONObject("profile");
 					mUserProfile.SetId(userProfile.getInt("id"));
 					mUserProfile.SetName(userProfile.getString("name"));
-					mUserProfile.SetEmail(userProfile.getString("email"));
 					mUserProfile.SetImageUrl(userProfile.getString("image_url"));
 					mUserProfile.SetGender(userProfile.getString("gender"));
 					mUserProfile.SetAge(userProfile.getInt("age"));
 					mUserProfile.SetDescription(userProfile.getString("description"));
 					mUserProfile.LogProfile();
 				} else if (request == RequestMode.LOGIN) {
-					mUserId = mSavedJSON.getJSONObject("data").getJSONObject("user").getInt("id");
+					mUserProfile.SetId(mSavedJSON.getJSONObject("data").getJSONObject("user").getInt("id"));
+					mUserProfile.SetEmail(mSavedJSON.getJSONObject("data").getJSONObject("user").getString("email"));
 					mGCMToken = mSavedJSON.getJSONObject("data").getJSONObject("user").getString("gcm_token");
 					Log.d(FacadeModule.TAG, mGCMToken);
 				}
@@ -394,12 +401,21 @@ public class FacadeModule {
 	public void UpdateGCMToken(String token)
 	{
 		Log.d(FacadeModule.TAG, "UpdateGCMToken called.");
-		Log.d(FacadeModule.TAG, Integer.toString(mUserId));
+		Log.d(FacadeModule.TAG, Integer.toString(mUserProfile.GetId()));
 
 		mGCMToken = token;
-		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserId) +
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) +
 				"?gcm_token=" + token;
 
-		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
+		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
+	}
+
+	public void UpdateFacebookId(int facebookId)
+	{
+		mFacebookId = facebookId;
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) +
+				"?facebook_id=" + Integer.toString(facebookId);
+
+		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
 	}
 }
