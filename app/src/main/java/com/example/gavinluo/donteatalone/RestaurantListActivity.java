@@ -18,6 +18,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -280,7 +281,13 @@ public class RestaurantListActivity extends ActionBarActivity {
                 view = inflater.inflate(R.layout.restaurantgrouprow, null);
             }
 
+            // TODO: get the restaurant object
 
+            TextView nameView = (TextView) view.findViewById(R.id.restaurant_name);
+            RatingBar ratingView = (RatingBar) view.findViewById(R.id.restaurant_rating);
+
+            nameView.setText("Restaurant name1");
+            ratingView.setRating(3.1f);
 
             return view;
         }
@@ -301,7 +308,6 @@ public class RestaurantListActivity extends ActionBarActivity {
 
             // format the strings
             Resources res = context.getResources();
-//            String distText = String.format(res.getString(R.string.matches_distance), user.getDistance());
             String addressText = String.format(res.getString(R.string.rest_address), "test avenue");
             String phoneText = String.format(res.getString(R.string.rest_phone), "(432)-321-3293");
 
@@ -322,7 +328,7 @@ public class RestaurantListActivity extends ActionBarActivity {
                             String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             i.setData(Uri.parse(url));
-                            startActivity(i); 
+                            startActivity(i);
 
                             Log.d(TAG, "direction button event fired");
                             break;

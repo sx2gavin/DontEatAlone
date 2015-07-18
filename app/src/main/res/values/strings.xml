@@ -121,6 +121,7 @@
 
 
     <!-- Restaurant List -->
+    <string name="rest_send_button">Send</string>
     <string name="rest_custom_loc">Set Location</string>
     <string name="rest_get_direction">Get Direction</string>
     <string name="rest_address">Address: %1$s</string>
