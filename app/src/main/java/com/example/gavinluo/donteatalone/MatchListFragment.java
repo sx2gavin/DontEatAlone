@@ -103,8 +103,8 @@ public class MatchListFragment extends Fragment {
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
 
-//        updateData();
-        addTestData();
+        updateData();
+//        addTestData();
 
         return view;
     }
@@ -112,6 +112,7 @@ public class MatchListFragment extends Fragment {
     public void updateData(){
         ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
         this.listAdapter.setUserList(matchList);
+        Log.d("list-size", "matchlist-size: " + matchList.size());
     }
 
     // add 2 test users

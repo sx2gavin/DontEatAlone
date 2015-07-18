@@ -122,6 +122,10 @@
 
     <!-- Restaurant List -->
     <string name="rest_custom_loc">Set Location</string>
+    <string name="rest_get_direction">Get Direction</string>
+    <string name="rest_address">Address: %1$s</string>
+    <string name="rest_phone">Phone: %1$s</string>
+
 
     <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
 
