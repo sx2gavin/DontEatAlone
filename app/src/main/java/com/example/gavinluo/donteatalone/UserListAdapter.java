@@ -43,17 +43,6 @@ public abstract class UserListAdapter extends BaseExpandableListAdapter {
         this.userList = new ArrayList<User>();
     }
 
-    public static void loadImage(ImageView imageView, String imageUrl) {
-        try {
-            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
-            imageView.setImageBitmap(bitmap);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public int getGroupCount() {
         return this.userList.size();

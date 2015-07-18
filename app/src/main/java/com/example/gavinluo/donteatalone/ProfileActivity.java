@@ -1,5 +1,6 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 
 public class ProfileActivity extends ActionBarActivity {
 
+    Activity mActivity;
+
     CallbackManager callbackManager;
     // References to UI components created in activity_profile
     protected EditText _name;
@@ -40,11 +43,14 @@ public class ProfileActivity extends ActionBarActivity {
 
     protected boolean _update;
 
+    protected Profile profile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
+        mActivity = this;
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_profile);
@@ -62,17 +68,16 @@ public class ProfileActivity extends ActionBarActivity {
         _name.setEnabled(false);
         _description.setEnabled(false);
 
-        // TODO: call the server to return the user's profile
+        //profile = FacadeModule.getFacadeModule(this).GetUserProfile();
         // initialize items
-        _name.setText("angela");
-        _email.setText("abcd@gmail.com");
-        _gender.setText("female");
-        _age.setText("18");
-        _description.setText("hello world");
+        _name.setText(profile.GetName());
+        _email.setText(profile.GetEmail());
+        _gender.setText(profile.GetGender());
+        _age.setText(profile.GetAge());
+        _description.setText(profile.GetDescription());
 
         _update = false;
 
-        //LoginButton loginButton = (LoginButton)findViewById(R.id.fblogin_button);
         // Callback registration
         _loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -114,6 +119,18 @@ public class ProfileActivity extends ActionBarActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (_update) {
+            menu.getItem(0).setEnabled(false);
+        }
+        else {
+            menu.getItem(0).setEnabled(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -122,7 +139,6 @@ public class ProfileActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            //TODO:Logout and go back to login page
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.profile_logoutDialog_message)
                     .setTitle(R.string.profile_logoutDialog_title);
@@ -130,10 +146,15 @@ public class ProfileActivity extends ActionBarActivity {
             builder.setPositiveButton(R.string.profile_logoutDialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     //TODO: delete everything and go back to login page
+                    FacadeModule.getFacadeModule(mActivity).SendRequestLogOut();
+                    Intent logoutIntent = new Intent(mActivity, LoginActivity.class);
+                    logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(logoutIntent);
                 }
             });
             builder.setNegativeButton(R.string.profile_logoutDialog_no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
                 }
             });
             // Create the AlertDialog
@@ -148,6 +169,8 @@ public class ProfileActivity extends ActionBarActivity {
     public void updateProfile(View view) {
         if (_update) {
             // save update
+
+            //FacadeModule.getFacadeModule(this).UpdateUserProfile(profile);
             _update = false;
             _loginButton.setVisibility(View.GONE);
             _updateButton.setText(R.string.profile_button_edit);
@@ -162,5 +185,6 @@ public class ProfileActivity extends ActionBarActivity {
         // change readonly
         _name.setEnabled(_update);
         _description.setEnabled(_update);
+        invalidateOptionsMenu();
     }
 }
