@@ -318,6 +318,12 @@ public class RestaurantListActivity extends ActionBarActivity {
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.restaurant_direction_button:
+                            // Open google map in internet
+                            String url = "http://maps.google.com/maps/place?cid=10281119596374313554";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i); 
+
                             Log.d(TAG, "direction button event fired");
                             break;
                     }
