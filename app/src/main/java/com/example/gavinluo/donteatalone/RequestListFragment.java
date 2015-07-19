@@ -131,7 +131,7 @@ public class RequestListFragment extends Fragment {
                     // create a new thread if the response is empty
 //                    if(response == null || response.compareTo("")!=0){
                     try {
-                        FacadeModule.getFacadeModule(context).SendRequestForMatchList();
+                        FacadeModule.getFacadeModule(context).SendRequestForRequestList();
                         Thread checker = new Thread() {
                             public void run() {
                                 boolean running = true;
