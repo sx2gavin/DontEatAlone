@@ -3,16 +3,21 @@
     xmlns:anrdoid="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ffe4d19f">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ffe4d19f">
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:layout_gravity="center_horizontal">
+            android:background="#ffe4d19f"
+            android:id="@+id/match_linear_layout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -20,12 +25,9 @@
                 android:text="@string/pref_about_person"
                 android:textSize="@dimen/heading_font_size"
                 android:textStyle="bold"
-                android:layout_margin="@dimen/activity_layout_margin"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_gender" />
+                android:layout_margin="@dimen/activity_layout_margin"
+                android:textColor="#ff21201d"
+                android:id="@+id/text_about_person" />
 
             <RadioGroup
                 android:id="@+id/pref_gender"
@@ -38,27 +40,27 @@
                     android:id="@+id/pref_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_male"/>
+                    android:text="@string/pref_male"
+                    android:textColor="#ff6f956d"
+                    android:textSize="@dimen/general_text_font_size" />
 
                 <RadioButton
                     android:id="@+id/pref_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_female"/>
+                    android:text="@string/pref_female"
+                    android:textColor="#ff6f956d"
+                    android:textSize="@dimen/general_text_font_size" />
 
                 <RadioButton
                     android:id="@+id/pref_sex_none"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_sex_none"
-                    android:checked="true"/>
+                    android:checked="true"
+                    android:textColor="#ff6f956d"
+                    android:textSize="@dimen/general_text_font_size" />
             </RadioGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_age"
-                android:layout_marginLeft="@dimen/activity_layout_margin"/>
 
             <LinearLayout
                 android:layout_width="@dimen/activity_edittext_layout_width"
@@ -68,30 +70,44 @@
 
                 <EditText
                     android:id="@+id/pref_min_age"
-                    android:layout_width="90dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
                     android:hint="@string/pref_min"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textColor="#ff6f956d"
+                    android:textColorHint="#ff6f956d"
+                    android:textSize="@dimen/general_text_font_size" />
 
                 <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="35dp"
                     android:gravity="center"
-                    android:text="@string/pref_to"/>
+                    android:text="@string/pref_to"
+                    android:id="@+id/min_to_max"
+                    android:textColor="#ff21201d" />
 
                 <EditText
                     android:id="@+id/pref_max_age"
-                    android:layout_width="90dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
                     android:hint="@string/pref_max"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textColor="#ff6f956d"
+                    android:textColorHint="#ff6f956d"
+                    android:textSize="@dimen/general_text_font_size" />
 
             </LinearLayout>
-            <!--<Spinner-->
-                <!--android:id="@+id/pref_age_spinner"-->
-                <!--android:layout_width="@dimen/activity_edittext_layout_width"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="@dimen/activity_layout_margin"/>-->
+
+            <EditText
+                android:id="@+id/pref_distance"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:hint="@string/pref_distance"
+                android:inputType="number"
+                android:layout_margin="@dimen/activity_layout_margin"
+                android:textColorHint="#ff6f956d"
+                android:textColor="#ff6f956d"
+                android:textSize="@dimen/general_text_font_size" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,25 +115,10 @@
                 android:text="@string/pref_about_meetup"
                 android:textSize="@dimen/heading_font_size"
                 android:textStyle="bold"
-                android:layout_margin="@dimen/activity_layout_margin"/>
+                android:layout_margin="@dimen/activity_layout_margin"
+                android:id="@+id/about_meetup"
+                android:textColor="#ff21201d" />
 
-            <!--<TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_food"
-                android:layout_margin="@dimen/activity_layout_margin"/>
-
-            <Spinner
-                android:id="@+id/pref_food_spinner"
-                android:layout_width="@dimen/activity_edittext_layout_width"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_layout_margin"/>-->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_time_range"
-                android:layout_margin="@dimen/activity_layout_margin"/>
             <LinearLayout
                 android:layout_width="@dimen/activity_edittext_layout_width"
                 android:layout_height="wrap_content"
@@ -129,28 +130,28 @@
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_start"
-                    android:onClick="getStartTime"/>
+                    android:onClick="getStartTime"
+                    android:background="#ff6f956d"
+                    android:textColor="#ffe4d19f" />
 
                 <TextView
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/pref_to"/>
+                    android:text="@string/pref_to"
+                    android:id="@+id/start_to_end"
+                    android:textColor="#ff21201d" />
 
                 <Button
                     android:id="@+id/pref_end_time"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_end"
-                    android:onClick="getEndTime"/>
+                    android:onClick="getEndTime"
+                    android:background="#ff6f956d"
+                    android:textColor="#ffe4d19f" />
 
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_price"
-                android:layout_marginLeft="@dimen/activity_layout_margin"/>
 
             <LinearLayout
                 android:layout_width="@dimen/activity_edittext_layout_width"
@@ -163,7 +164,9 @@
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/pref_min"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textColor="#ff6f956d"
+                    android:textColorHint="#ff6f956d" />
 
                 <TextView
                     android:layout_width="20dp"
@@ -176,17 +179,11 @@
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/pref_max"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textColorHint="#ff6f956d"
+                    android:textColor="#ff6f956d" />
 
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/pref_distance"
-                android:layout_width="@dimen/activity_edittext_layout_width"
-                android:layout_height="wrap_content"
-                android:hint="@string/pref_distance"
-                android:inputType="number"
-                android:layout_margin="@dimen/activity_layout_margin"/>
 
             <Button
                 android:id="@+id/pref_search_button"
@@ -194,7 +191,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_start_search"
                 android:layout_margin="@dimen/activity_layout_margin"
-                android:onClick="startSearching"/>
+                android:onClick="startSearching"
+                android:background="#ff6f956d"
+                android:textColor="#ffe4d19f"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
     </ScrollView>
