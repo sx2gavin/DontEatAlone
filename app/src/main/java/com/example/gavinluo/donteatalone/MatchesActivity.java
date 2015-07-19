@@ -159,6 +159,8 @@ public class MatchesActivity extends ActionBarActivity
         MatchListFragment mFrag;
         RequestListFragment rFrag;
 
+        Context context;
+
         public MatchesPagerAdapter(FragmentManager fm, Context context ){
             super(fm);
             this.context = context;
