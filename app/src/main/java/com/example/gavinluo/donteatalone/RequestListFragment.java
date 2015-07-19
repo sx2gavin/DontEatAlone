@@ -54,7 +54,7 @@ public class RequestListFragment extends Fragment {
     private Context context;
 
 //    private FacadeModule facade2;
-    private boolean stopFetchingRequests;
+    private static boolean stopFetchingRequests;
 
     /**
      * Use this factory method to create a new instance of
@@ -136,7 +136,7 @@ public class RequestListFragment extends Fragment {
                             Thread checker = new Thread() {
                                 public void run() {
                                     boolean running = true;
-                                    while (running == true) {
+                                    while (!stopFetchingRequests && running == true) {
                                         String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                                         try {
                                             // Get the match list
@@ -174,6 +174,18 @@ public class RequestListFragment extends Fragment {
         looper.start();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        stopFetchingRequests = true;
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        stopFetchingRequests = true;
+    }
 //    public void updateData(){
 //        Thread looper = new Thread() {
 //            public void run() {
@@ -286,12 +298,6 @@ public class RequestListFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**

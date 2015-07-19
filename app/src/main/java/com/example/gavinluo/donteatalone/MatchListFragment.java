@@ -130,6 +130,8 @@ public class MatchListFragment extends Fragment {
         Thread looper = new Thread() {
             public void run() {
                 String response = "";
+                final int TIMEOUT = 3;
+                int counter = 0;
 
                 // infinite loop to keep checking for new matches
                 while(!stopFetching) {
@@ -140,7 +142,7 @@ public class MatchListFragment extends Fragment {
                             Thread checker = new Thread() {
                                 public void run() {
                                     boolean running = true;
-                                    while (running == true) {
+                                    while (!stopFetching && running == true) {
                                         String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                                         try {
                                             // Get the match list
@@ -377,13 +379,13 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-//        stopFetching = true;
+        stopFetching = true;
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-//        stopFetching = true;
+        stopFetching = true;
     }
 
     /**
