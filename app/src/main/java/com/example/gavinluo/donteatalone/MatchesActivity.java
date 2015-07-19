@@ -62,12 +62,14 @@ public class MatchesActivity extends ActionBarActivity
         mViewPager.setAdapter(mMatchesPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout){
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout) {
             @Override
-            public void onPageSelected(int position){
+            public void onPageSelected(int position) {
                 activity.setService(position);
             }
         });
+
+
 
         // Set a toolbar to replace the action bar.
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.matches_toolbar);
@@ -102,6 +104,8 @@ public class MatchesActivity extends ActionBarActivity
     public void onResume(){
         super.onResume();
 
+        // reload the preference
+//        setService(PAGE_SEARCH);
     }
 
     @Override
@@ -131,6 +135,7 @@ public class MatchesActivity extends ActionBarActivity
         // start/stop server call thread
         if(position == PAGE_SEARCH) {
             Log.d("setservice", "do not update anything");
+            searchPage.retrievePreference();
             return;
         } else if (position == PAGE_MATCHES) {
             Log.d("setservice", "start update matches");

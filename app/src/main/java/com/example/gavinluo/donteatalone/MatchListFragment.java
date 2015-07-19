@@ -108,7 +108,7 @@ public class MatchListFragment extends Fragment {
 
         // called in activity
         stopFetching = true;
-        startUpdate();
+//        startUpdate();
 
 //        addTestData();
 

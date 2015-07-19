@@ -105,7 +105,7 @@ public class RequestListFragment extends Fragment {
 //        addTestData();
 
         stopFetchingRequests = true;
-        startUpdateRequests();
+//        startUpdateRequests();
 
         return view;
     }
