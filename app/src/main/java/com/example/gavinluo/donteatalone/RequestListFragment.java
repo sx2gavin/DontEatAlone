@@ -54,7 +54,7 @@ public class RequestListFragment extends Fragment {
     private Context context;
 
 //    private FacadeModule facade2;
-//    private boolean stopFetchingRequests;
+    private boolean stopFetchingRequests;
 
     /**
      * Use this factory method to create a new instance of
@@ -100,71 +100,79 @@ public class RequestListFragment extends Fragment {
 //        facade2 = FacadeModule.getFacadeModule(this.context);
 
 //        updateData();
-        addTestData();
+//        addTestData();
+
+        stopFetchingRequests = true;
+        startUpdateRequests();
 
         return view;
     }
 
-//    public void stopUpdateRequests(){
-//        stopFetchingRequests = true;
-//    }
+    public void stopUpdateRequests(){
+        stopFetchingRequests = true;
+    }
 
-//    public void startUpdateRequsets(){
+    public void startUpdateRequests(){
 //        stopFetchingRequests = false;
 //        if(facade2 == null){
 //            facade2 = FacadeModule.getFacadeModule(context);
 //        }
-//
-//        Thread looper = new Thread() {
-//            public void run() {
-//                String response = "";
-//
-//                // infinite loop to keep checking for new matches
-//                while(!stopFetchingRequests) {
-//                    // create a new thread if the response is empty
-//                    if(response.compareTo("")==0){
-//                        try {
-//                            facade2.SendRequestForMatchList();
-//                            Thread checker = new Thread() {
-//                                public void run() {
-//                                    boolean running = true;
-//                                    while (running == true) {
-//                                        String response = facade2.GetResponseMessage();
-//                                        try {
-//                                            // Get the match list
-//                                            if (facade2.GetResponse().compareTo("") != 0) {
-//                                                ArrayList matches = facade2.GetMatchList();
-//
-//                                                Log.d("tag", "matches-size:" +  matches.size());
-//                                                Log.d("tag", "response: " + facade2.GetResponse());
-//                                                listAdapter.setUserList(matches);
-//                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-//                                                running = false;
-//                                            }
-//
-//                                            Thread.sleep(1000);
-//                                        } catch (InterruptedException e) {
-//                                            e.printStackTrace();
-//                                            running = false;
-//                                            Thread.currentThread().interrupt();
-//                                        }
-//                                    }
-//                                }
-//                            };
-//                            checker.start();
-//
-//                            // sleep for 10 seconds
-//                            Thread.sleep(10001);
-//                        } catch (InterruptedException e){
-//                            e.printStackTrace();
-//                            Thread.currentThread().interrupt();
-//                        }
-//                    }
-//                }
-//            }
-//        };
-//        looper.start();
-//    }
+        if(!stopFetchingRequests){
+            // do not start the update again if it's already started
+            return;
+        }
+        stopFetchingRequests = false;
+
+        Thread looper = new Thread() {
+            public void run() {
+                String response = "";
+
+                // infinite loop to keep checking for new matches
+                while(!stopFetchingRequests) {
+                    // create a new thread if the response is empty
+                    if(response.compareTo("")==0){
+                        try {
+                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
+                            Thread checker = new Thread() {
+                                public void run() {
+                                    boolean running = true;
+                                    while (running == true) {
+                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                        try {
+                                            // Get the match list
+                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                                ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+
+                                                Log.d("tag", "requests-size:" +  requests.size());
+                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+                                                listAdapter.setUserList(requests);
+                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                running = false;
+                                            }
+
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            running = false;
+                                            Thread.currentThread().interrupt();
+                                        }
+                                    }
+                                }
+                            };
+                            checker.start();
+
+                            // sleep for 10 seconds
+                            Thread.sleep(10001);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+            }
+        };
+        looper.start();
+    }
 
 //    public void updateData(){
 //        Thread looper = new Thread() {

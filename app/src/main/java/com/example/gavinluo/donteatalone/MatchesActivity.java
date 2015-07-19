@@ -104,6 +104,7 @@ public class MatchesActivity extends ActionBarActivity
 
         // TODO: stop all thread in all fragments
         matchesPage.stopUpdate();
+        requestPage.stopUpdateRequests();
 
         // start/stop server call thread
         if(position == PAGE_SEARCH) {
@@ -111,7 +112,7 @@ public class MatchesActivity extends ActionBarActivity
         } else if (position == PAGE_MATCHES) {
             matchesPage.startUpdate();
         } else if (position == PAGE_REQUESTS) {
-
+            requestPage.startUpdateRequests();
         }
     }
 
