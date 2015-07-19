@@ -61,7 +61,7 @@ public class MatchListFragment extends Fragment {
     private Context context;
 
     private FacadeModule facade;
-    private boolean stopFetching = false;
+    private boolean stopFetching;
 
     /**
      * Use this factory method to create a new instance of
@@ -103,15 +103,26 @@ public class MatchListFragment extends Fragment {
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
-        facade = FacadeModule.getFacadeModule(this.context);
+//        facade = FacadeModule.getFacadeModule(this.context);
 
-        updateData();
+        // called in activity
+//        startUpdate();
+
 //        addTestData();
 
         return view;
     }
 
-    public void updateData(){
+    public void stopUpdate(){
+        stopFetching = true;
+    }
+
+    public void startUpdate(){
+        stopFetching = false;
+        if(facade == null){
+            facade = FacadeModule.getFacadeModule(context);
+        }
+
         Thread looper = new Thread() {
             public void run() {
                 String response = "";
@@ -126,7 +137,7 @@ public class MatchListFragment extends Fragment {
                                 public void run() {
                                     boolean running = true;
                                     while (running == true) {
-                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                        String response = facade.GetResponseMessage();
                                         try {
                                             // Get the match list
                                             if (facade.GetResponse().compareTo("") != 0) {
@@ -135,7 +146,7 @@ public class MatchListFragment extends Fragment {
                                                 Log.d("tag", "matches-size:" +  matches.size());
                                                 Log.d("tag", "response: " + facade.GetResponse());
                                                 listAdapter.setUserList(matches);
-                                                Log.d("tag", "actual list size: " + listAdapter.getUserList());
+                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
                                                 running = false;
                                             }
 
@@ -256,13 +267,13 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        stopFetching = true;
+//        stopFetching = true;
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        stopFetching = true;
+//        stopFetching = true;
     }
 
     /**

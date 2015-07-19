@@ -117,7 +117,7 @@ public class PreferenceFragment extends Fragment {
 
         _context = this.getActivity();
         activity = this.getActivity();
-        facade = FacadeModule.getFacadeModule(_context);
+
         state = EDIT_MODE;
     }
 
@@ -126,6 +126,8 @@ public class PreferenceFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_preference, container, false);
+
+        facade = FacadeModule.getFacadeModule(_context);
 
         // set the references
         _commentEdit = (EditText) view.findViewById(R.id.pref_comment);
@@ -177,18 +179,18 @@ public class PreferenceFragment extends Fragment {
                             Log.d(TAG, "search button clicked");
                             if (checkInput()) {
                                 // TODO: call facade to submit request
-//                                submitPreference();
+                                setPreference();
+                                submitPreference();
                                 setState(READ_MODE);
                             }
                         } else { // it is in the read only mode
                             // TODO: delete preference on server
-//                            deletePreference();
+                            deletePreference();
 
                             // TODO: enable all components on the page
 
                             // change the state to edit
-//                            state = EDIT_MODE;
-                            setState(EDIT_MODE);
+//                            setState(EDIT_MODE);
                         }
                         Log.d("tag", "state: "+state);
                         break;
@@ -199,6 +201,7 @@ public class PreferenceFragment extends Fragment {
         return view;
     }
 
+    // Precondition: The preference needs to be set
     public void submitPreference(){
         facade.CreatePreference(facade.GetUserId(), preference.m_max_distance,
             preference.m_min_age, preference.m_max_age, preference.m_min_price,
@@ -212,9 +215,16 @@ public class PreferenceFragment extends Fragment {
                     String response = FacadeModule.getFacadeModule(_context).GetResponseMessage();
                     try {
                         if (response.compareTo("Match successfully created.")==0) {
-                            setState(READ_MODE);
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setState(READ_MODE);
+                                }
+                            });
                             running = false;
                         } else if (response != "") {
+                            Log.d("tag", response);
                             running = false;
                         }
                         Thread.sleep(1000);
@@ -242,10 +252,15 @@ public class PreferenceFragment extends Fragment {
                     String response = FacadeModule.getFacadeModule(_context).GetResponseMessage();
                     try {
                         if (response.compareTo("Match has been successfully deleted.")==0) {
-                            setState(EDIT_MODE);
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setState(EDIT_MODE);
+                                }
+                            });
                             running = false;
                         } else if (response != "") {
-                            setState(EDIT_MODE);
+//                            setState(EDIT_MODE);
                             running = false;
                         }
                         Thread.sleep(1000);
@@ -260,25 +275,25 @@ public class PreferenceFragment extends Fragment {
         checker.start();
     }
 
+    // Precondition: should be ran on ui thread
     public void loadPreference(final Preference p) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String startTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_start_time);
-                String endTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_end_time);
-                _minAgeEdit.setText(p.m_min_age);
-                _maxAgeEdit.setText(p.m_max_age);
-                _startTimeEdit.setText(startTimeString);
-                _endTimeEdit.setText(endTimeString);
-                _minPriceEdit.setText(p.m_min_price);
-                _maxPriceEdit.setText(p.m_max_price);
-                _distanceEdit.setText(p.m_max_distance);
-                _commentEdit.setText(p.m_comment);
-            }
-        });
+        String startTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_start_time);
+        String endTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_end_time);
+        _minAgeEdit.setText(p.m_min_age);
+        _maxAgeEdit.setText(p.m_max_age);
+        _startTimeEdit.setText(startTimeString);
+        _endTimeEdit.setText(endTimeString);
+        _minPriceEdit.setText(p.m_min_price);
+        _maxPriceEdit.setText(p.m_max_price);
+        _distanceEdit.setText(p.m_max_distance);
+        _commentEdit.setText(p.m_comment);
     }
 
-    // disable all components
+    /**
+     * disable all components
+     *
+     * Precondition: should be run on ui thread
+     */
     public void setEnabledAllComponents(boolean enable){
         // disable all components
         _minAgeEdit.setEnabled(enable);
@@ -295,7 +310,11 @@ public class PreferenceFragment extends Fragment {
         _genderRadios.findViewById(R.id.pref_sex_none).setEnabled(enable);
     }
 
-    // set all components to default values
+    /**
+     * set all components to default values
+     *
+     * Precondition: should be run on ui thread
+     */
     public void setDefault(){
         _minAgeEdit.getText().clear();
         _maxAgeEdit.getText().clear();
@@ -310,6 +329,12 @@ public class PreferenceFragment extends Fragment {
         radioButton.setChecked(true);
     }
 
+    /**
+     * set the state of the preference page
+     *
+     * Precondition: should be run on ui thread
+     * @param newState
+     */
     public void setState(int newState){
         Resources res = _context.getResources();
 

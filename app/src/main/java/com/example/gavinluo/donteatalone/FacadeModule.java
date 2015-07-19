@@ -149,8 +149,8 @@ public class FacadeModule {
 
     public int CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, String gender, String comment, Timestamp start_time, Timestamp end_time)
     {
-        String start_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(start_time);
-        String end_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(end_time);
+        String start_time_string = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(start_time);
+        String end_time_string = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(end_time);
 
 		double latitude;
 		double longitude;
@@ -176,6 +176,7 @@ public class FacadeModule {
 					 "&comment=" + comment +
 					 "&start_time=" + start_time_string +
 					 "&end_time=" + end_time_string;
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.POST, RequestMode.CREATE_PREFERENCE);
 		return 1;
 	}
