@@ -12,13 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class messageFragment extends Fragment {
+
+    private final String TAG = "messageFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +38,7 @@ public class messageFragment extends Fragment {
 
     private FacadeModule _facade;
     private Context _context;
+    private static ArrayList<Message> _messages;
 
     /**
      * The fragment's ListView/GridView.
@@ -46,12 +52,16 @@ public class messageFragment extends Fragment {
     private ListAdapter _mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static messageFragment newInstance(String param1, String param2) {
+    public static messageFragment newInstance(ArrayList<Message> messages) {
+
+        Log.d("messageFragment", "newInstance called");
         messageFragment fragment = new messageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        _messages = messages;
+
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -90,12 +100,14 @@ public class messageFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 0;
+            Log.d(TAG, "getCount called");
+            return _messages.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            Log.d(TAG, "getItem called");
+            return _messages.get(position);
         }
 
         @Override
@@ -110,7 +122,20 @@ public class messageFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.sent_message_row, null);
+            }
+
+            Log.d(TAG, "getView called");
+
+            if (_messages.size() > 0) {
+                Message message = _messages.get(position);
+                TextView messageText = (TextView) convertView.findViewById(R.id.message_text);
+                messageText.setText(message.mMessage);
+            }
+
+            return convertView;
         }
 
         @Override
@@ -134,6 +159,8 @@ public class messageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate called");
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -147,10 +174,11 @@ public class messageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
+        Log.d(TAG, "onCreateView called");
+        View view = inflater.inflate(R.layout.fragment_message_list, container, false);
 
         // Set the adapter
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (ListView) view.findViewById(R.id.messenger_list_view);
         mListView.setAdapter(_mAdapter);
 
         return view;
@@ -159,6 +187,7 @@ public class messageFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG, "onAttach called");
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {

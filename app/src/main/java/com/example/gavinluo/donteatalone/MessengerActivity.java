@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.FragmentManager;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -30,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class MessengerActivity extends Activity
+public class MessengerActivity extends FragmentActivity
         implements messageFragment.OnFragmentInteractionListener
 {
     private static final String TAG = "MessengerActivity";
@@ -52,10 +54,11 @@ public class MessengerActivity extends Activity
 
         _context = this;
         setContentView(R.layout.activity_messenger);
-        _messageFragment = messageFragment.newInstance("blah1", "blah2");
+        this.getAllMessages();
+        _messageFragment = messageFragment.newInstance(_messages);
         _messageFragment.onAttach(this);
 
-        this.getAllMessages();
+//        _messageFragment.setArguments(getIntent().getExtras());
     }
 
     @Override
@@ -232,6 +235,6 @@ public class MessengerActivity extends Activity
     // messageFragment Methods
     @Override
     public void onFragmentInteraction(String id) {
-
+        Log.d(TAG, "onFragmentInteraction called");
     }
 }
