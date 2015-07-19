@@ -9,11 +9,11 @@ public class Message {
 	public int mUserId;
 	public int mToUserId;
 	public String mMessage;
-	public Timestamp mTimestamp;
+	public String mTimestamp;
 	public int mTimezoneType;
 	public String mTimeZone;
 
-	public Message(int userId, int toUserId, String message)
+	public Message(int userId, int toUserId, String message, String timeStamp)
 	{
 		mUserId = userId;
 		mToUserId = toUserId;
