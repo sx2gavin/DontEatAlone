@@ -259,10 +259,18 @@ public class ProfileActivity extends ActionBarActivity {
                 public void run () {
                     boolean running = true;
                     while (running == true) {
-                        String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
+                        int response = FacadeModule.getFacadeModule(mActivity).LastRequestResult();
                         try {
-
-                            if (response.equals("User's profile successfully updated.")) {
+                            if (response == 0) {
+                                DisplayMessage("no result");
+                            } else if (response == 1) {
+                                DisplayMessage("successful");
+                                running = false;
+                            } else if (response == -1) {
+                                DisplayMessage("error");
+                                running = false;
+                            }
+                            /*if (response.equals("User's profile successfully updated.")) {
                                 DisplayMessage("User's profile successfully updated.");
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
@@ -281,7 +289,7 @@ public class ProfileActivity extends ActionBarActivity {
                             } else if (response != "") {
                                 DisplayMessage(response);
                                 running = false;
-                            }
+                            }*/
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
