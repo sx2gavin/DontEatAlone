@@ -12,7 +12,7 @@ public class User {
 	private int m_invitation_sent;
     private String m_name;
 	private String m_gender;
-    private float m_max_distance;
+    private int m_max_distance;
     private float m_latitude;
     private float m_longitude;
     private double m_distance;
@@ -61,7 +61,7 @@ public class User {
 		return m_gender;
 	}	
 		
-	public float getMaxDistance()
+	public int getMaxDistance()
 	{
 		return m_max_distance;	
 	}
@@ -147,7 +147,7 @@ public class User {
 		m_gender = gender;
 	}
 
-	public void setMaxDistance(float max_distance)
+	public void setMaxDistance(int max_distance)
 	{
 		m_max_distance = max_distance;
 	}
@@ -212,7 +212,7 @@ public class User {
 		Log.d(FacadeModule.TAG, "ID:" + Integer.toString(m_id) + " " +
 			"Name:" + m_name + " " +
 			"Gender:" + m_gender + " " +
-			"Max distance:" + Float.toString(m_max_distance) + " " +
+			"Max distance:" + Integer.toString(m_max_distance) + " " +
 			"Latitude:" + Float.toString(m_latitude) + " " +
 			"Longtitude:" + Float.toString(m_longitude) + " " +
 			"Distance:" + Double.toString(m_distance) + " " +
