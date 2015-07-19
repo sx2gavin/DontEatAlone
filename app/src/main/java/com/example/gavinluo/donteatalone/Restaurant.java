@@ -6,15 +6,15 @@ package com.example.gavinluo.donteatalone;
 public class Restaurant {
 	public String m_name;
 	public String m_image_url;
-	public int m_rating;
+	public double m_rating;
 	public String m_formatted_address;
 	public String m_formatted_phone_number;
-	public float m_latitude;
-	public float m_longtitude;
+	public double m_latitude;
+	public double m_longtitude;
 	public String m_url;
 	public String m_website;
 
-	public Restaurant(String name, String image_url, int rating, String formatted_address, String formatted_phone_number, float latitude, float longtitude, String url, String website) 
+	public Restaurant(String name, String image_url, double rating, String formatted_address, String formatted_phone_number, double latitude, double longtitude, String url, String website) 
 	{
 		m_name = name;
 		m_image_url = image_url;
