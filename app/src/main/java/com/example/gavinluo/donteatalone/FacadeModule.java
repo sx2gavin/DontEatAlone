@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, OTHER
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, GET_MESSAGES, OTHER
 	}
 
     private static FacadeModule mInstance;
@@ -48,12 +48,15 @@ public class FacadeModule {
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
 	private ArrayList<User> mRequestList;
+	private Meeting mMeeting;
 	private Preference mPreference;
 	private GPSTracker mGPS;
+	private int mRequestResult;
 
     // constructor
     private FacadeModule(Context context)
     {
+		mRequestResult = 0;
         mContext = context;
         mSavedJSON = null;
         mMySingleton = MySingleton.getMySingleton(context);
@@ -66,6 +69,7 @@ public class FacadeModule {
     {
         Log.d(TAG, "SendRequest called");
 		mSavedJSON = null;
+		mRequestResult = 0;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
 					@Override
@@ -77,13 +81,16 @@ public class FacadeModule {
 							mSavedJSON = new JSONObject(response.toString());
 							if (mSavedJSON == null) {
 								Log.d(TAG, "mSavedJSON is null");
+								mRequestResult = -1;
 							} else {
 								Log.d(TAG, response.toString());
+								mRequestResult = 1;
 								ParseResponse(request);
 							}
 						} catch (JSONException e) {
 							Log.d(TAG, "There is an JSON exception.");
 							e.printStackTrace();
+							mRequestResult = -1;
 							return;
 						}
 
@@ -92,6 +99,7 @@ public class FacadeModule {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						Log.d(TAG, "ErrorResponse called");
+						mRequestResult = -1;
 						NetworkResponse response = error.networkResponse;
 						if(response != null && response.data != null) {
 							String message = new String(response.data);
@@ -149,8 +157,8 @@ public class FacadeModule {
 
     public int CreatePreference(int user_id, int max_distance, int min_age, int max_age, int min_price, int max_price, String gender, String comment, Timestamp start_time, Timestamp end_time)
     {
-        String start_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(start_time);
-        String end_time_string = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(end_time);
+        String start_time_string = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(start_time);
+        String end_time_string = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(end_time);
 
 		double latitude;
 		double longitude;
@@ -166,7 +174,7 @@ public class FacadeModule {
         String url = "http://donteatalone.paigelim.com/api/v1/matches?" +
 					 "user_id=" + Integer.toString(user_id) +
 					 "&latitude=" + Double.toString(latitude) +
-					 "&longtitude=" + Double.toString(longitude) +
+					 "&longitude=" + Double.toString(longitude) +
 					 "&max_distance=" + Integer.toString(max_distance) +
 					 "&min_age=" + Integer.toString(min_age) +
 					 "&max_age=" + Integer.toString(max_age) +
@@ -176,6 +184,7 @@ public class FacadeModule {
 					 "&comment=" + comment +
 					 "&start_time=" + start_time_string +
 					 "&end_time=" + end_time_string;
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.POST, RequestMode.CREATE_PREFERENCE);
 		return 1;
 	}
@@ -221,12 +230,23 @@ public class FacadeModule {
                 "&password_confirmation=" + password_confirm +
                 "&name=" + name +
                 "&age=" + age;
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.POST, RequestMode.SIGNUP);
 	}	
 
     public void SendRequestLogOut()
     {
-        
+
+		int mMatchId = -1;
+		String mFacebookId = "";
+		String mGCMToken = "";
+		JSONObject mSavedJSON = null;
+		Profile mUserProfile = new Profile();
+		ArrayList<User> mMatchList = null;
+		ArrayList<User> mRequestList = null;
+		Meeting mMeeting = null;
+		Preference mPreference = null;
+		 
 		String url = "http://donteatalone.paigelim.com/api/v1/logout";
 		SendRequest(url, Request.Method.GET, RequestMode.LOGOUT);
     }
@@ -246,7 +266,7 @@ public class FacadeModule {
 			"&gender=" + mUserProfile.GetGender() +
 			"&age=" + Integer.toString(mUserProfile.GetAge()) +
 			"&description=" + mUserProfile.GetDescription();
-		
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
@@ -265,6 +285,11 @@ public class FacadeModule {
             return mSavedJSON.toString();
         }
     }
+
+	public int LastRequestResult()
+	{
+		return mRequestResult;	
+	}	
 
 	public String GetResponseMessage()
 	{
@@ -295,7 +320,8 @@ public class FacadeModule {
 					for (int i = 0; i < matches.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = matches.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setInvitationSent(userInfo.getInt("inviation_sent"));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getString("max_distance")));
@@ -317,13 +343,14 @@ public class FacadeModule {
 					for (int i = 0; i < requestList.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = requestList.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setRequestId(Integer.parseInt(userInfo.getString("id")));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
-						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
@@ -339,7 +366,7 @@ public class FacadeModule {
 				} else if (request == RequestMode.GET_PROFILE) {
 					Log.d(TAG, "LOGIN parsing");
 					JSONObject userProfile = mSavedJSON.getJSONObject("user").getJSONObject("profile");
-					mUserProfile.SetId(userProfile.getInt("id"));
+					mUserProfile.SetId(userProfile.getInt("user_id"));
 					mUserProfile.SetName(userProfile.getString("name"));
 					mUserProfile.SetImageUrl(userProfile.getString("image_url"));
 					mUserProfile.SetGender(userProfile.getString("gender"));
@@ -351,6 +378,28 @@ public class FacadeModule {
 					mUserProfile.SetEmail(mSavedJSON.getJSONObject("data").getJSONObject("user").getString("email"));
 					mGCMToken = mSavedJSON.getJSONObject("data").getJSONObject("user").getString("gcm_token");
 					Log.d(FacadeModule.TAG, mGCMToken);
+				} else if (request == RequestMode.GET_MEETING) {
+					JSONArray meetingList = mSavedJSON.getJSONArray("meetings");
+					if (meetingList.length() != 0) {
+						int user_id1 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id1"));			
+						int user_id2 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id2"));
+						if (user_id1 == mUserProfile.GetId()) {
+							mMeeting = new Meeting(user_id1, user_id2);	
+						} else if (user_id2 == mUserProfile.GetId()) {
+							mMeeting = new Meeting(user_id2, user_id1);
+						}	
+					}	
+				} else if (request == RequestMode.GET_MESSAGES) {
+					JSONArray messagesList = mSavedJSON.getJSONArray("messages");
+					for (int i = 0; i < messagesList.length(); i++) {
+						JSONObject messageJson = messagesList.getJSONObject(i);
+						int user_id = Integer.parseInt(messageJson.getString("user_id")); 
+						int to_user_id = Integer.parseInt(messageJson.getString("to_user_id"));
+						String message_str = messageJson.getString("message"); 
+						String timestamp = messageJson.getJSONObject("created_at").getString("date");
+						Message message = new Message(user_id, to_user_id, message_str, timestamp);	
+						mMeeting.mMessages.add(message);
+					}	
 				}
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -365,7 +414,18 @@ public class FacadeModule {
 	public ArrayList<User> GetMatchList()
 	{
 		return mMatchList;
-	}	
+	}
+
+	public ArrayList<User> GetRequestList()
+	{
+		return mRequestList;
+	}
+
+	// mMeeting might be null, make sure to call SendRequestGetMeeting first to check if there is any meeting.
+	public Meeting GetMeeting()
+	{
+		return mMeeting;
+	}
 
     public boolean LoggedIn()
     {
@@ -422,5 +482,29 @@ public class FacadeModule {
 				"?facebook_id=" + facebookId;
 
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
+	}
+
+
+	public void SendRequestGetMeeting()
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/meetings";
+		SendRequest(url, Request.Method.GET, RequestMode.GET_MEETING);
+	}
+
+	// Please don't call this function if your mMeeting object is null. 
+	public void SendRequestGetAllMessages()
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/messages";
+		SendRequest(url, Request.Method.GET, RequestMode.GET_MESSAGES);
+	}
+
+	public void SendMessageToUser(int to_user_id, String message)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/messages?" +
+			"user_id=" + Integer.toString(mUserProfile.GetId()) +
+			"&to_user_id=" + Integer.toString(to_user_id) +
+			"&message=" + message;
+
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
 	}
 }

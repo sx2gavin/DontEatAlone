@@ -1,6 +1,7 @@
 package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import 	android.support.design.widget.TabLayout;
@@ -32,14 +34,22 @@ public class MatchesActivity extends ActionBarActivity
         PreferenceFragment.OnFragmentInteractionListener,
         ActionBar.TabListener
 {
-    MatchesPagerAdapter mMatchesPageAdapter;
+    public static final int NUM_PAGES = 3;
+    public static final int PAGE_SEARCH = 0;
+    public static final int PAGE_MATCHES = 1;
+    public static final int PAGE_REQUESTS = 2;
+
+    static MatchesPagerAdapter mMatchesPageAdapter;
     ViewPager mViewPager;
     TabLayout mTabLayout;
+    MatchesActivity activity ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matches);
+
+        activity = this;
 
         // ViewPager and its adapter use support library
         // fragments, so use getSupportFragmentManager.
@@ -49,6 +59,13 @@ public class MatchesActivity extends ActionBarActivity
 
         mViewPager.setAdapter(mMatchesPageAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout){
+            @Override
+            public void onPageSelected(int position){
+                activity.setService(position);
+            }
+        });
 
         // Set a toolbar to replace the action bar.
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.matches_toolbar);
@@ -80,10 +97,42 @@ public class MatchesActivity extends ActionBarActivity
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        setService(-1);     // stop all services
+    }
+
+    @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    public void setService( int position ){
+        // get the pages
+        PreferenceFragment searchPage = (PreferenceFragment) mMatchesPageAdapter.getItem(PAGE_SEARCH);
+        MatchListFragment matchesPage = (MatchListFragment) mMatchesPageAdapter.getItem(PAGE_MATCHES);
+        RequestListFragment requestPage = (RequestListFragment) mMatchesPageAdapter.getItem(PAGE_REQUESTS);
+
+        // TODO: stop all thread in all fragments
+        matchesPage.stopUpdate();
+        requestPage.stopUpdateRequests();
+
+        // start/stop server call thread
+        if(position == PAGE_SEARCH) {
+
+        } else if (position == PAGE_MATCHES) {
+            matchesPage.startUpdate();
+        } else if (position == PAGE_REQUESTS) {
+            requestPage.startUpdateRequests();
+        }
     }
 
     @Override
@@ -100,26 +149,27 @@ public class MatchesActivity extends ActionBarActivity
     }
 
     public class MatchesPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES = 3;
-        private static final int PAGE_SEARCH = 0;
-        private static final int PAGE_MATCHES = 1;
-        private static final int PAGE_REQUESTS = 2;
-        private Context context;
+        PreferenceFragment pFrag;
+        MatchListFragment mFrag;
+        RequestListFragment rFrag;
 
         public MatchesPagerAdapter(FragmentManager fm, Context context ){
             super(fm);
             this.context = context;
+
+            pFrag = new PreferenceFragment();
+            mFrag = new MatchListFragment();
+            rFrag = new RequestListFragment();
         }
 
         @Override
         public Fragment getItem(int position) {
-            // TODO: change the fragment to be the correct ones
-            if(position == PAGE_SEARCH) {
-                return new PreferenceFragment();
-            } else if (position == PAGE_MATCHES) {
-                return new MatchListFragment();
+            if(position == PAGE_SEARCH){
+                return pFrag;
+            } else if (position == PAGE_MATCHES){
+                return mFrag;
             } else if (position == PAGE_REQUESTS){
-                return new RequestListFragment();
+                return rFrag;
             }
 
             return new NoMatchFragment();

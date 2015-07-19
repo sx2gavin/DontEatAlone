@@ -97,11 +97,6 @@
                     android:textSize="@dimen/general_text_font_size" />
 
             </LinearLayout>
-            <!--<Spinner-->
-                <!--android:id="@+id/pref_age_spinner"-->
-                <!--android:layout_width="@dimen/activity_edittext_layout_width"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="@dimen/activity_layout_margin"/>-->
 
             <EditText
                 android:id="@+id/pref_distance"
@@ -123,18 +118,6 @@
                 android:layout_margin="@dimen/activity_layout_margin"
                 android:id="@+id/about_meetup"
                 android:textColor="#ff21201d" />
-
-            <!--<TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_food"
-                android:layout_margin="@dimen/activity_layout_margin"/>
-
-            <Spinner
-                android:id="@+id/pref_food_spinner"
-                android:layout_width="@dimen/activity_edittext_layout_width"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_layout_margin"/>-->
 
             <LinearLayout
                 android:layout_width="@dimen/activity_edittext_layout_width"
