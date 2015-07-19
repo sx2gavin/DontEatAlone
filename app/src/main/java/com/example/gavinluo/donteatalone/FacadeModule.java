@@ -274,6 +274,7 @@ public class FacadeModule {
 			"&gender=" + mUserProfile.GetGender() +
 			"&age=" + Integer.toString(mUserProfile.GetAge()) +
 			"&description=" + mUserProfile.GetDescription();
+
 		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
