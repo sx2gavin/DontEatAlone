@@ -12,6 +12,8 @@ public class Profile {
 	private String m_image_url;
 	private String m_gender;
 	private int m_age;
+	private int m_likes;
+	private int m_dislikes;	
 	private String m_description;
 
 	public int GetId()
@@ -42,7 +44,17 @@ public class Profile {
 	{
 		return m_age;
 	}
+
+	public int GetLikes()
+	{
+		return m_likes;
+	}	
 	
+	public int GetDislikes()
+	{
+		return m_dislikes;
+	}
+
 	public String GetDescription()
 	{
 		return m_description;
@@ -77,6 +89,16 @@ public class Profile {
 	public void SetAge(int age)
 	{
 		m_age = age;	
+	}
+
+	public void SetLikes(int likes)
+	{
+		m_likes = likes;
+	}
+
+	public void SetDislikes(int dislikes)
+	{
+		m_dislikes = dislikes;	
 	}
 	
 	public void SetDescription(String description) {

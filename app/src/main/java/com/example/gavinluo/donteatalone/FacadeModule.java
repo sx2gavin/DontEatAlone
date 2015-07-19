@@ -546,4 +546,16 @@ public class FacadeModule {
 
 		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
 	}
+
+	public void SendRequestLikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/like";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestDislikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/dislike";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
 }
