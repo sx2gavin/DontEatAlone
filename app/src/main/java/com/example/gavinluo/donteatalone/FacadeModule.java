@@ -230,12 +230,23 @@ public class FacadeModule {
                 "&password_confirmation=" + password_confirm +
                 "&name=" + name +
                 "&age=" + age;
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.POST, RequestMode.SIGNUP);
 	}	
 
     public void SendRequestLogOut()
     {
-        
+
+		int mMatchId = -1;
+		String mFacebookId = "";
+		String mGCMToken = "";
+		JSONObject mSavedJSON = null;
+		Profile mUserProfile = new Profile();
+		ArrayList<User> mMatchList = null;
+		ArrayList<User> mRequestList = null;
+		Meeting mMeeting = null;
+		Preference mPreference = null;
+		 
 		String url = "http://donteatalone.paigelim.com/api/v1/logout";
 		SendRequest(url, Request.Method.GET, RequestMode.LOGOUT);
     }
@@ -255,7 +266,7 @@ public class FacadeModule {
 			"&gender=" + mUserProfile.GetGender() +
 			"&age=" + Integer.toString(mUserProfile.GetAge()) +
 			"&description=" + mUserProfile.GetDescription();
-		
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
