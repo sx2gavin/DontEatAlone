@@ -321,7 +321,7 @@ public class FacadeModule {
 						User newUser = new User();
 						JSONObject userInfo = matches.getJSONObject(i);
 						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
-						newUser.setInvitationSent(userInfo.getInt("inviation_sent"));
+						newUser.setInvitationSent(userInfo.getInt("invitation_sent"));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getString("max_distance")));
