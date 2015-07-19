@@ -2,15 +2,22 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import 	android.support.design.widget.TabLayout;
@@ -36,7 +43,7 @@ public class MatchesActivity extends ActionBarActivity
 
         // ViewPager and its adapter use support library
         // fragments, so use getSupportFragmentManager.
-        mMatchesPageAdapter = new MatchesPagerAdapter(getSupportFragmentManager());
+        mMatchesPageAdapter = new MatchesPagerAdapter(getSupportFragmentManager(), this);
         mTabLayout = (TabLayout)findViewById(R.id.matches_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.matches_pager);
 
@@ -97,9 +104,11 @@ public class MatchesActivity extends ActionBarActivity
         private static final int PAGE_SEARCH = 0;
         private static final int PAGE_MATCHES = 1;
         private static final int PAGE_REQUESTS = 2;
+        private Context context;
 
-        public MatchesPagerAdapter(FragmentManager fm){
+        public MatchesPagerAdapter(FragmentManager fm, Context context ){
             super(fm);
+            this.context = context;
         }
 
         @Override
@@ -121,26 +130,43 @@ public class MatchesActivity extends ActionBarActivity
             return NUM_PAGES;
         }
 
+        private int[] imageResId = {
+                R.drawable.mag_icon_no_bg,
+                R.drawable.list_icon_no_bg,
+                R.drawable.exclaim_icon_yellow_no_bg,
+                R.drawable.exclaim_icon_red_no_bg
+        };
+
         @Override
         public CharSequence getPageTitle(int position) {
-            String retVal ;
-            switch(position){
-                case 0:
-                    retVal = "Preference";
-                    break;
-                case 1:
-                    retVal = "Match List";
-                    break;
-                case 2:
-                    retVal = "Request List";
-                    break;
-                default:
-                    retVal = "position: " + (position+1);
-                    break;
-            }
-
-            return retVal;
+            Drawable image = ContextCompat.getDrawable(this.context, imageResId[position]);
+            image.setBounds(0, 0, image.getIntrinsicWidth()-65, image.getIntrinsicHeight()-50);
+            SpannableString sb = new SpannableString(" ");
+            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return sb;
         }
+
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            String retVal ;
+//            switch(position){
+//                case 0:
+//                    retVal = "Preference";
+//                    break;
+//                case 1:
+//                    retVal = "Match List";
+//                    break;
+//                case 2:
+//                    retVal = "Request List";
+//                    break;
+//                default:
+//                    retVal = "position: " + (position+1);
+//                    break;
+//            }
+//
+//            return retVal;
+//        }
     }
 }
 
