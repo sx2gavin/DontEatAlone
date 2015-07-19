@@ -286,6 +286,9 @@ public class LoginActivity extends ActionBarActivity {
         Intent GCMListenerIntent = new Intent(this, MyGcmListenerService.class);
         startService(GCMListenerIntent);
 
+        // We need to get our meeting before we can store messages for messenger
+        FacadeModule.getFacadeModule(this).SendRequestGetMeeting();
+
         Intent intent = new Intent (this, StartMatchingActivity.class);
         startActivity(intent);
     }

@@ -65,7 +65,8 @@
             android:backgroundTint="#ff6f956d"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/button_send" />
+                android:id="@+id/button_send"
+                android:onClick="onSendButtonClick" />
 
         </RelativeLayout>
 
