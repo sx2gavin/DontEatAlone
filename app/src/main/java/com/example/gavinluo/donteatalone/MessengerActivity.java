@@ -22,20 +22,44 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 
 public class MessengerActivity extends ActionBarActivity
 {
     private static final String TAG = "MESSENGER";
+
+    //TODO: Will probably change these to hold a DEAMessage
+    private ArrayList<String> retrievedMessages;
+    private ArrayList<String> sentMessages;
 
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
      */
     private static final int REQUEST_PLACE_PICKER = 1;
 
+
+    public MessengerActivity() {
+        ArrayList<String> retrievedMessages = new ArrayList<>();
+        retrievedMessages.add("Hi there!");
+        retrievedMessages.add("Let's meet at ...");
+        retrievedMessages.add("Ok see you soon!");
+
+        ArrayList<String> sentMessages = new ArrayList<>();
+        retrievedMessages.add("Hi there!");
+        retrievedMessages.add("Let's meet at ...");
+        retrievedMessages.add("Ok see you soon!");
+
+        this.retrievedMessages = retrievedMessages;
+        this.sentMessages = sentMessages;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger);
+
+
     }
 
     @Override
@@ -131,12 +155,12 @@ public class MessengerActivity extends ActionBarActivity
                 attributions = "";
             }
 
-            TextView tv1 = (TextView)findViewById(R.id.mess_debug1);
-            TextView tv2 = (TextView)findViewById(R.id.mess_debug2);
-            TextView tv3 = (TextView)findViewById(R.id.mess_debug3);
-            tv1.setText(name);
-            tv2.setText(address);
-            tv3.setText(Html.fromHtml(attributions));
+//            TextView tv1 = (TextView)findViewById(R.id.mess_debug1);
+//            TextView tv2 = (TextView)findViewById(R.id.mess_debug2);
+//            TextView tv3 = (TextView)findViewById(R.id.mess_debug3);
+//            tv1.setText(name);
+//            tv2.setText(address);
+//            tv3.setText(Html.fromHtml(attributions));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
