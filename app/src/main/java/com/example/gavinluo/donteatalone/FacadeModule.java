@@ -206,6 +206,9 @@ public class FacadeModule {
 
 	public void SendRequestGetPreference()
 	{
+		if (mPreference == null) {
+			mPreference = new Preference();
+		}
 		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/matches";
 
 		SendRequest(url, Request.Method.GET, RequestMode.GET_PREFERENCE);
