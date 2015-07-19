@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, OTHER
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, GET_MESSAGES, OTHER
 	}
 
     private static FacadeModule mInstance;
@@ -48,6 +48,7 @@ public class FacadeModule {
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
 	private ArrayList<User> mRequestList;
+	private Meeting mMeeting;
 	private Preference mPreference;
 	private GPSTracker mGPS;
 	private int mRequestResult;
@@ -366,8 +367,25 @@ public class FacadeModule {
 					Log.d(FacadeModule.TAG, mGCMToken);
 				} else if (request == RequestMode.GET_MEETING) {
 					JSONArray meetingList = mSavedJSON.getJSONArray("meetings");
-					if (meetingList.length() == 0) {
-						
+					if (meetingList.length() != 0) {
+						int user_id1 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id1"));			
+						int user_id2 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id2"));
+						if (user_id1 == mUserProfile.GetId()) {
+							mMeeting = new Meeting(user_id1, user_id2);	
+						} else if (user_id2 == mUserProfile.GetId()) {
+							mMeeting = new Meeting(user_id2, user_id1);
+						}	
+					}	
+				} else if (request == RequestMode.GET_MESSAGES) {
+					JSONArray messagesList = mSavedJSON.getJSONArray("messages");
+					for (int i = 0; i < messagesList.length(); i++) {
+						JSONObject messageJson = messagesList.getJSONObject(i);
+						int user_id = Integer.parseInt(messageJson.getString("user_id")); 
+						int to_user_id = Integer.parseInt(messageJson.getString("to_user_id"));
+						String message_str = messageJson.getString("message"); 
+						String timestamp = messageJson.getJSONObject("created_at").getString("date");
+						Message message = new Message(user_id, to_user_id, message_str, timestamp);	
+						mMeeting.mMessages.add(message);
 					}	
 				}
             } catch (JSONException e) {
@@ -388,6 +406,12 @@ public class FacadeModule {
 	public ArrayList<User> GetRequestList()
 	{
 		return mRequestList;
+	}
+
+	// mMeeting might be null, make sure to call SendRequestGetMeeting first to check if there is any meeting.
+	public Meeting GetMeeting()
+	{
+		return mMeeting;
 	}
 
     public boolean LoggedIn()
@@ -452,5 +476,22 @@ public class FacadeModule {
 	{
 		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/meetings";
 		SendRequest(url, Request.Method.GET, RequestMode.GET_MEETING);
+	}
+
+	// Please don't call this function if your mMeeting object is null. 
+	public void SendRequestGetAllMessages()
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/messages";
+		SendRequest(url, Request.Method.GET, RequestMode.GET_MESSAGES);
+	}
+
+	public void SendMessageToUser(int to_user_id, String message)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/messages?" +
+			"user_id=" + Integer.toString(mUserProfile.GetId()) +
+			"&to_user_id=" + Integer.toString(to_user_id) +
+			"&message=" + message;
+
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);	
 	}
 }
