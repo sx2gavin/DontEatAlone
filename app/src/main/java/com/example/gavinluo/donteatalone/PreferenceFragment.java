@@ -74,6 +74,17 @@ public class PreferenceFragment extends Fragment {
     RadioGroup _genderRadios;
     RadioButton _genderNoPrefRadio;
     Button _prefButton;
+//    static EditText _distanceEdit;
+//    static EditText _minAgeEdit;
+//    static EditText _maxAgeEdit;
+//    static EditText _minPriceEdit;
+//    static EditText _maxPriceEdit;
+//    static EditText _commentEdit;
+//    static Button _startTimeEdit;
+//    static Button _endTimeEdit;
+//    static RadioGroup _genderRadios;
+//    static RadioButton _genderNoPrefRadio;
+//    static Button _prefButton;
 
     Context _context;
     Activity activity;
@@ -145,6 +156,9 @@ public class PreferenceFragment extends Fragment {
         startTime = null;
         endTime = null;
 
+
+
+
         // attach the button click listeners
         _startTimeEdit.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -198,7 +212,44 @@ public class PreferenceFragment extends Fragment {
             }
         });
 
+        retrievePreference();
         return view;
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+//        try {
+//            // retrieve and set the preference if there's one
+//            retrievePreference();
+//            Thread.sleep
+//        } catch(){
+//
+//        }
+
+        // Thread
+        // TODO: wait a while before retrieving preference
+
+//        Log.d("tag", "sent request retrieve preference");
+//        Thread checker = new Thread() {
+//            public void run () {
+//                FacadeModule.getFacadeModule(_context).SendRequestGetPreference();
+//                boolean running = true;
+//                while (running == true) {
+//                    try {
+//                        Thread.sleep(500);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                        running = false;
+//                        Thread.currentThread().interrupt();
+//                    }
+//                }
+//            }
+//        };
+//        checker.start();
+
     }
 
     // Precondition: The preference needs to be set
@@ -284,14 +335,67 @@ public class PreferenceFragment extends Fragment {
     public void loadPreference(final Preference p) {
         String startTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_start_time);
         String endTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_end_time);
-        _minAgeEdit.setText(p.m_min_age);
-        _maxAgeEdit.setText(p.m_max_age);
+        _minAgeEdit.setText(p.m_min_age+"");
+        _maxAgeEdit.setText(p.m_max_age+"");
         _startTimeEdit.setText(startTimeString);
         _endTimeEdit.setText(endTimeString);
-        _minPriceEdit.setText(p.m_min_price);
-        _maxPriceEdit.setText(p.m_max_price);
-        _distanceEdit.setText(p.m_max_distance);
+        _minPriceEdit.setText(p.m_min_price+"");
+        _maxPriceEdit.setText(p.m_max_price+"");
+        _distanceEdit.setText(p.m_max_distance+"");
         _commentEdit.setText(p.m_comment);
+
+        startTime = p.m_start_time;
+        endTime = p.m_end_time;
+
+        setState(READ_MODE);
+    }
+
+    public void retrievePreference(){
+        // Thread
+
+        Log.d("tag", "sent request retrieve preference");
+        Thread checker = new Thread() {
+            public void run () {
+                FacadeModule.getFacadeModule(_context).SendRequestGetPreference();
+                boolean running = true;
+                final int TIMEOUT = 100;
+                int  counter = 0;
+                while (running == true) {
+                    try {
+                        if (FacadeModule.getFacadeModule(_context).LastRequestResult() != 0) {
+                            counter += 1;
+                            final Preference pref = FacadeModule.getFacadeModule(_context).GetPreference();
+                            Log.d("tag", "retrieve-response: "+FacadeModule.getFacadeModule(_context).GetResponse());
+                            if(pref.m_start_time==null && counter<TIMEOUT){
+                                continue;
+                            } else if (pref.m_end_time==null){
+                                running = false;
+                                continue;
+                            }
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d("tag", "load the preference");
+                                    loadPreference(pref);
+                                }
+                            });
+                            running = false;
+                        }
+//                        else if (FacadeModule.getFacadeModule(_context).LastRequestResult() !=0 ){
+//                            // there's no preference set
+//                            running = false;
+//                        }
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
     }
 
     public void DisplayMessage(final String message) {

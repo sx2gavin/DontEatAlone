@@ -210,7 +210,7 @@ public class FacadeModule {
 			mPreference = new Preference();
 		}
 		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/matches";
-
+Log.d("tag", "preference url: " + url);
 		SendRequest(url, Request.Method.GET, RequestMode.GET_PREFERENCE);
 	}
 
