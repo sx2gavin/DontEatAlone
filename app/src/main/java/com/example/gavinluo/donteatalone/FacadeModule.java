@@ -50,11 +50,12 @@ public class FacadeModule {
 	private ArrayList<User> mRequestList;
 	private Preference mPreference;
 	private GPSTracker mGPS;
-	private boolean mRequestResult;
+	private int mRequestResult;
 
     // constructor
     private FacadeModule(Context context)
     {
+		mRequestResult = 0;
         mContext = context;
         mSavedJSON = null;
         mMySingleton = MySingleton.getMySingleton(context);
@@ -67,7 +68,7 @@ public class FacadeModule {
     {
         Log.d(TAG, "SendRequest called");
 		mSavedJSON = null;
-		mRequestResult = false;
+		mRequestResult = 0;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
 					@Override
@@ -79,14 +80,16 @@ public class FacadeModule {
 							mSavedJSON = new JSONObject(response.toString());
 							if (mSavedJSON == null) {
 								Log.d(TAG, "mSavedJSON is null");
+								mRequestResult = -1;
 							} else {
 								Log.d(TAG, response.toString());
-								mRequestResult = true;
+								mRequestResult = 1;
 								ParseResponse(request);
 							}
 						} catch (JSONException e) {
 							Log.d(TAG, "There is an JSON exception.");
 							e.printStackTrace();
+							mRequestResult = -1;
 							return;
 						}
 
@@ -95,6 +98,7 @@ public class FacadeModule {
 					@Override
 					public void onErrorResponse(VolleyError error) {
 						Log.d(TAG, "ErrorResponse called");
+						mRequestResult = -1;
 						NetworkResponse response = error.networkResponse;
 						if(response != null && response.data != null) {
 							String message = new String(response.data);
@@ -270,7 +274,7 @@ public class FacadeModule {
         }
     }
 
-	public boolean LastRequestResult()
+	public int LastRequestResult()
 	{
 		return mRequestResult;	
 	}	
