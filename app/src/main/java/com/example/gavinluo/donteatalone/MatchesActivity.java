@@ -2,8 +2,10 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -205,6 +207,7 @@ public class MatchesActivity extends ActionBarActivity
             return sb;
         }
 
+
 //        @Override
 //        public CharSequence getPageTitle(int position) {
 //            String retVal ;
@@ -225,6 +228,22 @@ public class MatchesActivity extends ActionBarActivity
 //
 //            return retVal;
 //        }
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(activity)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MatchesActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 }
 
