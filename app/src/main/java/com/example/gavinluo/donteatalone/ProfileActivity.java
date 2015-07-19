@@ -112,39 +112,33 @@ public class ProfileActivity extends ActionBarActivity {
 
                 final AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken != null) {
-                    //FacadeModule.getFacadeModule(mActivity).UpdateFacebookId(accessToken.getUserId());
+                    FacadeModule.getFacadeModule(mActivity).UpdateFacebookId(accessToken.getUserId());
+                    Thread checker = new Thread() {
+                        public void run () {
+                            boolean running = true;
+                            while (running == true) {
+                                String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
+                                try {
+                                    if (response == "User was successfully updated.") {
+                                        DisplayMessage(response);
+                                        running = false;
+                                    } else if (response != "") {
+                                        DisplayMessage(response);
+                                        running = false;
+                                    }
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                    running = false;
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+                        }
+                    };
+                    checker.start();
                 } else {
                     DisplayMessage("User ID: null");
                 }
-                /*Thread checker = new Thread() {
-                    public void run () {
-                        boolean running = true;
-                        while (running == true) {
-                            String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
-                            try {
-                                if (response == "Logout successful!") {
-                                    DisplayMessage(response);
-                                    /*Intent logoutIntent = new Intent(mActivity, LoginActivity.class);
-                                    logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(logoutIntent);
-
-                                    running = false;
-                                } else if (response != "") {
-                                    /*DisplayMessage(response);
-                                    running = false;
-                                }
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                                running = false;
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                    }
-                };
-                checker.start();*/
-
-
             }
 
             @Override
@@ -260,9 +254,6 @@ public class ProfileActivity extends ActionBarActivity {
             profile.SetName(_name.getText().toString());
             profile.SetDescription(_description.getText().toString());
             FacadeModule.getFacadeModule(mActivity).UpdateUserProfile(profile);
-            //_update = false;
-            //_loginButton.setVisibility(View.GONE);
-            //_updateButton.setText(R.string.profile_button_edit);
             // TODO: call server to update the profile
             Thread checker = new Thread() {
                 public void run () {
@@ -270,7 +261,9 @@ public class ProfileActivity extends ActionBarActivity {
                     while (running == true) {
                         String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
                         try {
+
                             if (response.equals("User's profile successfully updated.")) {
+                                DisplayMessage("User's profile successfully updated.");
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
