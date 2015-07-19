@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -125,59 +127,62 @@ public class RequestListFragment extends Fragment {
 //                String response = null;
 //                final int TIMEOUT = 3;
 //                int counter = 0;
+                boolean working = false;
 
                 // infinite loop to keep checking for new matches
-                while(!stopFetchingRequests) {
+                while(!working && !stopFetchingRequests) {
                     // create a new thread if the response is empty
 //                    if(response == null || response.compareTo("")!=0){
-                    try {
-                        FacadeModule.getFacadeModule(context).SendRequestForRequestList();
-                        Thread checker = new Thread() {
-                            public void run() {
-                                boolean running = true;
-                                while (!stopFetchingRequests && running == true) {
-//                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
-                                    try {
-                                        // Get the match list
-//                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
-                                        if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
-                                            final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+                    if(!working || FacadeModule.getFacadeModule(context).LastRequestResult() != 0) {
+                        working = true;
+                        try {
+                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
+                            Thread checker = new Thread() {
+                                public void run() {
+                                    boolean running = true;
+                                    while (!stopFetchingRequests && running == true) {
+    //                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                        try {
+                                            // Get the match list
+    //                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                            if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
+                                                final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
 
-                                            if(requests != null) {
-                                                Log.d("tag", "requests-size:" + requests.size());
-                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
-//                                                  listAdapter.setUserList(matches);
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        listAdapter.setUserList(requests);
-                                                        Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-                                                    }
-                                                });
+                                                if(requests != null) {
+                                                    Log.d("tag", "requests-size:" + requests.size());
+                                                    Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+    //                                                  listAdapter.setUserList(matches);
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            listAdapter.setUserList(requests);
+                                                            Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                        }
+                                                    });
+                                                }
+
+
+                                                running = false;
                                             }
 
-
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
                                             running = false;
+                                            Thread.currentThread().interrupt();
                                         }
-
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                        running = false;
-                                        Thread.currentThread().interrupt();
                                     }
                                 }
-                            }
-                        };
-                        checker.start();
+                            };
+                            checker.start();
 
-                        // sleep for 5 seconds
-                        Thread.sleep(5001);
-                    } catch (InterruptedException e){
-                        e.printStackTrace();
-                        Thread.currentThread().interrupt();
+                            // sleep for 5 seconds
+                            Thread.sleep(5001);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
                     }
-//                    }
 
 //                    response = FacadeModule.getFacadeModule(context).GetResponseMessage();
 //                    counter += 1;
@@ -187,6 +192,61 @@ public class RequestListFragment extends Fragment {
         looper.start();
     }
 
+    public void DisplayMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void acceptUser(Integer otherId, final Button acceptButton){
+        // pause the update
+        stopUpdateRequests();
+
+        FacadeModule.getFacadeModule(context).AcceptUserRequest(otherId);
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    try {
+                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                        if (response.compareTo("User's request was successfully accepted. Meeting has been created.") == 0) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // show the messenger page
+                                    Intent intent = new Intent (context, MessengerActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                            DisplayMessage("Accepted the request successfully.");
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        DisplayMessage("Failed to accept the request.");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // re-enable the button
+                                acceptButton.setEnabled(true);
+                            }
+                        });
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    } finally{
+                        // resume the updating of the request list
+                        startUpdateRequests();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
 //    public void startUpdateRequests(){
 ////        stopFetchingRequests = false;
 ////        if(facade2 == null){
@@ -392,12 +452,12 @@ public class RequestListFragment extends Fragment {
             }
 
             // get the user object
-            User user = this.getGroup(i);
+            final User user = this.getGroup(i);
 
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
             TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
-            Button acceptButton = (Button) view.findViewById(R.id.matches_group_invite);
+            final Button acceptButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
             Resources res = context.getResources();
@@ -418,10 +478,12 @@ public class RequestListFragment extends Fragment {
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.matches_group_invite:
-                            // go to the messenger
-                            Intent intent = new Intent (context, MessengerActivity.class);
-                            startActivity(intent);
-                            Log.d(TAG, "invite button event fired");
+                            acceptUser(user.getRequestId(), acceptButton);
+                            Log.d("requestid", "request id: "+user.getRequestId());
+                            Log.d("tag", "accept button event fired");
+                            DisplayMessage("Please wait for the server to respond.");
+                            // disable the button
+                            acceptButton.setEnabled(false);
                             break;
                     }
                 }
