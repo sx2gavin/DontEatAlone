@@ -2,7 +2,9 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -193,6 +195,22 @@ public class MatchesActivity extends ActionBarActivity
 
             return retVal;
         }
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(activity)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MatchesActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 }
 

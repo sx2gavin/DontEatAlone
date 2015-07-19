@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class ProfileActivity extends ActionBarActivity {
     protected EditText _description;
     protected LoginButton _loginButton;
     protected Button _updateButton;
+    protected ImageView _imageView;
 
     protected boolean _update;
 
@@ -56,6 +58,7 @@ public class ProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_profile);
 
         // set the references
+        _imageView = (ImageView)findViewById(R.id.imageView);
         _name = (EditText)findViewById(R.id.profile_name);
         _email = (TextView)findViewById(R.id.profile_email);
         _gender = (TextView)findViewById(R.id.profile_gender);
@@ -89,6 +92,7 @@ public class ProfileActivity extends ActionBarActivity {
                                     _gender.setText(profile.GetGender());
                                     _age.setText(Integer.toString(profile.GetAge()));
                                     _description.setText(profile.GetDescription());
+                                    new DownloadImageTask((ImageView)_imageView).execute(profile.GetImageUrl());
                                 }
                             });
                         }
@@ -262,16 +266,8 @@ public class ProfileActivity extends ActionBarActivity {
                         int response = FacadeModule.getFacadeModule(mActivity).LastRequestResult();
                         try {
                             if (response == 0) {
-                                DisplayMessage("no result");
                             } else if (response == 1) {
                                 DisplayMessage("successful");
-                                running = false;
-                            } else if (response == -1) {
-                                DisplayMessage("error");
-                                running = false;
-                            }
-                            /*if (response.equals("User's profile successfully updated.")) {
-                                DisplayMessage("User's profile successfully updated.");
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -283,13 +279,11 @@ public class ProfileActivity extends ActionBarActivity {
                                         invalidateOptionsMenu();
                                     }
                                 });
-
-                                //updateUI(false);
                                 running = false;
-                            } else if (response != "") {
-                                DisplayMessage(response);
+                            } else if (response == -1) {
+                                DisplayMessage("error");
                                 running = false;
-                            }*/
+                            }
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -310,20 +304,5 @@ public class ProfileActivity extends ActionBarActivity {
             _description.setEnabled(_update);
             invalidateOptionsMenu();
         }
-    }
-
-    public void updateUI(boolean save) { // false: update->view; true: view->update
-        _update = save;
-        if (!_update) {
-            _loginButton.setVisibility(View.GONE);
-            _updateButton.setText(R.string.profile_button_edit);
-        }
-        else {
-            _loginButton.setVisibility(View.VISIBLE);
-            _updateButton.setText(R.string.profile_button_save);
-        }
-        _name.setEnabled(_update);
-        _description.setEnabled(_update);
-        invalidateOptionsMenu();
     }
 }

@@ -17,7 +17,7 @@
     <string name="button_login">Log in</string>
 
     <!-- Sign up activity string -->
-    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_signup">Sign Up</string>
     <string name="signup_firstname">First name(Required)</string>
     <string name="signup_lastname">Last name</string>
     <string name="signup_age">Age</string>
@@ -87,7 +87,7 @@
     <string name="profile_logoutDialog_no">No</string>
 
     <!-- Start Matching activity string -->
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="title_activity_start_matching">StartMatchingActivity</string>
     <string name="button_set_preference">Preference</string>
     <string name="button_find_match">Finding a match</string>
@@ -96,7 +96,7 @@
 
 
     <!-- Messenger activity -->
-    <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="title_activity_messenger">Messenger</string>
     <string name="messenger_place">Pick a place</string>
     <string name="messenger_endDialog_msg">Please rate your company to end this meeting.</string>
     <string name="messenger_endDialog_title">Rating</string>
@@ -118,7 +118,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_match_list">MatchListActivity</string>
-    <string name="title_activity_matches">MatchesActivity</string>
+    <string name="title_activity_matches">Matches</string>
     <string name="title_activity_restaurant_list">RestaurantListActivity</string>
 
 
