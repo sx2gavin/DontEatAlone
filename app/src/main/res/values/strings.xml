@@ -66,10 +66,10 @@
 
     <!-- The first param is the display name, the second param is the age -->
     <string name="matches_user_basic_info">%1$s</string>
-    <string name="matches_distance">Distance: %1$s km</string>
-    <string name="matches_time">Time: %1$s to %2$s</string>
-    <string name="matches_price">Price: $%1$s to $%2$s</string>
-    <string name="matches_comment">Comment: %1$s</string>
+    <string name="matches_distance">%1$s Km away</string>
+    <string name="matches_time">Time available: %1$s to %2$s</string>
+    <string name="matches_price">Price range: $%1$s to $%2$s</string>
+    <string name="matches_comment">%1$s</string>
     <string name="matches_invite">Invite</string>
     <string name="request_accept">Accept</string>
 
@@ -133,5 +133,6 @@
     <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
     <string name="min_price_pref">Min Price</string>
     <string name="max_price_pref">Max Price</string>
+    <string name="thumbs_up_group">thumps_up_group</string>
 
 </resources>

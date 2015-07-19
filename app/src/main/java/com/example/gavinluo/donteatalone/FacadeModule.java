@@ -331,11 +331,12 @@ public class FacadeModule {
 						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
 						newUser.setInvitationSent(userInfo.getInt("invitation_sent"));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
+						newUser.setImageUrl(userInfo.getJSONObject("profile").getString("image_url"));
 						newUser.setGender(userInfo.getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getString("longitude")));
-						// newUser.setDistance(userInfo.getDouble("distance"));
+						 newUser.setDistance(userInfo.getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getString("min_price")));

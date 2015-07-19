@@ -424,6 +424,10 @@ public class MatchListFragment extends Fragment {
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
             TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
+            final ImageView image = (ImageView) view.findViewById(R.id.group_profile_image);
+            String url = user.getImageUrl();
+            new DownloadImageTask((ImageView)image).execute(url);
+
             final Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
@@ -446,7 +450,7 @@ public class MatchListFragment extends Fragment {
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.matches_group_invite:
-                            ImageView image = (ImageView) wholeView.findViewById(R.id.group_profile_image);
+//                            ImageView image = (ImageView) wholeView.findViewById(R.id.group_profile_image);
 //                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
                             String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
                             new DownloadImageTask((ImageView)image).execute(url);

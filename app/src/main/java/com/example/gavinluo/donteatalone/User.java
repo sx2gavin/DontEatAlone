@@ -11,6 +11,7 @@ public class User {
 	private int m_request_id;
 	private int m_invitation_sent;
     private String m_name;
+	private String m_image_url;
 	private String m_gender;
     private float m_max_distance;
     private float m_latitude;
@@ -55,6 +56,8 @@ public class User {
 	{
 		return m_name;
 	}
+
+	public String getImageUrl() { return m_image_url; }
 	
 	public String getGender()    
 	{
@@ -141,6 +144,8 @@ public class User {
 	{
 		m_name = name;
 	}
+
+	public void setImageUrl(String image_url) {m_image_url = image_url; }
 
 	public void setGender(String gender)
 	{

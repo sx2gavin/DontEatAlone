@@ -1,96 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="#ffe4d19f"
+    android:id="@+id/match_group_row">
 
-    <!-- Layout that contians the profile picture -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="22"
+    <ImageView
+        android:layout_width="@dimen/group_profile_image_size"
+        android:layout_height="@dimen/group_profile_image_size"
+        android:src="@drawable/default_profile_picture"
+        android:id="@+id/group_profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/matches_group_basic_info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:textSize="@dimen/group_matches_font_size"
+        android:layout_toRightOf="@+id/group_profile_image"
+        android:layout_toLeftOf="@+id/matches_group_invite"
+        android:textColor="#ff21201d"
+        android:layout_marginLeft="10dp" />
+
+    <Button
+        android:id="@+id/matches_group_invite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:text="@string/matches_invite"
+        android:textSize="@dimen/group_matches_button_font_size"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentEnd="true"
+        android:background="#ff6f956d"
+        android:textColor="#ffe4d19f"
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/matches_group_basic_info"
+        android:layout_toRightOf="@+id/group_profile_image"
+        android:layout_toLeftOf="@+id/matches_group_invite"
+        android:layout_marginLeft="10dp">
 
         <ImageView
-            android:layout_width="@dimen/group_profile_image_size"
-            android:layout_height="@dimen/group_profile_image_size"
-            android:src="@drawable/default_profile_picture"
-            android:id="@+id/group_profile_image"
-            android:layout_centerHorizontal="true" />
+            android:layout_width="@dimen/thumb_image_size"
+            android:layout_height="@dimen/thumb_image_size"
+            android:src="@drawable/thumb_up"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/thumbs_up_group" />
 
-    </LinearLayout>
-
-    <!-- Layout that contains basic user info -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="53"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
-
-        <!-- Layout that contains user name, age, gender -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/matches_group_basic_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/group_matches_font_size"/>
-
-
-        </LinearLayout>
-
-        <!-- Layout that contains the like and dislikes -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/matches_group_thumb_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:textSize="@dimen/group_matches_font_size"
+            android:textColor="#ff6f956d"
+            android:layout_marginLeft="2dp" />
 
-            <ImageView
-                android:layout_width="@dimen/thumb_image_size"
-                android:layout_height="@dimen/thumb_image_size"
-                android:src="@drawable/thumb_up" />
+        <ImageView
+            android:layout_width="@dimen/thumb_image_size"
+            android:layout_height="@dimen/thumb_image_size"
+            android:src="@drawable/thumb_down"
+            android:layout_toRightOf="@+id/matches_group_thumb_up"
+            android:layout_marginLeft="2dp" />
 
-            <TextView
-                android:id="@+id/matches_group_thumb_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/group_matches_font_size"/>
-
-            <ImageView
-                android:layout_marginLeft="10dp"
-                android:layout_width="@dimen/thumb_image_size"
-                android:layout_height="@dimen/thumb_image_size"
-                android:src="@drawable/thumb_down" />
-
-            <TextView
-                android:id="@+id/matches_group_thumb_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/group_matches_font_size"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-     <!--Layout that contains the invite button-->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="25"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/matches_group_invite"
+        <TextView
+            android:id="@+id/matches_group_thumb_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:text="@string/matches_invite"
-            android:textSize="@dimen/group_matches_button_font_size"
-            android:layout_gravity="center_vertical"/>
+            android:textSize="@dimen/group_matches_font_size"
+            android:textColor="#ff91211c"
+            android:layout_marginLeft="2dp" />
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
