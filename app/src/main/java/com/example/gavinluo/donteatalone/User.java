@@ -9,6 +9,7 @@ public class User {
     private int m_id;
 	// used only for requests.
 	private int m_request_id;
+	private int m_invitation_sent;
     private String m_name;
 	private String m_gender;
     private float m_max_distance;
@@ -43,6 +44,11 @@ public class User {
 	public int getRequestId()
 	{
 		return m_request_id;
+	}
+
+	public int getInvitationSent()
+	{
+		return m_invitation_sent;
 	}
 
     public String getName()
@@ -124,6 +130,11 @@ public class User {
 	public void setRequestId(int request_id)
 	{
 		m_request_id = request_id;
+	}
+
+	public void setInvitationSent(int invitationSent)
+	{
+		m_invitation_sent = invitationSent;
 	}
 
 	public void setName(String name)

@@ -309,7 +309,8 @@ public class FacadeModule {
 					for (int i = 0; i < matches.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = matches.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setInvitationSent(userInfo.getInt("inviation_sent"));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getString("max_distance")));
@@ -331,13 +332,14 @@ public class FacadeModule {
 					for (int i = 0; i < requestList.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = requestList.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setRequestId(Integer.parseInt(userInfo.getString("id")));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
 						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
-						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
@@ -353,7 +355,7 @@ public class FacadeModule {
 				} else if (request == RequestMode.GET_PROFILE) {
 					Log.d(TAG, "LOGIN parsing");
 					JSONObject userProfile = mSavedJSON.getJSONObject("user").getJSONObject("profile");
-					mUserProfile.SetId(userProfile.getInt("id"));
+					mUserProfile.SetId(userProfile.getInt("user_id"));
 					mUserProfile.SetName(userProfile.getString("name"));
 					mUserProfile.SetImageUrl(userProfile.getString("image_url"));
 					mUserProfile.SetGender(userProfile.getString("gender"));
