@@ -40,9 +40,9 @@ public class MatchesActivity extends ActionBarActivity
     public static final int PAGE_REQUESTS = 2;
 
     static MatchesPagerAdapter mMatchesPageAdapter;
-    ViewPager mViewPager;
-    TabLayout mTabLayout;
-    MatchesActivity activity ;
+    static ViewPager mViewPager;
+    static TabLayout mTabLayout;
+    static MatchesActivity activity ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,7 @@ public class MatchesActivity extends ActionBarActivity
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    public void setService( int position ){
+    public synchronized void setService( int position ){
         // get the pages
         PreferenceFragment searchPage = (PreferenceFragment) mMatchesPageAdapter.getItem(PAGE_SEARCH);
         MatchListFragment matchesPage = (MatchListFragment) mMatchesPageAdapter.getItem(PAGE_MATCHES);
@@ -124,14 +124,20 @@ public class MatchesActivity extends ActionBarActivity
         // TODO: stop all thread in all fragments
         matchesPage.stopUpdate();
         requestPage.stopUpdateRequests();
+        Log.d("setservice", "set service: " + position);
 
         // start/stop server call thread
         if(position == PAGE_SEARCH) {
-
+            Log.d("setservice", "do not update anything");
+            return;
         } else if (position == PAGE_MATCHES) {
+            Log.d("setservice", "start update matches");
             matchesPage.startUpdate();
+            return;
         } else if (position == PAGE_REQUESTS) {
+            Log.d("setservice", "start update requests");
             requestPage.startUpdateRequests();
+            return;
         }
     }
 

@@ -129,30 +129,43 @@ public class MatchListFragment extends Fragment {
 
         Thread looper = new Thread() {
             public void run() {
-                String response = "";
+//                String response = null;
+//                final int TIMEOUT = 3;
+//                int counter = 0;
 
                 // infinite loop to keep checking for new matches
                 while(!stopFetching) {
                     // create a new thread if the response is empty
-                    if(response.compareTo("")==0){
+//                    if(response == null || response.compareTo("")!=0){
                         try {
                             FacadeModule.getFacadeModule(context).SendRequestForMatchList();
                             Thread checker = new Thread() {
                                 public void run() {
                                     boolean running = true;
-                                    while (running == true) {
-                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                    while (!stopFetching && running == true) {
+//                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                                         try {
                                             // Get the match list
-                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
-                                                ArrayList matches = FacadeModule.getFacadeModule(context).GetMatchList();
+//                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                              if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
+                                                  final ArrayList matches = FacadeModule.getFacadeModule(context).GetMatchList();
 
-                                                Log.d("tag", "matches-size:" +  matches.size());
-                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
-                                                listAdapter.setUserList(matches);
-                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-                                                running = false;
-                                            }
+                                                  if(matches != null) {
+                                                      Log.d("tag", "matches-size:" + matches.size());
+                                                      Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+//                                                  listAdapter.setUserList(matches);
+                                                      getActivity().runOnUiThread(new Runnable() {
+                                                          @Override
+                                                          public void run() {
+                                                              listAdapter.setUserList(matches);
+//                                                              listAdapter.notifyDataSetChanged();
+                                                              Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                          }
+                                                      });
+                                                  }
+
+                                                  running = false;
+                                              }
 
                                             Thread.sleep(1000);
                                         } catch (InterruptedException e) {
@@ -165,13 +178,16 @@ public class MatchListFragment extends Fragment {
                             };
                             checker.start();
 
-                            // sleep for 10 seconds
-                            Thread.sleep(10001);
+                            // sleep for 5 seconds
+                            Thread.sleep(5001);
                         } catch (InterruptedException e){
                             e.printStackTrace();
                             Thread.currentThread().interrupt();
                         }
-                    }
+//                    }
+
+//                    response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+//                    counter += 1;
                 }
             }
         };
@@ -377,13 +393,13 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-//        stopFetching = true;
+        stopFetching = true;
     }
 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-//        stopFetching = true;
+        stopFetching = true;
     }
 
     /**
