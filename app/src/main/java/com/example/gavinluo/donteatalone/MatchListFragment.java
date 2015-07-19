@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -61,6 +62,7 @@ public class MatchListFragment extends Fragment {
     private Context context;
 
     private FacadeModule facade;
+    private boolean stopFetching;
 
     /**
      * Use this factory method to create a new instance of
@@ -102,17 +104,75 @@ public class MatchListFragment extends Fragment {
         matchListExpand = (ExpandableListView) view.findViewById(R.id.match_list_expandable);
         listAdapter = new MatchListAdapter();
         matchListExpand.setAdapter(listAdapter);
-        facade = FacadeModule.getFacadeModule(this.context);
-//        updateData();
-        addTestData();
+//        facade = FacadeModule.getFacadeModule(this.context);
+
+        // called in activity
+//        startUpdate();
+
+//        addTestData();
 
         return view;
     }
 
-    public void updateData(){
-        ArrayList<User> matchList = facade.GetMatchList();
-        this.listAdapter.setUserList(matchList);
-        Log.d("list-size", "matchlist-size: " + matchList.size());
+    public void stopUpdate(){
+        stopFetching = true;
+    }
+
+    public void startUpdate(){
+        stopFetching = false;
+        if(facade == null){
+            facade = FacadeModule.getFacadeModule(context);
+        }
+
+        Thread looper = new Thread() {
+            public void run() {
+                String response = "";
+
+                // infinite loop to keep checking for new matches
+                while(!stopFetching) {
+                    // create a new thread if the response is empty
+                    if(response.compareTo("")==0){
+                        try {
+                            facade.SendRequestForMatchList();
+                            Thread checker = new Thread() {
+                                public void run() {
+                                    boolean running = true;
+                                    while (running == true) {
+                                        String response = facade.GetResponseMessage();
+                                        try {
+                                            // Get the match list
+                                            if (facade.GetResponse().compareTo("") != 0) {
+                                                ArrayList matches = facade.GetMatchList();
+
+                                                Log.d("tag", "matches-size:" +  matches.size());
+                                                Log.d("tag", "response: " + facade.GetResponse());
+                                                listAdapter.setUserList(matches);
+                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                running = false;
+                                            }
+
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            running = false;
+                                            Thread.currentThread().interrupt();
+                                        }
+                                    }
+                                }
+                            };
+                            checker.start();
+
+                            // sleep for 10 seconds
+                            Thread.sleep(10001);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+            }
+        };
+        looper.start();
     }
 
     // add 2 test users
@@ -153,6 +213,15 @@ public class MatchListFragment extends Fragment {
 
         this.listAdapter.addUser(user1);
         this.listAdapter.addUser(user2);
+    }
+
+    public void DisplayMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void updateData(JSONObject response){
@@ -208,6 +277,13 @@ public class MatchListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+//        stopFetching = true;
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+//        stopFetching = true;
     }
 
     /**
@@ -238,7 +314,6 @@ public class MatchListFragment extends Fragment {
             Resources res = context.getResources();
             String basicInfoText = String.format(res.getString(R.string.matches_user_basic_info),
                     user.getName());
-            // TODO: change the age or remove it
 
             final View wholeView = view;
 

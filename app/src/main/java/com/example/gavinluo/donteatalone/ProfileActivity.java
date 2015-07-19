@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -38,7 +39,6 @@ public class ProfileActivity extends ActionBarActivity {
     protected TextView _age;
     protected EditText _description;
     protected LoginButton _loginButton;
-    protected TextView _fbloginMsg;
     protected Button _updateButton;
 
     protected boolean _update;
@@ -63,18 +63,45 @@ public class ProfileActivity extends ActionBarActivity {
         _description = (EditText)findViewById(R.id.profile_description);
         _updateButton = (Button)findViewById(R.id.profile_update_button);
         _loginButton = (LoginButton)findViewById(R.id.fblogin_button);
-        _fbloginMsg = (TextView)findViewById(R.id.fblogin_msg);
 
         _name.setEnabled(false);
         _description.setEnabled(false);
 
-        //profile = FacadeModule.getFacadeModule(this).GetUserProfile();
-        // initialize items
-        _name.setText(profile.GetName());
-        _email.setText(profile.GetEmail());
-        _gender.setText(profile.GetGender());
-        _age.setText(profile.GetAge());
-        _description.setText(profile.GetDescription());
+        FacadeModule.getFacadeModule(mActivity).SendRequestGetProfile(FacadeModule.getFacadeModule(this).GetUserId());
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    String response = FacadeModule.getFacadeModule(mActivity).GetResponse();
+                    try {
+                        if (response.equals("error")) {
+                            running = false;
+                            DisplayMessage("Error! Please try again");
+                        } else if (response.equals("")) {
+                        } else {
+                            running = false;
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profile = FacadeModule.getFacadeModule(mActivity).GetUserProfile();
+                                    _name.setText(profile.GetName());
+                                    _email.setText(profile.GetEmail());
+                                    _gender.setText(profile.GetGender());
+                                    _age.setText(Integer.toString(profile.GetAge()));
+                                    _description.setText(profile.GetDescription());
+                                }
+                            });
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
 
         _update = false;
 
@@ -82,25 +109,52 @@ public class ProfileActivity extends ActionBarActivity {
         _loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                _fbloginMsg.setText("User ID: ");
 
                 final AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 if (accessToken != null) {
-                    _fbloginMsg.setText("User ID: " + accessToken.getUserId());
+                    //FacadeModule.getFacadeModule(mActivity).UpdateFacebookId(accessToken.getUserId());
                 } else {
-                    //user = null;
-                    _fbloginMsg.setText("User ID: null");
+                    DisplayMessage("User ID: null");
                 }
+                /*Thread checker = new Thread() {
+                    public void run () {
+                        boolean running = true;
+                        while (running == true) {
+                            String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
+                            try {
+                                if (response == "Logout successful!") {
+                                    DisplayMessage(response);
+                                    /*Intent logoutIntent = new Intent(mActivity, LoginActivity.class);
+                                    logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(logoutIntent);
+
+                                    running = false;
+                                } else if (response != "") {
+                                    /*DisplayMessage(response);
+                                    running = false;
+                                }
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                running = false;
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                    }
+                };
+                checker.start();*/
+
+
             }
 
             @Override
             public void onCancel() {
-                _fbloginMsg.setText("Login attempt canceled");
+                DisplayMessage("Login attempt canceled");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                _fbloginMsg.setText("Login attempt failed" + exception.toString());
+                DisplayMessage("Login attempt failed" + exception.toString());
             }
         });
     }
@@ -147,9 +201,34 @@ public class ProfileActivity extends ActionBarActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     //TODO: delete everything and go back to login page
                     FacadeModule.getFacadeModule(mActivity).SendRequestLogOut();
-                    Intent logoutIntent = new Intent(mActivity, LoginActivity.class);
-                    logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(logoutIntent);
+                    DisplayMessage("Logging out");
+                    DialogInterface Dialog = dialog;
+                    Dialog.dismiss();
+                    Thread checker = new Thread() {
+                        public void run () {
+                            boolean running = true;
+                            while (running == true) {
+                                String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
+                                try {
+                                    if (response.equals("Logout successful!")) {
+                                        Intent logoutIntent = new Intent(mActivity, LoginActivity.class);
+                                        logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(logoutIntent);
+                                        running = false;
+                                    } else if (!response.equals("")) {
+                                        DisplayMessage("error: " + response);
+                                        running = false;
+                                    }
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                    running = false;
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+                        }
+                    };
+                    checker.start();
                 }
             });
             builder.setNegativeButton(R.string.profile_logoutDialog_no, new DialogInterface.OnClickListener() {
@@ -166,23 +245,82 @@ public class ProfileActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void DisplayMessage(final String message) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mActivity, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void updateProfile(View view) {
         if (_update) {
             // save update
-
-            //FacadeModule.getFacadeModule(this).UpdateUserProfile(profile);
-            _update = false;
-            _loginButton.setVisibility(View.GONE);
-            _updateButton.setText(R.string.profile_button_edit);
+            profile.SetName(_name.getText().toString());
+            profile.SetDescription(_description.getText().toString());
+            FacadeModule.getFacadeModule(mActivity).UpdateUserProfile(profile);
+            //_update = false;
+            //_loginButton.setVisibility(View.GONE);
+            //_updateButton.setText(R.string.profile_button_edit);
             // TODO: call server to update the profile
+            Thread checker = new Thread() {
+                public void run () {
+                    boolean running = true;
+                    while (running == true) {
+                        String response = FacadeModule.getFacadeModule(mActivity).GetResponseMessage();
+                        try {
+                            if (response.equals("User's profile successfully updated.")) {
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        _update = false;
+                                        _loginButton.setVisibility(View.GONE);
+                                        _updateButton.setText(R.string.profile_button_edit);
+                                        _name.setEnabled(false);
+                                        _description.setEnabled(false);
+                                        invalidateOptionsMenu();
+                                    }
+                                });
+
+                                //updateUI(false);
+                                running = false;
+                            } else if (response != "") {
+                                DisplayMessage(response);
+                                running = false;
+                            }
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            running = false;
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+            };
+            checker.start();
         }
         else {
             // enable update: remove readonly, change button name, enable FB
             _update = true;
             _loginButton.setVisibility(View.VISIBLE);
             _updateButton.setText(R.string.profile_button_save);
+            _name.setEnabled(_update);
+            _description.setEnabled(_update);
+            invalidateOptionsMenu();
         }
-        // change readonly
+    }
+
+    public void updateUI(boolean save) { // false: update->view; true: view->update
+        _update = save;
+        if (!_update) {
+            _loginButton.setVisibility(View.GONE);
+            _updateButton.setText(R.string.profile_button_edit);
+        }
+        else {
+            _loginButton.setVisibility(View.VISIBLE);
+            _updateButton.setText(R.string.profile_button_save);
+        }
         _name.setEnabled(_update);
         _description.setEnabled(_update);
         invalidateOptionsMenu();

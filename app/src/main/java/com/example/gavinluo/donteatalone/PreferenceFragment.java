@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,6 +68,7 @@ public class PreferenceFragment extends Fragment {
     EditText _maxAgeEdit;
     EditText _minPriceEdit;
     EditText _maxPriceEdit;
+    EditText _commentEdit;
     Button _startTimeEdit;
     Button _endTimeEdit;
     RadioGroup _genderRadios;
@@ -74,10 +76,14 @@ public class PreferenceFragment extends Fragment {
     Button _prefButton;
 
     Context _context;
+    Activity activity;
 
     // Time components
     private Timestamp startTime;
     private Timestamp endTime;
+
+    private FacadeModule facade;
+    private Preference preference;  // store the current preference set by the user
 
     /**
      * Use this factory method to create a new instance of
@@ -110,6 +116,9 @@ public class PreferenceFragment extends Fragment {
         }
 
         _context = this.getActivity();
+        activity = this.getActivity();
+
+        state = EDIT_MODE;
     }
 
     @Override
@@ -118,7 +127,10 @@ public class PreferenceFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_preference, container, false);
 
+        facade = FacadeModule.getFacadeModule(_context);
+
         // set the references
+        _commentEdit = (EditText) view.findViewById(R.id.pref_comment);
         _distanceEdit = (EditText)view.findViewById(R.id.pref_distance);
         _startTimeEdit = (Button)view.findViewById(R.id.pref_start_time);
         _endTimeEdit = (Button)view.findViewById(R.id.pref_end_time);
@@ -163,16 +175,194 @@ public class PreferenceFragment extends Fragment {
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.pref_search_button:
-                        Log.d(TAG, "search button clicked");
-                        if(checkInput()) {
-                            // TODO: call facade to submit request
+                        if(state == EDIT_MODE) {
+                            Log.d(TAG, "search button clicked");
+                            if (checkInput()) {
+                                // TODO: call facade to submit request
+                                setPreference();
+                                submitPreference();
+//                                setState(READ_MODE);
+                            }
+                        } else { // it is in the read only mode
+                            // TODO: delete preference on server
+                            deletePreference();
+
+                            // TODO: enable all components on the page
+
+                            // change the state to edit
+//                            setState(EDIT_MODE);
                         }
+                        Log.d("tag", "state: "+state);
                         break;
                 }
             }
         });
 
         return view;
+    }
+
+    // Precondition: The preference needs to be set
+    public void submitPreference(){
+        facade.CreatePreference(facade.GetUserId(), preference.m_max_distance,
+            preference.m_min_age, preference.m_max_age, preference.m_min_price,
+            preference.m_max_price, preference.m_gender.substring(0,1),
+            preference.m_comment, startTime, endTime);
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    String response = FacadeModule.getFacadeModule(_context).GetResponseMessage();
+                    try {
+                        if (response.compareTo("Match successfully created.")==0) {
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setState(READ_MODE);
+                                    DisplayMessage("Match successfully created.");
+                                }
+                            });
+                            running = false;
+                        } else if (response != "") {
+                            DisplayMessage(response);
+                            Log.d("tag", response);
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
+
+    public void deletePreference(){
+        int check = facade.DeletePreference();
+        if(check==0){ // do not create a thread if no preference is found
+            return;
+        }
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    String response = FacadeModule.getFacadeModule(_context).GetResponseMessage();
+                    try {
+                        if (response.compareTo("Match has been successfully deleted.")==0) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setState(EDIT_MODE);
+                                    DisplayMessage("Match has been successfully deleted.");
+                                }
+                            });
+                            running = false;
+                        } else if (response.compareTo("") !=0 ) {
+//                            setState(EDIT_MODE);
+                            // create a toast to show the error message
+                            DisplayMessage(response);
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
+
+    // Precondition: should be ran on ui thread
+    public void loadPreference(final Preference p) {
+        String startTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_start_time);
+        String endTimeString = new SimpleDateFormat("hh:mm aa").format(p.m_end_time);
+        _minAgeEdit.setText(p.m_min_age);
+        _maxAgeEdit.setText(p.m_max_age);
+        _startTimeEdit.setText(startTimeString);
+        _endTimeEdit.setText(endTimeString);
+        _minPriceEdit.setText(p.m_min_price);
+        _maxPriceEdit.setText(p.m_max_price);
+        _distanceEdit.setText(p.m_max_distance);
+        _commentEdit.setText(p.m_comment);
+    }
+
+    public void DisplayMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(_context, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * disable all components
+     *
+     * Precondition: should be run on ui thread
+     */
+    public void setEnabledAllComponents(boolean enable){
+        // disable all components
+        _minAgeEdit.setEnabled(enable);
+        _maxAgeEdit.setEnabled(enable);
+        _startTimeEdit.setEnabled(enable);
+        _endTimeEdit.setEnabled(enable);
+        _minPriceEdit.setEnabled(enable);
+        _maxPriceEdit.setEnabled(enable);
+        _distanceEdit.setEnabled(enable);
+        _commentEdit.setEnabled(enable);
+
+        _genderRadios.findViewById(R.id.pref_male).setEnabled(enable);
+        _genderRadios.findViewById(R.id.pref_female).setEnabled(enable);
+        _genderRadios.findViewById(R.id.pref_sex_none).setEnabled(enable);
+    }
+
+    /**
+     * set all components to default values
+     *
+     * Precondition: should be run on ui thread
+     */
+    public void setDefault(){
+        _minAgeEdit.getText().clear();
+        _maxAgeEdit.getText().clear();
+        _minPriceEdit.getText().clear();
+        _maxPriceEdit.getText().clear();
+        _distanceEdit.getText().clear();
+        _commentEdit.getText().clear();
+        _startTimeEdit.setText("START");
+        _endTimeEdit.setText("END");
+
+        RadioButton radioButton = (RadioButton) _genderRadios.findViewById(R.id.pref_sex_none);
+        radioButton.setChecked(true);
+    }
+
+    /**
+     * set the state of the preference page
+     *
+     * Precondition: should be run on ui thread
+     * @param newState
+     */
+    public void setState(int newState){
+        Resources res = _context.getResources();
+
+        if(newState == READ_MODE){
+            setEnabledAllComponents(false);
+            // change the button label
+            _prefButton.setText(res.getString(R.string.pref_delete_pref));
+        } else if (newState == EDIT_MODE){
+            setEnabledAllComponents(true);
+            setDefault();
+            // change the button label
+            _prefButton.setText(res.getString(R.string.pref_start_search));
+        }
+        state = newState;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -251,6 +441,26 @@ public class PreferenceFragment extends Fragment {
         }, hour, minute, false); // use the 12 hour clock
         mTimePicker.setTitle("Select Time");
         mTimePicker.show();
+    }
+
+    // Precondition: the input has to be valid
+    public void setPreference(){
+        int id= _genderRadios.getCheckedRadioButtonId();
+        View radioButton = _genderRadios.findViewById(id);
+        RadioButton btn = (RadioButton) _genderRadios.getChildAt(_genderRadios.indexOfChild(radioButton));
+        String pref_gender_selection = (String) btn.getText();
+//        pref_gender_selection = pref_gender_selection.substring(0,1); // retrieve the very first letter of gender
+//        char gender = pref_gender_selection.charAt(0);
+
+        Integer pref_min_age = Integer.parseInt(_minAgeEdit.getText().toString());
+        Integer pref_max_age = Integer.parseInt(_maxAgeEdit.getText().toString());
+        Integer pref_min_price = Integer.parseInt(_minPriceEdit.getText().toString());
+        Integer pref_max_price = Integer.parseInt(_maxPriceEdit.getText().toString());
+        Integer pref_distance_int = Integer.parseInt(_distanceEdit.getText().toString());
+
+        preference = new Preference(facade.GetUserId(), pref_distance_int,
+                pref_min_age, pref_max_age, pref_min_price, pref_max_price,
+                _commentEdit.getText().toString(), pref_gender_selection, startTime, endTime);
     }
 
     public boolean checkInput(){

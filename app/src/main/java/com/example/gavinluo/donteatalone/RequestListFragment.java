@@ -53,6 +53,8 @@ public class RequestListFragment extends Fragment {
     private RequestListAdapter listAdapter;
     private Context context;
 
+    private FacadeModule facade;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -94,6 +96,8 @@ public class RequestListFragment extends Fragment {
         listAdapter = new RequestListAdapter();
         requestListExpand.setAdapter(listAdapter);
 
+        facade = FacadeModule.getFacadeModule(this.context);
+
 //        updateData();
         addTestData();
 
@@ -101,8 +105,55 @@ public class RequestListFragment extends Fragment {
     }
 
     public void updateData(){
-        ArrayList<User> matchList = FacadeModule.getFacadeModule(this.context).GetMatchList();
-        this.listAdapter.setUserList(matchList);
+        Thread looper = new Thread() {
+            public void run() {
+                String response = "";
+
+                // infinite loop to keep checking for new matches
+                while(true) {
+                    // create a new thread if the response is empty
+                    if(response.compareTo("")==0){
+                        try {
+                            facade.SendRequestForMatchList();
+                            Thread checker = new Thread() {
+                                public void run() {
+                                    boolean running = true;
+                                    while (running == true) {
+                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                        try {
+                                            // Get the match list
+                                            if (facade.GetResponse().compareTo("") != 0) {
+                                                ArrayList matches = facade.GetMatchList();
+
+                                                Log.d("tag", "matches-size:" +  matches.size());
+                                                Log.d("tag", "response: " + facade.GetResponse());
+                                                listAdapter.setUserList(matches);
+                                                Log.d("tag", "actual list size: " + listAdapter.getUserList());
+                                                running = false;
+                                            }
+
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            running = false;
+                                            Thread.currentThread().interrupt();
+                                        }
+                                    }
+                                }
+                            };
+                            checker.start();
+
+                            // sleep for 10 seconds
+                            Thread.sleep(10001);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+            }
+        };
+        looper.start();
     }
 
     // add 2 test users
