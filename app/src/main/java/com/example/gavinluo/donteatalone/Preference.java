@@ -30,4 +30,16 @@ public class Preference {
 		m_start_time = start_time;
 		m_end_time = end_time;
 	}
+
+	public Preference()
+	{
+		m_user_id = -1;
+		m_max_distance = 0;
+		m_min_age = 0;
+		m_max_age = 0;
+		m_min_price = 0;
+		m_max_price = 0;
+		m_comment = "";
+		m_gender = "";
+	}
 }

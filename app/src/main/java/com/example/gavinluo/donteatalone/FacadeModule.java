@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, GET_MESSAGES, OTHER
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, GET_MESSAGES, OTHER
 	}
 
     private static FacadeModule mInstance;
@@ -48,6 +48,7 @@ public class FacadeModule {
     private Profile mUserProfile;
 	private ArrayList<User> mMatchList;
 	private ArrayList<User> mRequestList;
+	private ArrayList<Restaurant> mRestaurantList;
 	private Meeting mMeeting;
 	private Preference mPreference;
 	private GPSTracker mGPS;
@@ -174,7 +175,7 @@ public class FacadeModule {
         String url = "http://donteatalone.paigelim.com/api/v1/matches?" +
 					 "user_id=" + Integer.toString(user_id) +
 					 "&latitude=" + Double.toString(latitude) +
-					 "&longtitude=" + Double.toString(longitude) +
+					 "&longitude=" + Double.toString(longitude) +
 					 "&max_distance=" + Integer.toString(max_distance) +
 					 "&min_age=" + Integer.toString(min_age) +
 					 "&max_age=" + Integer.toString(max_age) +
@@ -201,6 +202,16 @@ public class FacadeModule {
 			SendRequest(url, Request.Method.DELETE, RequestMode.DELETE_PREFERENCE);
 			return 1;
 		}
+	}
+
+	public void SendRequestGetPreference()
+	{
+		if (mPreference == null) {
+			mPreference = new Preference();
+		}
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/matches";
+
+		SendRequest(url, Request.Method.GET, RequestMode.GET_PREFERENCE);
 	}
 
 	public Preference GetPreference()
@@ -230,12 +241,23 @@ public class FacadeModule {
                 "&password_confirmation=" + password_confirm +
                 "&name=" + name +
                 "&age=" + age;
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.POST, RequestMode.SIGNUP);
 	}	
 
     public void SendRequestLogOut()
     {
-        
+
+		int mMatchId = -1;
+		String mFacebookId = "";
+		String mGCMToken = "";
+		JSONObject mSavedJSON = null;
+		Profile mUserProfile = new Profile();
+		ArrayList<User> mMatchList = null;
+		ArrayList<User> mRequestList = null;
+		Meeting mMeeting = null;
+		Preference mPreference = null;
+		 
 		String url = "http://donteatalone.paigelim.com/api/v1/logout";
 		SendRequest(url, Request.Method.GET, RequestMode.LOGOUT);
     }
@@ -255,7 +277,8 @@ public class FacadeModule {
 			"&gender=" + mUserProfile.GetGender() +
 			"&age=" + Integer.toString(mUserProfile.GetAge()) +
 			"&description=" + mUserProfile.GetDescription();
-		
+
+		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
 
@@ -309,13 +332,15 @@ public class FacadeModule {
 					for (int i = 0; i < matches.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = matches.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setInvitationSent(userInfo.getInt("invitation_sent"));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
+						newUser.setImageUrl(userInfo.getJSONObject("profile").getString("image_url"));
 						newUser.setGender(userInfo.getString("gender"));
-						newUser.setMaxDistance(Float.parseFloat(userInfo.getString("max_distance")));
+						newUser.setMaxDistance(Integer.parseInt(userInfo.getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getString("longitude")));
-						// newUser.setDistance(userInfo.getDouble("distance"));
+						 newUser.setDistance(userInfo.getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getString("min_price")));
@@ -331,13 +356,14 @@ public class FacadeModule {
 					for (int i = 0; i < requestList.length(); i++) {
 						User newUser = new User();
 						JSONObject userInfo = requestList.getJSONObject(i);
-						newUser.setId(Integer.parseInt(userInfo.getString("id")));
+						newUser.setId(Integer.parseInt(userInfo.getString("user_id")));
+						newUser.setRequestId(Integer.parseInt(userInfo.getString("id")));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
-						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
+						newUser.setMaxDistance(Integer.parseInt(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
-						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
@@ -353,7 +379,7 @@ public class FacadeModule {
 				} else if (request == RequestMode.GET_PROFILE) {
 					Log.d(TAG, "LOGIN parsing");
 					JSONObject userProfile = mSavedJSON.getJSONObject("user").getJSONObject("profile");
-					mUserProfile.SetId(userProfile.getInt("id"));
+					mUserProfile.SetId(userProfile.getInt("user_id"));
 					mUserProfile.SetName(userProfile.getString("name"));
 					mUserProfile.SetImageUrl(userProfile.getString("image_url"));
 					mUserProfile.SetGender(userProfile.getString("gender"));
@@ -387,6 +413,18 @@ public class FacadeModule {
 						Message message = new Message(user_id, to_user_id, message_str, timestamp);	
 						mMeeting.mMessages.add(message);
 					}	
+				} else if (request == RequestMode.GET_PREFERENCE) {
+					JSONObject preference = mSavedJSON.getJSONObject("preference");
+					mPreference.m_user_id = Integer.parseInt(preference.getString("user_id"));
+					mPreference.m_max_distance = Integer.parseInt(preference.getString("max_distance"));
+					mPreference.m_min_age = Integer.parseInt(preference.getString("min_age"));
+					mPreference.m_max_age = Integer.parseInt(preference.getString("max_age"));
+					mPreference.m_min_price = Integer.parseInt(preference.getString("min_price"));
+					mPreference.m_max_price = Integer.parseInt(preference.getString("max_price"));
+					mPreference.m_comment = preference.getString("comment");
+					mPreference.m_gender = preference.getString("gender");
+					mPreference.m_start_time = Timestamp.valueOf(preference.getString("start_time")); 
+					mPreference.m_end_time = Timestamp.valueOf(preference.getString("end_time"));
 				}
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -406,6 +444,25 @@ public class FacadeModule {
 	public ArrayList<User> GetRequestList()
 	{
 		return mRequestList;
+	}
+
+	public ArrayList<Restaurant> GetRestaurantList()
+	{
+		if (mRestaurantList == null) {
+			mRestaurantList = new ArrayList<Restaurant>();
+			Restaurant eastSide = new Restaurant("East Side Mario's", "http://www.brampton.com/images/esm.jpg", 3.7, "University Shops Plaza, 170 University Ave W, Waterloo, ON", "(519)725-9310", 43.4658341, -80.534518, "http://www.eastsidemarios.com", "http://www.eastsidemarios.com");
+			mRestaurantList.add(eastSide);
+
+			Restaurant williams = new Restaurant("Williams Fresh Cafe", "http://www.570news.com/wp-content/blogs.dir/sites/3/2014/08/williams-fresh-cafe-logo-thumb-113.jpg", 4.1, "University Shops Plaza, 170 University Ave W, Waterloo, ON", "(519)888-7254", 43.4654785, -80.5344364, "http://williamsfreshcafe.com", "http://williamsfreshcafe.com");
+			mRestaurantList.add(williams);
+
+			Restaurant harveys = new Restaurant("Harvey's", "http://www.seawayliving.com/wp-content/uploads/2013/12/haverveys.gif", 4.0, "University Shops Plaza, 170 University Ave W, Waterloo, ON N2L 3E9", "(519)888-9744", 43.4654785, -80.5344364, "http://www.harveys.ca", "http://www.harveys.ca");
+			mRestaurantList.add(harveys);
+
+			Restaurant melsDiner = new Restaurant("Mel's Diner", "http://www.melsdiner.ca/wp-content/uploads/2015/03/logo.png", 3.6, "University Shops Plaza, 170 University Ave W, Waterloo, ON N2L 3E9", "(519)579-6357", 43.4729352, -80.5355826, "http://www.melsdiner.ca", "http://www.melsdiner.ca");
+			mRestaurantList.add(melsDiner);	 
+		}
+		return mRestaurantList;	
 	}
 
 	// mMeeting might be null, make sure to call SendRequestGetMeeting first to check if there is any meeting.
@@ -492,6 +549,18 @@ public class FacadeModule {
 			"&to_user_id=" + Integer.toString(to_user_id) +
 			"&message=" + message;
 
-		SendRequest(url, Request.Method.POST, RequestMode.OTHER);	
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestLikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/like";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestDislikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/dislike";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
 	}
 }

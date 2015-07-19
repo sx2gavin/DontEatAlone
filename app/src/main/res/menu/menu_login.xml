@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.gavinluo.donteatalone.LoginActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <!--<item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_preference" android:title="Preference"
         android:orderInCategory="100" app:showAsAction="never" />
@@ -13,5 +13,5 @@
     <item android:id="@+id/action_messenger" android:title="Messenger"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_matches" android:title="Matches"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="never" />-->
 </menu>

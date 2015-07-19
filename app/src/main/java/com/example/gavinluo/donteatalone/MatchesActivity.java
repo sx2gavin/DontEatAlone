@@ -2,16 +2,25 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,9 +42,9 @@ public class MatchesActivity extends ActionBarActivity
     public static final int PAGE_REQUESTS = 2;
 
     static MatchesPagerAdapter mMatchesPageAdapter;
-    ViewPager mViewPager;
-    TabLayout mTabLayout;
-    MatchesActivity activity ;
+    static ViewPager mViewPager;
+    static TabLayout mTabLayout;
+    static MatchesActivity activity ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +55,7 @@ public class MatchesActivity extends ActionBarActivity
 
         // ViewPager and its adapter use support library
         // fragments, so use getSupportFragmentManager.
-        mMatchesPageAdapter = new MatchesPagerAdapter(getSupportFragmentManager());
+        mMatchesPageAdapter = new MatchesPagerAdapter(getSupportFragmentManager(), this);
         mTabLayout = (TabLayout)findViewById(R.id.matches_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.matches_pager);
 
@@ -90,13 +99,25 @@ public class MatchesActivity extends ActionBarActivity
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        setService(-1);     // stop all services
+    }
+
+    @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    public void setService( int position ){
+    public synchronized void setService( int position ){
         // get the pages
         PreferenceFragment searchPage = (PreferenceFragment) mMatchesPageAdapter.getItem(PAGE_SEARCH);
         MatchListFragment matchesPage = (MatchListFragment) mMatchesPageAdapter.getItem(PAGE_MATCHES);
@@ -104,14 +125,21 @@ public class MatchesActivity extends ActionBarActivity
 
         // TODO: stop all thread in all fragments
         matchesPage.stopUpdate();
+        requestPage.stopUpdateRequests();
+        Log.d("setservice", "set service: " + position);
 
         // start/stop server call thread
         if(position == PAGE_SEARCH) {
-
+            Log.d("setservice", "do not update anything");
+            return;
         } else if (position == PAGE_MATCHES) {
+            Log.d("setservice", "start update matches");
             matchesPage.startUpdate();
+            return;
         } else if (position == PAGE_REQUESTS) {
-
+            Log.d("setservice", "start update requests");
+            requestPage.startUpdateRequests();
+            return;
         }
     }
 
@@ -129,13 +157,15 @@ public class MatchesActivity extends ActionBarActivity
     }
 
     public class MatchesPagerAdapter extends FragmentPagerAdapter {
-
         PreferenceFragment pFrag;
         MatchListFragment mFrag;
         RequestListFragment rFrag;
 
-        public MatchesPagerAdapter(FragmentManager fm){
+        Context context;
+
+        public MatchesPagerAdapter(FragmentManager fm, Context context ){
             super(fm);
+            this.context = context;
 
             pFrag = new PreferenceFragment();
             mFrag = new MatchListFragment();
@@ -160,26 +190,60 @@ public class MatchesActivity extends ActionBarActivity
             return NUM_PAGES;
         }
 
+        private int[] imageResId = {
+                R.drawable.mag_icon_no_bg,
+                R.drawable.list_icon_no_bg,
+                R.drawable.exclaim_icon_yellow_no_bg,
+                R.drawable.exclaim_icon_red_no_bg
+        };
+
         @Override
         public CharSequence getPageTitle(int position) {
-            String retVal ;
-            switch(position){
-                case 0:
-                    retVal = "Preference";
-                    break;
-                case 1:
-                    retVal = "Match List";
-                    break;
-                case 2:
-                    retVal = "Request List";
-                    break;
-                default:
-                    retVal = "position: " + (position+1);
-                    break;
-            }
-
-            return retVal;
+            Drawable image = ContextCompat.getDrawable(this.context, imageResId[position]);
+            image.setBounds(0, 0, image.getIntrinsicWidth()-65, image.getIntrinsicHeight()-50);
+            SpannableString sb = new SpannableString(" ");
+            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return sb;
         }
+
+
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            String retVal ;
+//            switch(position){
+//                case 0:
+//                    retVal = "Preference";
+//                    break;
+//                case 1:
+//                    retVal = "Match List";
+//                    break;
+//                case 2:
+//                    retVal = "Request List";
+//                    break;
+//                default:
+//                    retVal = "position: " + (position+1);
+//                    break;
+//            }
+//
+//            return retVal;
+//        }
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(activity)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MatchesActivity.super.onBackPressed();
+                    }
+                }).create().show();
     }
 }
 

@@ -17,7 +17,7 @@
     <string name="button_login">Log in</string>
 
     <!-- Sign up activity string -->
-    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_signup">Sign Up</string>
     <string name="signup_firstname">First name(Required)</string>
     <string name="signup_lastname">Last name</string>
     <string name="signup_age">Age</string>
@@ -31,19 +31,19 @@
     <string name="title_activity_preference">PreferenceActivity</string>
 
     <!-- Preference activity string -->
-    <string name="pref_about_person">About the person</string>
-    <string name="pref_about_meetup">About the meetup</string>
+    <string name="pref_about_person">Search For:</string>
+    <string name="pref_about_meetup">Preferred Meeting Details:</string>
     <string name="pref_age">Age</string>
     <string name="pref_gender">Gender</string>
     <string name="pref_male">Male</string>
     <string name="pref_female">Female</string>
-    <string name="pref_sex_none">None</string>
-    <string name="pref_min">Min</string>
-    <string name="pref_max">Max</string>
+    <string name="pref_sex_none">No preference</string>
+    <string name="pref_min">Min Age</string>
+    <string name="pref_max">Max Age</string>
     <string name="pref_food">Preferred food</string>
     <string name="pref_time_range">Preferred time range</string>
     <string name="pref_to">to</string>
-    <string name="pref_distance">Distance (km)</string>
+    <string name="pref_distance">Max Distance Away (Km)</string>
     <string name="pref_start">Start</string>
     <string name="pref_end">End</string>
     <string name="pref_price">Price</string>
@@ -66,10 +66,10 @@
 
     <!-- The first param is the display name, the second param is the age -->
     <string name="matches_user_basic_info">%1$s</string>
-    <string name="matches_distance">Distance: %1$s km</string>
-    <string name="matches_time">Time: %1$s to %2$s</string>
-    <string name="matches_price">Price: $%1$s to $%2$s</string>
-    <string name="matches_comment">Comment: %1$s</string>
+    <string name="matches_distance">%1$s Km away</string>
+    <string name="matches_time">Time available: %1$s to %2$s</string>
+    <string name="matches_price">Price range: $%1$s to $%2$s</string>
+    <string name="matches_comment">%1$s</string>
     <string name="matches_invite">Invite</string>
     <string name="request_accept">Accept</string>
 
@@ -87,7 +87,7 @@
     <string name="profile_logoutDialog_no">No</string>
 
     <!-- Start Matching activity string -->
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="title_activity_start_matching">StartMatchingActivity</string>
     <string name="button_set_preference">Preference</string>
     <string name="button_find_match">Finding a match</string>
@@ -96,7 +96,7 @@
 
 
     <!-- Messenger activity -->
-    <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="title_activity_messenger">Messenger</string>
     <string name="messenger_place">Pick a place</string>
     <string name="messenger_endDialog_msg">Please rate your company to end this meeting.</string>
     <string name="messenger_endDialog_title">Rating</string>
@@ -118,7 +118,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_match_list">MatchListActivity</string>
-    <string name="title_activity_matches">MatchesActivity</string>
+    <string name="title_activity_matches">Matches</string>
     <string name="title_activity_restaurant_list">RestaurantListActivity</string>
 
 
@@ -133,5 +133,8 @@
     <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
     <string name="meeting_edit_message">Write a message</string>
     <string name="meeting_messenger_place_button">Pick a place</string>
+    <string name="min_price_pref">Min Price</string>
+    <string name="max_price_pref">Max Price</string>
+    <string name="thumbs_up_group">thumps_up_group</string>
 
 </resources>
