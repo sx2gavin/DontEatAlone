@@ -355,7 +355,7 @@ public class FacadeModule {
 						newUser.setRequestId(Integer.parseInt(userInfo.getString("id")));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
-						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
+						newUser.setMaxDistance(Integer.parseInt(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
 						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
