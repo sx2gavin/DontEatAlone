@@ -125,7 +125,7 @@ public class MatchListFragment extends Fragment {
             // check if update already started
             return;
         }
-        stopFetching = false; 
+        stopFetching = false;
 
         Thread looper = new Thread() {
             public void run() {
@@ -310,6 +310,47 @@ public class MatchListFragment extends Fragment {
 //        }
     }
 
+    public void inviteUser(Integer otherId, final Button inviteButton){
+        // pause the update
+        stopUpdate();
+
+        FacadeModule.getFacadeModule(context).SendRequestInviteUser(otherId);
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                    try {
+                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+                            DisplayMessage("User Invited Successfully");
+                            running = false;
+                        } else if (response != "") {
+                            DisplayMessage(response);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // enabled the ui button to resend the invitation
+                                    inviteButton.setEnabled(true);
+                                }
+                            });
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    } finally{
+                        // resume the updating of the match list
+                        startUpdate();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
+
     public MatchListAdapter getListAdapter(){
         return listAdapter;
     }
@@ -362,12 +403,12 @@ public class MatchListFragment extends Fragment {
             }
 
             // get the user object
-            User user = this.getGroup(i);
+            final User user = this.getGroup(i);
 
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
             TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
-            Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
+            final Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
             Resources res = context.getResources();
@@ -396,6 +437,9 @@ public class MatchListFragment extends Fragment {
 
                             // disable button when clicked
                             listenerBtn.setEnabled(false);
+
+                            // invite the user
+                            inviteUser(user.getId(), listenerBtn);
 
                             Log.d(TAG, "invite button event fired");
                             break;

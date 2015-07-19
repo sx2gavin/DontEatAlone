@@ -90,6 +90,18 @@ public class MatchesActivity extends ActionBarActivity
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        setService(-1);     // stop all services
+    }
+
+    @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
