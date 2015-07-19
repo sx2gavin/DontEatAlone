@@ -181,7 +181,7 @@ public class PreferenceFragment extends Fragment {
                                 // TODO: call facade to submit request
                                 setPreference();
                                 submitPreference();
-                                setState(READ_MODE);
+//                                setState(READ_MODE);
                             }
                         } else { // it is in the read only mode
                             // TODO: delete preference on server
@@ -220,10 +220,12 @@ public class PreferenceFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     setState(READ_MODE);
+                                    DisplayMessage("Match successfully created.");
                                 }
                             });
                             running = false;
                         } else if (response != "") {
+                            DisplayMessage(response);
                             Log.d("tag", response);
                             running = false;
                         }
@@ -256,11 +258,14 @@ public class PreferenceFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     setState(EDIT_MODE);
+                                    DisplayMessage("Match has been successfully deleted.");
                                 }
                             });
                             running = false;
-                        } else if (response != "") {
+                        } else if (response.compareTo("") !=0 ) {
 //                            setState(EDIT_MODE);
+                            // create a toast to show the error message
+                            DisplayMessage(response);
                             running = false;
                         }
                         Thread.sleep(1000);
@@ -287,6 +292,15 @@ public class PreferenceFragment extends Fragment {
         _maxPriceEdit.setText(p.m_max_price);
         _distanceEdit.setText(p.m_max_distance);
         _commentEdit.setText(p.m_comment);
+    }
+
+    public void DisplayMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(_context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**

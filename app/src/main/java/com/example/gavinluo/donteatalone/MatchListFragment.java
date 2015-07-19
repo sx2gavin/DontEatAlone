@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -212,6 +213,15 @@ public class MatchListFragment extends Fragment {
 
         this.listAdapter.addUser(user1);
         this.listAdapter.addUser(user2);
+    }
+
+    public void DisplayMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void updateData(JSONObject response){
