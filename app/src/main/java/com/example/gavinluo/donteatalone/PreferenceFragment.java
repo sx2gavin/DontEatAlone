@@ -201,6 +201,15 @@ public class PreferenceFragment extends Fragment {
         return view;
     }
 
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        // retrieve and set the preference if there's one
+        retrievePreference();
+    }
+
     // Precondition: The preference needs to be set
     public void submitPreference(){
         facade.CreatePreference(facade.GetUserId(), preference.m_max_distance,
@@ -292,6 +301,51 @@ public class PreferenceFragment extends Fragment {
         _maxPriceEdit.setText(p.m_max_price);
         _distanceEdit.setText(p.m_max_distance);
         _commentEdit.setText(p.m_comment);
+    }
+
+    public void retrievePreference(){
+        FacadeModule.getFacadeModule(_context).SendRequestGetPreference();
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                final int TIMEOUT = 10;
+                int  counter = 0;
+                while (running == true) {
+                    try {
+                        if (FacadeModule.getFacadeModule(_context).LastRequestResult() == 1) {
+                            counter += 1;
+                            final Preference pref = FacadeModule.getFacadeModule(_context).GetPreference();
+                            Log.d("tag", "response: "+FacadeModule.getFacadeModule(_context).GetResponse());
+                            if(pref==null && counter<TIMEOUT){
+                                continue;
+                            } else if (pref==null){
+                                running = false;
+                                continue;
+                            }
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadPreference(pref);
+                                }
+                            });
+                            running = false;
+                        }
+//                        else if (FacadeModule.getFacadeModule(_context).LastRequestResult() !=0 ){
+//                            // there's no preference set
+//                            running = false;
+//                        }
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        checker.start();
     }
 
     public void DisplayMessage(final String message) {
