@@ -274,6 +274,7 @@ Log.d("tag", "preference url: " + url);
 			"&gender=" + mUserProfile.GetGender() +
 			"&age=" + Integer.toString(mUserProfile.GetAge()) +
 			"&description=" + mUserProfile.GetDescription();
+
 		url = url.replace(" ", "%20");
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_PROFILE);
     }
@@ -355,7 +356,7 @@ Log.d("tag", "preference url: " + url);
 						newUser.setRequestId(Integer.parseInt(userInfo.getString("id")));
 						newUser.setName(userInfo.getJSONObject("profile").getString("name"));
 						newUser.setGender(userInfo.getJSONObject("profile").getString("gender"));
-						newUser.setMaxDistance(Float.parseFloat(userInfo.getJSONObject("match").getString("max_distance")));
+						newUser.setMaxDistance(Integer.parseInt(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
 						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
@@ -544,6 +545,18 @@ Log.d("tag", "preference url: " + url);
 			"&to_user_id=" + Integer.toString(to_user_id) +
 			"&message=" + message;
 
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestLikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/like";
+		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestDislikeUser(int id)
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/dislike";
 		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
 	}
 }

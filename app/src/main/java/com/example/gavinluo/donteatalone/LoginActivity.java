@@ -150,7 +150,7 @@ public class LoginActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_preference){
             startActivity(new Intent(this, PreferenceActivity.class));
@@ -167,7 +167,7 @@ public class LoginActivity extends ActionBarActivity {
         } else if (id == R.id.action_matches) {
             startActivity(new Intent(this, MatchesActivity.class));
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -286,7 +286,7 @@ public class LoginActivity extends ActionBarActivity {
         Intent GCMListenerIntent = new Intent(this, MyGcmListenerService.class);
         startService(GCMListenerIntent);
 
-        Intent intent = new Intent (this, StartMatchingActivity.class);
+        Intent intent = new Intent (this, MatchesActivity.class);
         startActivity(intent);
     }
 }
