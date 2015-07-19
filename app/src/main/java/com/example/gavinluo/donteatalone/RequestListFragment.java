@@ -113,66 +113,141 @@ public class RequestListFragment extends Fragment {
     }
 
     public void startUpdateRequests(){
-//        stopFetchingRequests = false;
-//        if(facade2 == null){
-//            facade2 = FacadeModule.getFacadeModule(context);
-//        }
+//        stopFetching = false;
         if(!stopFetchingRequests){
-            // do not start the update again if it's already started
+            // check if update already started
             return;
         }
         stopFetchingRequests = false;
 
         Thread looper = new Thread() {
             public void run() {
-                String response = "";
+//                String response = null;
+//                final int TIMEOUT = 3;
+//                int counter = 0;
 
                 // infinite loop to keep checking for new matches
                 while(!stopFetchingRequests) {
                     // create a new thread if the response is empty
-                    if(response.compareTo("")==0){
-                        try {
-                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
-                            Thread checker = new Thread() {
-                                public void run() {
-                                    boolean running = true;
-                                    while (!stopFetchingRequests && running == true) {
-                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
-                                        try {
-                                            // Get the match list
-                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
-                                                ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+//                    if(response == null || response.compareTo("")!=0){
+                    try {
+                        FacadeModule.getFacadeModule(context).SendRequestForMatchList();
+                        Thread checker = new Thread() {
+                            public void run() {
+                                boolean running = true;
+                                while (!stopFetchingRequests && running == true) {
+//                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                    try {
+                                        // Get the match list
+//                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                        if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
+                                            final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
 
-                                                Log.d("tag", "requests-size:" +  requests.size());
+                                            if(requests != null) {
+                                                Log.d("tag", "requests-size:" + requests.size());
                                                 Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
-                                                listAdapter.setUserList(requests);
-                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-                                                running = false;
+//                                                  listAdapter.setUserList(matches);
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        listAdapter.setUserList(requests);
+                                                        Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                    }
+                                                });
                                             }
 
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
+
                                             running = false;
-                                            Thread.currentThread().interrupt();
                                         }
+
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        running = false;
+                                        Thread.currentThread().interrupt();
                                     }
                                 }
-                            };
-                            checker.start();
+                            }
+                        };
+                        checker.start();
 
-                            // sleep for 10 seconds
-                            Thread.sleep(10001);
-                        } catch (InterruptedException e){
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
+                        // sleep for 5 seconds
+                        Thread.sleep(5001);
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
+//                    }
+
+//                    response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+//                    counter += 1;
                 }
             }
         };
         looper.start();
     }
+
+//    public void startUpdateRequests(){
+////        stopFetchingRequests = false;
+////        if(facade2 == null){
+////            facade2 = FacadeModule.getFacadeModule(context);
+////        }
+//        if(!stopFetchingRequests){
+//            // do not start the update again if it's already started
+//            return;
+//        }
+//        stopFetchingRequests = false;
+//
+//        Thread looper = new Thread() {
+//            public void run() {
+//                String response = "";
+//
+//                // infinite loop to keep checking for new matches
+//                while(!stopFetchingRequests) {
+//                    // create a new thread if the response is empty
+//                    if(response.compareTo("")==0){
+//                        try {
+//                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
+//                            Thread checker = new Thread() {
+//                                public void run() {
+//                                    boolean running = true;
+//                                    while (!stopFetchingRequests && running == true) {
+//                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+//                                        try {
+//                                            // Get the match list
+//                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+//                                                ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+//
+//                                                Log.d("tag", "requests-size:" +  requests.size());
+//                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+//                                                listAdapter.setUserList(requests);
+//                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+//                                                running = false;
+//                                            }
+//
+//                                            Thread.sleep(1000);
+//                                        } catch (InterruptedException e) {
+//                                            e.printStackTrace();
+//                                            running = false;
+//                                            Thread.currentThread().interrupt();
+//                                        }
+//                                    }
+//                                }
+//                            };
+//                            checker.start();
+//
+//                            // sleep for 10 seconds
+//                            Thread.sleep(10001);
+//                        } catch (InterruptedException e){
+//                            e.printStackTrace();
+//                            Thread.currentThread().interrupt();
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//        looper.start();
+//    }
 
     @Override
     public void onDetach() {

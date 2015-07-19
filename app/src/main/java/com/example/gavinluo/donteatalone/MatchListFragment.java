@@ -150,17 +150,19 @@ public class MatchListFragment extends Fragment {
                                               if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
                                                   final ArrayList matches = FacadeModule.getFacadeModule(context).GetMatchList();
 
-                                                  Log.d("tag", "matches-size:" + matches.size());
-                                                  Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+                                                  if(matches != null) {
+                                                      Log.d("tag", "matches-size:" + matches.size());
+                                                      Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
 //                                                  listAdapter.setUserList(matches);
-                                                  getActivity().runOnUiThread(new Runnable() {
-                                                      @Override
-                                                      public void run() {
-                                                          listAdapter.setUserList(matches);
-                                                          Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-                                                      }
-                                                  });
-
+                                                      getActivity().runOnUiThread(new Runnable() {
+                                                          @Override
+                                                          public void run() {
+                                                              listAdapter.setUserList(matches);
+//                                                              listAdapter.notifyDataSetChanged();
+                                                              Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                          }
+                                                      });
+                                                  }
 
                                                   running = false;
                                               }
