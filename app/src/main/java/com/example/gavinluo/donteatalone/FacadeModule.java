@@ -174,7 +174,7 @@ public class FacadeModule {
         String url = "http://donteatalone.paigelim.com/api/v1/matches?" +
 					 "user_id=" + Integer.toString(user_id) +
 					 "&latitude=" + Double.toString(latitude) +
-					 "&longtitude=" + Double.toString(longitude) +
+					 "&longitude=" + Double.toString(longitude) +
 					 "&max_distance=" + Integer.toString(max_distance) +
 					 "&min_age=" + Integer.toString(min_age) +
 					 "&max_age=" + Integer.toString(max_age) +
