@@ -62,7 +62,7 @@ public class MatchListFragment extends Fragment {
     private Context context;
 
     private FacadeModule facade;
-    private boolean stopFetching;
+    private static boolean stopFetching;
 
     /**
      * Use this factory method to create a new instance of
@@ -107,7 +107,8 @@ public class MatchListFragment extends Fragment {
 //        facade = FacadeModule.getFacadeModule(this.context);
 
         // called in activity
-//        startUpdate();
+        stopFetching = true;
+        startUpdate();
 
 //        addTestData();
 
@@ -119,10 +120,12 @@ public class MatchListFragment extends Fragment {
     }
 
     public void startUpdate(){
-        stopFetching = false;
-        if(facade == null){
-            facade = FacadeModule.getFacadeModule(context);
+//        stopFetching = false;
+        if(!stopFetching){
+            // check if update already started
+            return;
         }
+        stopFetching = false;
 
         Thread looper = new Thread() {
             public void run() {
@@ -133,19 +136,19 @@ public class MatchListFragment extends Fragment {
                     // create a new thread if the response is empty
                     if(response.compareTo("")==0){
                         try {
-                            facade.SendRequestForMatchList();
+                            FacadeModule.getFacadeModule(context).SendRequestForMatchList();
                             Thread checker = new Thread() {
                                 public void run() {
                                     boolean running = true;
                                     while (running == true) {
-                                        String response = facade.GetResponseMessage();
+                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                                         try {
                                             // Get the match list
-                                            if (facade.GetResponse().compareTo("") != 0) {
-                                                ArrayList matches = facade.GetMatchList();
+                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                                ArrayList matches = FacadeModule.getFacadeModule(context).GetMatchList();
 
                                                 Log.d("tag", "matches-size:" +  matches.size());
-                                                Log.d("tag", "response: " + facade.GetResponse());
+                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
                                                 listAdapter.setUserList(matches);
                                                 Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
                                                 running = false;
@@ -174,6 +177,62 @@ public class MatchListFragment extends Fragment {
         };
         looper.start();
     }
+//    public void startUpdate(){
+//        stopFetching = false;
+//        if(facade == null){
+//            facade = FacadeModule.getFacadeModule(context);
+//        }
+//
+//        Thread looper = new Thread() {
+//            public void run() {
+//                String response = "";
+//
+//                // infinite loop to keep checking for new matches
+//                while(!stopFetching) {
+//                    // create a new thread if the response is empty
+//                    if(response.compareTo("")==0){
+//                        try {
+//                            facade.SendRequestForMatchList();
+//                            Thread checker = new Thread() {
+//                                public void run() {
+//                                    boolean running = true;
+//                                    while (running == true) {
+//                                        String response = facade.GetResponseMessage();
+//                                        try {
+//                                            // Get the match list
+//                                            if (facade.GetResponse().compareTo("") != 0) {
+//                                                ArrayList matches = facade.GetMatchList();
+//
+//                                                Log.d("tag", "matches-size:" +  matches.size());
+//                                                Log.d("tag", "response: " + facade.GetResponse());
+//                                                listAdapter.setUserList(matches);
+//                                                Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+//                                                running = false;
+//                                            }
+//
+//                                            Thread.sleep(1000);
+//                                        } catch (InterruptedException e) {
+//                                            e.printStackTrace();
+//                                            running = false;
+//                                            Thread.currentThread().interrupt();
+//                                        }
+//                                    }
+//                                }
+//                            };
+//                            checker.start();
+//
+//                            // sleep for 10 seconds
+//                            Thread.sleep(10001);
+//                        } catch (InterruptedException e){
+//                            e.printStackTrace();
+//                            Thread.currentThread().interrupt();
+//                        }
+//                    }
+//                }
+//            }
+//        };
+//        looper.start();
+//    }
 
     // add 2 test users
     public void addTestData(){
@@ -251,6 +310,47 @@ public class MatchListFragment extends Fragment {
 //        }
     }
 
+    public void inviteUser(Integer otherId, final Button inviteButton){
+        // pause the update
+        stopUpdate();
+
+        FacadeModule.getFacadeModule(context).SendRequestInviteUser(otherId);
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                    try {
+                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+                            DisplayMessage("User Invited Successfully");
+                            running = false;
+                        } else if (response != "") {
+                            DisplayMessage(response);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // enabled the ui button to resend the invitation
+                                    inviteButton.setEnabled(true);
+                                }
+                            });
+                            running = false;
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    } finally{
+                        // resume the updating of the match list
+                        startUpdate();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
+
     public MatchListAdapter getListAdapter(){
         return listAdapter;
     }
@@ -303,12 +403,12 @@ public class MatchListFragment extends Fragment {
             }
 
             // get the user object
-            User user = this.getGroup(i);
+            final User user = this.getGroup(i);
 
             TextView basicInfoView = (TextView) view.findViewById(R.id.matches_group_basic_info);
             TextView thumbsUpView = (TextView) view.findViewById(R.id.matches_group_thumb_up);
             TextView thumbsDownView = (TextView) view.findViewById(R.id.matches_group_thumb_down);
-            Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
+            final Button inviteButton = (Button) view.findViewById(R.id.matches_group_invite);
 
             // format the strings
             Resources res = context.getResources();
@@ -337,6 +437,9 @@ public class MatchListFragment extends Fragment {
 
                             // disable button when clicked
                             listenerBtn.setEnabled(false);
+
+                            // invite the user
+                            inviteUser(user.getId(), listenerBtn);
 
                             Log.d(TAG, "invite button event fired");
                             break;
