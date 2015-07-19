@@ -34,7 +34,7 @@ public class FacadeModule {
     public final static String TAG = "TAG";
 	
 	private enum RequestMode {
-		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, OTHER
+		LOGIN, LOGOUT, SIGNUP, GET_PROFILE, UPDATE_PROFILE, UPDATE_USER, CREATE_PREFERENCE, DELETE_PREFERENCE, GET_MATCHLIST, GET_REQUESTLIST, INVITE_USER, GET_MEETING, OTHER
 	}
 
     private static FacadeModule mInstance;
@@ -50,6 +50,7 @@ public class FacadeModule {
 	private ArrayList<User> mRequestList;
 	private Preference mPreference;
 	private GPSTracker mGPS;
+	private boolean mRequestResult;
 
     // constructor
     private FacadeModule(Context context)
@@ -66,6 +67,7 @@ public class FacadeModule {
     {
         Log.d(TAG, "SendRequest called");
 		mSavedJSON = null;
+		mRequestResult = false;
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(method, url, null,
 				new Response.Listener<JSONObject>() {
 					@Override
@@ -79,6 +81,7 @@ public class FacadeModule {
 								Log.d(TAG, "mSavedJSON is null");
 							} else {
 								Log.d(TAG, response.toString());
+								mRequestResult = true;
 								ParseResponse(request);
 							}
 						} catch (JSONException e) {
@@ -267,6 +270,11 @@ public class FacadeModule {
         }
     }
 
+	public boolean LastRequestResult()
+	{
+		return mRequestResult;	
+	}	
+
 	public String GetResponseMessage()
 	{
 		if (mSavedJSON == null) {
@@ -352,6 +360,11 @@ public class FacadeModule {
 					mUserProfile.SetEmail(mSavedJSON.getJSONObject("data").getJSONObject("user").getString("email"));
 					mGCMToken = mSavedJSON.getJSONObject("data").getJSONObject("user").getString("gcm_token");
 					Log.d(FacadeModule.TAG, mGCMToken);
+				} else if (request == RequestMode.GET_MEETING) {
+					JSONArray meetingList = mSavedJSON.getJSONArray("meetings");
+					if (meetingList.length() == 0) {
+						
+					}	
 				}
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -366,7 +379,12 @@ public class FacadeModule {
 	public ArrayList<User> GetMatchList()
 	{
 		return mMatchList;
-	}	
+	}
+
+	public ArrayList<User> GetRequestList()
+	{
+		return mRequestList;
+	}
 
     public boolean LoggedIn()
     {
@@ -423,5 +441,12 @@ public class FacadeModule {
 				"?facebook_id=" + facebookId;
 
 		SendRequest(url, Request.Method.PUT, RequestMode.UPDATE_USER);
+	}
+
+
+	public void SendRequestGetMeeting()
+	{
+		String url = "http://donteatalone.paigelim.com/api/v1/users/" + Integer.toString(mUserProfile.GetId()) + "/meetings";
+		SendRequest(url, Request.Method.GET, RequestMode.GET_MEETING);
 	}
 }
