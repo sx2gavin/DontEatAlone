@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -577,6 +578,7 @@ Log.d("tag", "preference url: " + url);
 		} else {
 			String url = "http://donteatalone.paigelim.com/api/v1/meetings/" + mMeeting.mMeetingId;
 			SendRequest(url, Request.Method.DELETE, RequestMode.OTHER);
+			mMeeting = null;
 		}
 	}
 }
