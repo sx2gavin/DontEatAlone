@@ -396,12 +396,13 @@ Log.d("tag", "preference url: " + url);
 				} else if (request == RequestMode.GET_MEETING) {
 					JSONArray meetingList = mSavedJSON.getJSONArray("meetings");
 					if (meetingList.length() != 0) {
+						int meeting_id = Integer.parseInt(meetingList.getJSONObject(0).getString("id"));
 						int user_id1 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id1"));			
 						int user_id2 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id2"));
 						if (user_id1 == mUserProfile.GetId()) {
-							mMeeting = new Meeting(user_id1, user_id2);	
+							mMeeting = new Meeting(meeting_id, user_id1, user_id2);
 						} else if (user_id2 == mUserProfile.GetId()) {
-							mMeeting = new Meeting(user_id2, user_id1);
+							mMeeting = new Meeting(meeting_id, user_id2, user_id1);
 						}	
 					}	
 				} else if (request == RequestMode.GET_MESSAGES) {
@@ -567,5 +568,15 @@ Log.d("tag", "preference url: " + url);
 	{
 		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/dislike";
 		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestEndMeeting()
+	{
+		if (mMeeting == null) {
+			return;
+		} else {
+			String url = "http://donteatalone.paigelim.com/api/v1/meetings/" + mMeeting.mMeetingId;
+			SendRequest(url, Request.Method.DELETE, RequestMode.OTHER);
+		}
 	}
 }
