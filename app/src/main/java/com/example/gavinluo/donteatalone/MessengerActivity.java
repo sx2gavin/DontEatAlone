@@ -1,10 +1,13 @@
 package com.example.gavinluo.donteatalone;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -12,8 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.FragmentManager;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -22,10 +27,21 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
 
-public class MessengerActivity extends ActionBarActivity
+import java.util.ArrayList;
+
+
+public class MessengerActivity extends FragmentActivity
+        implements messageFragment.OnFragmentInteractionListener
 {
-    private static final String TAG = "MESSENGER";
+    private static final String TAG = "MessengerActivity";
+
+    private Context _context;
+    private ArrayList<Message> _messages;
+    private Meeting _meeting;
+    private messageFragment _messageFragment;
+
 
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
@@ -35,7 +51,72 @@ public class MessengerActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        _context = this;
         setContentView(R.layout.activity_messenger);
+        this.getAllMessages();
+        _messageFragment = messageFragment.newInstance(_messages);
+        _messageFragment.onAttach(this);
+
+//        _messageFragment.setArguments(getIntent().getExtras());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart called");
+        this.getAllMessages();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume called");
+        this.getAllMessages();
+    }
+
+    public void checkInternetConnection() {
+        if (! FacadeModule.getFacadeModule(_context).isNetworkAvailable()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
+
+            // set title
+            alertDialogBuilder.setTitle("Warning");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Internet connection unavailable, please turn on data service or WIFI.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+        }
+    }
+
+    public void getAllMessages() {
+        Log.d(TAG, "getAllMessages called");
+
+        this.checkInternetConnection();
+
+        // Do request
+        FacadeModule.getFacadeModule(this).SendRequestGetAllMessages();
+//        if (FacadeModule.getFacadeModule(this).LastRequestResult() == 1) {
+            _meeting = FacadeModule.getFacadeModule(this).GetMeeting();
+            _messages = _meeting.mMessages;
+
+//            for (int i = 0; i < _messages.size(); i++) {
+//                Message mMessage = _messages.get(i);
+//                Log.d(TAG, "Printing Message" + i + ": " + mMessage.mMessage);
+//            }
+//        } else {
+//            Log.d(TAG, "LastRequestResult != 1");
+//        }
     }
 
     @Override
@@ -75,6 +156,14 @@ public class MessengerActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSendButtonClick(View view) {
+        // TODO: Get current text in message box
+        String message = "hello!";
+        FacadeModule.getFacadeModule(_context).SendMessageToUser(_meeting.mToUserId, message);
+
+        this.getAllMessages();
     }
 
     // Pick the place
@@ -131,15 +220,21 @@ public class MessengerActivity extends ActionBarActivity
                 attributions = "";
             }
 
-            TextView tv1 = (TextView)findViewById(R.id.mess_debug1);
-            TextView tv2 = (TextView)findViewById(R.id.mess_debug2);
-            TextView tv3 = (TextView)findViewById(R.id.mess_debug3);
-            tv1.setText(name);
-            tv2.setText(address);
-            tv3.setText(Html.fromHtml(attributions));
+//            TextView tv1 = (TextView)findViewById(R.id.mess_debug1);
+//            TextView tv2 = (TextView)findViewById(R.id.mess_debug2);
+//            TextView tv3 = (TextView)findViewById(R.id.mess_debug3);
+//            tv1.setText(name);
+//            tv2.setText(address);
+//            tv3.setText(Html.fromHtml(attributions));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+
+    // messageFragment Methods
+    @Override
+    public void onFragmentInteraction(String id) {
+        Log.d(TAG, "onFragmentInteraction called");
+    }
 }
