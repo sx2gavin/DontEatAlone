@@ -408,6 +408,7 @@ Log.d("tag", "preference url: " + url);
 					}	
 				} else if (request == RequestMode.GET_MESSAGES) {
 					JSONArray messagesList = mSavedJSON.getJSONArray("messages");
+					mMeeting.mMessages = null;
 					for (int i = 0; i < messagesList.length(); i++) {
 						JSONObject messageJson = messagesList.getJSONObject(i);
 						int user_id = Integer.parseInt(messageJson.getString("user_id")); 
