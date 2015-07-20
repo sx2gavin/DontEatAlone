@@ -2,23 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/retrieve_message">
+    android:id="@+id/retrieve_message"
+    android:background="#ffe4d19f"
+    android:backgroundTint="#ffe4d19f">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/name_text"
+        android:id="@+id/sender"
         android:layout_alignParentStart="true"
-        android:background="#ffe4d19f"
-        android:backgroundTint="#ffe4d19f"
-        android:textColorHint="#ff21201d"
-        android:textColor="#ff21201d"
-        android:textIsSelectable="true" />
+        android:layout_below="@+id/timestamp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/from_text"
+            android:layout_alignParentStart="true"
+            android:textColorHint="#ff21201d"
+            android:textColor="#ff21201d"
+            android:textIsSelectable="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/display_picture"
+            android:layout_below="@+id/from_text"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/message_text"
@@ -26,10 +43,22 @@
         android:layout_alignParentEnd="false"
         android:textColorHint="#ff83231d"
         android:textColor="#ff83231d"
-        android:background="#ffe4d19f"
-        android:backgroundTint="#ffe4d19f"
         android:layout_alignParentStart="false"
-        android:layout_toRightOf="@+id/from_text"
-        android:layout_marginLeft="5dp" />
+        android:layout_toRightOf="@+id/sender"
+        android:layout_below="@+id/timestamp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/timestamp"
+        android:layout_alignParentStart="false"
+        android:textColor="#ff21201d"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
