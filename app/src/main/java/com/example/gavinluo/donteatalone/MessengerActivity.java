@@ -52,6 +52,9 @@ public class MessengerActivity extends ActionBarActivity
 
     private static final int REQUEST_PLACE_PICKER = 1;
 
+    private boolean stopFetching;
+    private boolean handlingRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +118,19 @@ public class MessengerActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        handlingRequest = false;
+        startUpdate();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        stopUpdate();
+    }
+
     public void DisplayMessage(final String message) {
         this.runOnUiThread(new Runnable() {
             @Override
@@ -130,7 +146,11 @@ public class MessengerActivity extends ActionBarActivity
 
         if(message.compareTo("")==0){
             DisplayMessage("Cannot send an empty message.");
+            return;
         }
+
+        // stop the update
+        stopUpdate();
 
         FacadeModule.getFacadeModule(_context).SendMessageToUser(_meeting.mToUserId, message);
 
@@ -140,6 +160,7 @@ public class MessengerActivity extends ActionBarActivity
                 while (running == true) {
                     try {
                         if (FacadeModule.getFacadeModule(_context).LastRequestResult()==1) {
+                            Log.d(TAG, "sent message sucessfully");
                             _activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -163,6 +184,9 @@ public class MessengerActivity extends ActionBarActivity
                         Thread.currentThread().interrupt();
                     }
                 }
+
+                // restart the update after the thread is done
+                startUpdate();
             }
         };
         checker.start();
@@ -195,8 +219,13 @@ public class MessengerActivity extends ActionBarActivity
     }
 
     // Precondition: has to be run in UI thread
-    private void getAllMessages() {
+    private synchronized void getAllMessages() {
         Log.d(TAG, "getAllMessages called");
+
+        if(handlingRequest){
+            return;
+        }
+        handlingRequest = true;
 
         // Do request
         FacadeModule.getFacadeModule(this).SendRequestGetAllMessages();
@@ -206,29 +235,84 @@ public class MessengerActivity extends ActionBarActivity
                 boolean running = true;
                 while (running == true) {
                     try {
+                        Log.d("tag", "message result: " + FacadeModule.getFacadeModule(_context).LastRequestResult());
                         if (FacadeModule.getFacadeModule(_context).LastRequestResult()==1) {
                             _activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     _meeting = FacadeModule.getFacadeModule(_activity).GetMeeting();
+//                                    _messages.clear();
                                     _messages = _meeting.mMessages;
 
-                                    _adapter.setMessageList(_messages);
+//                                    _adapter.setMessageList(_messages);
+                                    _adapter.setMessageList(_meeting.mMessages);
+
+                                    Log.d("list-size", "messenger list size: " + _messages.size());
+                                    Log.d("list-size", "adapter size: " +_adapter.getCount());
                                     scrollMyListViewToBottom();
                                 }
                             });
                             running = false;
-                        } 
-                        Thread.sleep(1000);
+                        } else if (FacadeModule.getFacadeModule(_context).LastRequestResult()!=0){
+                            running = false;
+                        }
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         running = false;
                         Thread.currentThread().interrupt();
+                    } finally {
+                        handlingRequest = false;
                     }
                 }
             }
         };
         checker.start();
+    }
+
+    public void stopUpdate(){
+        stopFetching = true;
+    }
+
+    public void startUpdate(){
+        if(!stopFetching){
+            // check if update already started
+            return;
+        }
+        stopFetching = false;
+
+        Thread looper = new Thread() {
+            public void run() {
+//                String response = null;
+//                final int TIMEOUT = 3;
+//                int counter = 0;
+
+                // infinite loop to keep checking for new matches
+                while(!stopFetching) {
+                    // create a new thread if the response is empty
+//                    if(response == null || response.compareTo("")!=0){
+                    try {
+//                        _activity.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                // get all the messages
+//                                _activity.getAllMessages();
+//                            }
+//                        });
+
+                        _activity.getAllMessages();
+                        Log.d("refresh", "refreshing");
+
+                        // sleep for 500 milliseconds
+                        Thread.sleep(500);
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        };
+        looper.start();
     }
 
 //    // Precondition: has to be run in UI thread
@@ -295,6 +379,11 @@ public class MessengerActivity extends ActionBarActivity
             this.messengers.clear();
             this.messengers.addAll(messages);
             this.notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return this.messengers.size();
         }
 
         @Override
