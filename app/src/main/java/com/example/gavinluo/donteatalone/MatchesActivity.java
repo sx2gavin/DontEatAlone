@@ -91,9 +91,22 @@ public class MatchesActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_profile) {
-            Intent intent = new Intent (this, ProfileActivity.class);
-            startActivity(intent);
+        if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_preference){
+            startActivity(new Intent(this, PreferenceActivity.class));
+            return true;
+        } else if (id == R.id.action_profile) {
+            startActivity(new Intent(this, ProfileActivity.class));
+            return true;
+        } else if (id == R.id.action_matchlist) {
+            startActivity(new Intent(this, MatchListActivity.class));
+            return true;
+        } else if (id == R.id.action_messenger) {
+            startActivity(new Intent(this, MessengerActivity.class));
+            return true;
+        } else if (id == R.id.action_matches) {
+            startActivity(new Intent(this, MatchesActivity.class));
             return true;
         }
 

@@ -131,6 +131,8 @@
 
 
     <string name="google_api_key">AIzaSyB0CJSASK7BddKekAbYTYKfmC6LDcmssIE</string>
+    <string name="meeting_edit_message">Write a message</string>
+    <string name="meeting_messenger_place_button">Pick a place</string>
     <string name="min_price_pref">Min Price</string>
     <string name="max_price_pref">Max Price</string>
     <string name="thumbs_up_group">thumps_up_group</string>
