@@ -261,11 +261,8 @@ public class MessengerActivity extends ActionBarActivity
             }
             Message m = messengers.get(position);
 
-            TextView name = (TextView) v.findViewById(R.id.name_text);
             TextView message = (TextView) v.findViewById(R.id.message_text);
 
-            if (type == 0) name.setText(Integer.toString(m.mUserId));
-            else name.setText(Integer.toString(m.mToUserId));
             message.setText(m.mMessage);
 
             return v;
