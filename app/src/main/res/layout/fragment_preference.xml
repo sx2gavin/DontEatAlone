@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffe4d19f">
+    android:background="#ff21201d">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffe4d19f">
+        android:background="#ff21201d">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffe4d19f"
+            android:background="#ff21201d"
             android:id="@+id/match_linear_layout">>
 
             <TextView
@@ -24,9 +24,10 @@
                 android:textSize="@dimen/heading_font_size"
                 android:textStyle="bold"
                 android:layout_margin="@dimen/activity_layout_margin"
-                android:textColor="#ff21201d"
+                android:textColor="#ffe4d19f"
                 android:id="@+id/text_about_person"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:textColorHint="#ffe4d19f" />
 
             <RadioGroup
                 android:id="@+id/pref_gender"
@@ -35,23 +36,25 @@
                 android:orientation="horizontal"
                 android:layout_margin="@dimen/activity_layout_margin"
                 android:layout_below="@+id/text_about_person"
-                android:layout_centerHorizontal="true">
+                android:layout_alignParentLeft="true">
 
                 <RadioButton
                     android:id="@+id/pref_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_male"
-                    android:textColor="#ff6f956d"
-                    android:textSize="@dimen/general_text_font_size" />
+                    android:textColor="#ffe4d19f"
+                    android:textSize="@dimen/general_text_font_size"
+                    android:textColorHint="#ffe4d19f" />
 
                 <RadioButton
                     android:id="@+id/pref_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_female"
-                    android:textColor="#ff6f956d"
-                    android:textSize="@dimen/general_text_font_size" />
+                    android:textColor="#ffe4d19f"
+                    android:textSize="@dimen/general_text_font_size"
+                    android:textColorHint="#ffe4d19f" />
 
                 <RadioButton
                     android:id="@+id/pref_sex_none"
@@ -59,8 +62,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pref_sex_none"
                     android:checked="true"
-                    android:textColor="#ff6f956d"
-                    android:textSize="@dimen/general_text_font_size" />
+                    android:textColor="#ffe4d19f"
+                    android:textSize="@dimen/general_text_font_size"
+                    android:textColorHint="#ffe4d19f" />
             </RadioGroup>
 
             <RelativeLayout
@@ -77,8 +81,8 @@
                     android:layout_height="40dp"
                     android:hint="@string/pref_min"
                     android:inputType="number"
-                    android:textColor="#ff6f956d"
-                    android:textColorHint="#ff6f956d"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f"
                     android:textSize="@dimen/general_text_font_size"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="false"
@@ -90,10 +94,11 @@
                     android:gravity="center"
                     android:text="@string/pref_to"
                     android:id="@+id/min_to_max"
-                    android:textColor="#ff21201d"
+                    android:textColor="#ffe4d19f"
                     android:layout_toRightOf="@+id/pref_min_age"
                     android:layout_toLeftOf="@+id/pref_max_age"
-                    android:layout_centerInParent="true" />
+                    android:layout_centerInParent="true"
+                    android:textColorHint="#ffe4d19f" />
 
                 <EditText
                     android:id="@+id/pref_max_age"
@@ -101,8 +106,8 @@
                     android:layout_height="40dp"
                     android:hint="@string/pref_max"
                     android:inputType="number"
-                    android:textColor="#ff6f956d"
-                    android:textColorHint="#ff6f956d"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f"
                     android:textSize="@dimen/general_text_font_size"
                     android:layout_alignParentEnd="true"
                     android:textAlignment="center" />
@@ -116,8 +121,8 @@
                 android:hint="@string/pref_distance"
                 android:inputType="number"
                 android:layout_margin="@dimen/activity_layout_margin"
-                android:textColorHint="#ff6f956d"
-                android:textColor="#ff6f956d"
+                android:textColorHint="#ffe4d19f"
+                android:textColor="#ffe4d19f"
                 android:textSize="@dimen/general_text_font_size"
                 android:layout_below="@+id/age_layout"
                 android:layout_centerHorizontal="true"
@@ -131,8 +136,9 @@
                 android:textStyle="bold"
                 android:layout_margin="@dimen/activity_layout_margin"
                 android:id="@+id/about_meetup"
-                android:textColor="#ff21201d"
-                android:layout_below="@+id/pref_distance" />
+                android:textColor="#ffe4d19f"
+                android:layout_below="@+id/pref_distance"
+                android:textColorHint="#ffe4d19f" />
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -157,7 +163,7 @@
                     android:gravity="center"
                     android:text="@string/pref_to"
                     android:id="@+id/start_to_end"
-                    android:textColor="#ff21201d"
+                    android:textColor="#ffe4d19f"
                     android:layout_toRightOf="@+id/pref_start_time"
                     android:layout_toLeftOf="@+id/pref_end_time"
                     android:layout_centerInParent="true" />
@@ -187,8 +193,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Min Price"
                     android:inputType="number"
-                    android:textColor="#ff6f956d"
-                    android:textColorHint="#ff6f956d"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f"
                     android:layout_alignParentStart="true"
                     android:textAlignment="center" />
 
@@ -199,7 +205,8 @@
                     android:text="@string/pref_to"
                     android:layout_toRightOf="@+id/pref_min_price"
                     android:layout_toLeftOf="@+id/pref_max_price"
-                    android:layout_centerInParent="true" />
+                    android:layout_centerInParent="true"
+                    android:textColor="#ffe4d19f" />
 
                 <EditText
                     android:id="@+id/pref_max_price"
@@ -207,8 +214,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/max_price_pref"
                     android:inputType="number"
-                    android:textColorHint="#ff6f956d"
-                    android:textColor="#ff6f956d"
+                    android:textColorHint="#ffe4d19f"
+                    android:textColor="#ffe4d19f"
                     android:layout_alignParentEnd="true"
                     android:textAlignment="center" />
 
@@ -221,8 +228,8 @@
                 android:hint="@string/pref_comment"
                 android:layout_margin="@dimen/activity_layout_margin"
                 android:layout_below="@+id/price_layout"
-                android:textColorHint="#ff6f956d"
-                android:textColor="#ff6f956d"
+                android:textColorHint="#ffe4d19f"
+                android:textColor="#ffe4d19f"
                 android:textAlignment="center" />
 
             <Button
