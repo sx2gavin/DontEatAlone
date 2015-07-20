@@ -131,6 +131,7 @@ public class FacadeModule {
 	{
 		mRequestList = new ArrayList<User> ();
 		String url = "http://donteatalone.paigelim.com/api/v1/requests/" + mUserProfile.GetId() + "/retrieved";
+		Log.d("tag", "request list url: " + url);
 		SendRequest(url, Request.Method.GET, RequestMode.GET_REQUESTLIST);
 	}
 
@@ -140,7 +141,7 @@ public class FacadeModule {
 			"user_id=" + mUserProfile.GetId() +
 			"&to_user_id=" + Integer.toString(otherUserId) +
 			"&match_id=" + Integer.toString(mMatchId);
-
+Log.d("invite", url);
 		SendRequest(url, Request.Method.POST, RequestMode.INVITE_USER);
 	}
 
@@ -349,6 +350,7 @@ Log.d("tag", "preference url: " + url);
 						newUser.setEndTime(userInfo.getString("end_time"));
 						newUser.setLikes(Integer.parseInt(userInfo.getJSONObject("profile").getString("likes")));
 						newUser.setDislikes(Integer.parseInt(userInfo.getJSONObject("profile").getString("dislikes")));
+						newUser.LogUserInfo();
 						mMatchList.add(newUser);
 					}
 				} else if (request == RequestMode.GET_REQUESTLIST) {
