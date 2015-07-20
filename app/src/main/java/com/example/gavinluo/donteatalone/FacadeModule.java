@@ -363,7 +363,7 @@ Log.d("tag", "preference url: " + url);
 						newUser.setMaxDistance(Integer.parseInt(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
-						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
