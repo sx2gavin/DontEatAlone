@@ -25,9 +25,10 @@
         android:text="Small Text"
         android:id="@+id/timestamp"
         android:layout_alignParentEnd="false"
-        android:textColor="#ff21201d"
-        android:textColorHint="#ff21201d"
+        android:textColor="#ff4e4d49"
+        android:textColorHint="#ff4e4d49"
         android:layout_margin="10dp"
         android:layout_alignParentLeft="false"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="10dp" />
 </RelativeLayout>
