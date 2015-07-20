@@ -15,12 +15,13 @@ public class Message {
 	public int mTimezoneType;
 	public String mTimeZone;
 
-	public Message(int userId, int toUserId, String senderName, String senderPic, String message, String timeStamp)
+	public Message(int userId, int toUserId, String senderName, String senderPic, String message, String timestamp)
 	{
 		mUserId = userId;
 		mToUserId = toUserId;
 		mSenderName = senderName;
 		mSenderPic = senderPic;
 		mMessage = message;
+		mTimestamp = timestamp;
 	}
 }
