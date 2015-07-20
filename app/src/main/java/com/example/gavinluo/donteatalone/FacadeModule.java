@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -341,7 +342,7 @@ Log.d("tag", "preference url: " + url);
 						newUser.setMaxDistance(Integer.parseInt(userInfo.getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getString("longitude")));
-						 newUser.setDistance(userInfo.getDouble("distance"));
+						newUser.setDistance(userInfo.getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getString("min_price")));
@@ -365,7 +366,7 @@ Log.d("tag", "preference url: " + url);
 						newUser.setMaxDistance(Integer.parseInt(userInfo.getJSONObject("match").getString("max_distance")));
 						newUser.setLatitude(Float.parseFloat(userInfo.getJSONObject("match").getString("latitude")));
 						newUser.setLongitude(Float.parseFloat(userInfo.getJSONObject("match").getString("longitude")));
-						newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
+						// newUser.setDistance(userInfo.getJSONObject("match").getDouble("distance"));
 						newUser.setMinAge(Integer.parseInt(userInfo.getJSONObject("match").getString("min_age")));
 						newUser.setMaxAge(Integer.parseInt(userInfo.getJSONObject("match").getString("max_age")));
 						newUser.setMinPrice(Float.parseFloat(userInfo.getJSONObject("match").getString("min_price")));
@@ -396,23 +397,27 @@ Log.d("tag", "preference url: " + url);
 				} else if (request == RequestMode.GET_MEETING) {
 					JSONArray meetingList = mSavedJSON.getJSONArray("meetings");
 					if (meetingList.length() != 0) {
+						int meeting_id = Integer.parseInt(meetingList.getJSONObject(0).getString("id"));
 						int user_id1 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id1"));			
 						int user_id2 = Integer.parseInt(meetingList.getJSONObject(0).getString("user_id2"));
 						if (user_id1 == mUserProfile.GetId()) {
-							mMeeting = new Meeting(user_id1, user_id2);	
+							mMeeting = new Meeting(meeting_id, user_id1, user_id2);
 						} else if (user_id2 == mUserProfile.GetId()) {
-							mMeeting = new Meeting(user_id2, user_id1);
+							mMeeting = new Meeting(meeting_id, user_id2, user_id1);
 						}	
 					}	
 				} else if (request == RequestMode.GET_MESSAGES) {
 					JSONArray messagesList = mSavedJSON.getJSONArray("messages");
+					mMeeting.mMessages = new ArrayList<Message>();
 					for (int i = 0; i < messagesList.length(); i++) {
 						JSONObject messageJson = messagesList.getJSONObject(i);
 						int user_id = Integer.parseInt(messageJson.getString("user_id")); 
 						int to_user_id = Integer.parseInt(messageJson.getString("to_user_id"));
+						String sender_name = messageJson.getJSONObject("profile").getString("name");
+						String sender_url = messageJson.getJSONObject("profile").getString("image_url");
 						String message_str = messageJson.getString("message"); 
 						String timestamp = messageJson.getJSONObject("created_at").getString("date");
-						Message message = new Message(user_id, to_user_id, message_str, timestamp);	
+						Message message = new Message(user_id, to_user_id, sender_name, sender_url,  message_str, timestamp);
 						mMeeting.mMessages.add(message);
 					}	
 				} else if (request == RequestMode.GET_PREFERENCE) {
@@ -565,5 +570,16 @@ Log.d("tag", "preference url: " + url);
 	{
 		String url = "http://donteatalone.paigelim.com/api/v1/users/"+ Integer.toString(id) +"/dislike";
 		SendRequest(url, Request.Method.POST, RequestMode.OTHER);
+	}
+
+	public void SendRequestEndMeeting()
+	{
+		if (mMeeting == null) {
+			return;
+		} else {
+			String url = "http://donteatalone.paigelim.com/api/v1/meetings/" + mMeeting.mMeetingId;
+			SendRequest(url, Request.Method.DELETE, RequestMode.OTHER);
+			mMeeting = null;
+		}
 	}
 }

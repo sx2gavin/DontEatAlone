@@ -8,15 +8,20 @@ import java.sql.Timestamp;
 public class Message {
 	public int mUserId;
 	public int mToUserId;
+	public String mSenderName;
+	public String mSenderPic;
 	public String mMessage;
 	public String mTimestamp;
 	public int mTimezoneType;
 	public String mTimeZone;
 
-	public Message(int userId, int toUserId, String message, String timeStamp)
+	public Message(int userId, int toUserId, String senderName, String senderPic, String message, String timestamp)
 	{
 		mUserId = userId;
 		mToUserId = toUserId;
+		mSenderName = senderName;
+		mSenderPic = senderPic;
 		mMessage = message;
+		mTimestamp = timestamp;
 	}
 }

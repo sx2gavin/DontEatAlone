@@ -7,11 +7,12 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/matches_pager"
             android:layout_width="match_parent"
-            android:layout_height="470dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="#ffe4d19f" />
+            android:layout_alignParentTop="false"
+            android:background="#ffe4d19f"
+            android:layout_above="@+id/matches_tab_layout" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/matches_tab_layout"
@@ -21,7 +22,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
-            android:layout_above="@+id/matches_pager"
             style="@style/MyCustomTabLayout"
             android:backgroundTint="#ff21201d"
             android:background="#ff21201d" />

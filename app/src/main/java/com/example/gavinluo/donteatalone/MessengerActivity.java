@@ -82,6 +82,28 @@ public class MessengerActivity extends ActionBarActivity
                     Meeting meeting = FacadeModule.getFacadeModule(_context).GetMeeting();
                     if (meeting != null) {
                         FacadeModule.getFacadeModule(_context).SendRequestLikeUser(meeting.mToUserId);
+                        Thread checker = new Thread() {
+                            public void run () {
+                                boolean running = true;
+                                while (running == true) {
+                                    int response = FacadeModule.getFacadeModule(_context).LastRequestResult();
+                                    try {
+                                        if (response != 0) {
+                                            running = false;
+                                        }
+                                        Thread.sleep(500);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        running = false;
+                                        Thread.currentThread().interrupt();
+                                    }
+                                }
+                            }
+                        };
+                        checker.start();
+
+                        FacadeModule.getFacadeModule(_context).SendRequestEndMeeting();
+                        goBackToMatchList();
                     }
                 }
             });
@@ -91,6 +113,28 @@ public class MessengerActivity extends ActionBarActivity
                     Meeting meeting = FacadeModule.getFacadeModule(_context).GetMeeting();
                     if (meeting != null) {
                         FacadeModule.getFacadeModule(_context).SendRequestDislikeUser(meeting.mToUserId);
+                        Thread checker = new Thread() {
+                            public void run () {
+                                boolean running = true;
+                                while (running == true) {
+                                    int response = FacadeModule.getFacadeModule(_context).LastRequestResult();
+                                    try {
+                                        if (response != 0) {
+                                            running = false;
+                                        }
+                                        Thread.sleep(500);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        running = false;
+                                        Thread.currentThread().interrupt();
+                                    }
+                                }
+                            }
+                        };
+                        checker.start();
+
+                        FacadeModule.getFacadeModule(_context).SendRequestEndMeeting();
+                        goBackToMatchList();
                     }
                 }
             });
@@ -99,8 +143,13 @@ public class MessengerActivity extends ActionBarActivity
             builder.show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goBackToMatchList()
+    {
+        Intent intent = new Intent(this, MatchesActivity.class);
+        startActivity(intent);
     }
 
     public void onSendButtonClick(View view) {
@@ -212,11 +261,8 @@ public class MessengerActivity extends ActionBarActivity
             }
             Message m = messengers.get(position);
 
-            TextView name = (TextView) v.findViewById(R.id.name_text);
             TextView message = (TextView) v.findViewById(R.id.message_text);
 
-            if (type == 0) name.setText(Integer.toString(m.mUserId));
-            else name.setText(Integer.toString(m.mToUserId));
             message.setText(m.mMessage);
 
             return v;
