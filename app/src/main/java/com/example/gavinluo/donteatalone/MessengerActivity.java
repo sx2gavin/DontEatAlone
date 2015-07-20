@@ -1,6 +1,5 @@
 package com.example.gavinluo.donteatalone;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,10 +10,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,95 +28,29 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 
-public class MessengerActivity extends Activity
-        implements messageFragment.OnFragmentInteractionListener
+public class MessengerActivity extends ActionBarActivity
 {
-    private static final String TAG = "MessengerActivity";
-
-    private Context _context;
-    private ArrayList<Message> _messages;
-    private Meeting _meeting;
-    private messageFragment _messageFragment;
-
+    private static final String TAG = "MESSENGER";
 
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
      */
+    private Context _context;
+    private ArrayList<Message> _messages;
+    private Meeting _meeting;
+
     private static final int REQUEST_PLACE_PICKER = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         _context = this;
         setContentView(R.layout.activity_messenger);
-        _messageFragment = messageFragment.newInstance("blah1", "blah2");
-        _messageFragment.onAttach(this);
 
         this.getAllMessages();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart called");
-        this.getAllMessages();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume called");
-        this.getAllMessages();
-    }
-
-    public void checkInternetConnection() {
-        if (! FacadeModule.getFacadeModule(_context).isNetworkAvailable()) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
-
-            // set title
-            alertDialogBuilder.setTitle("Warning");
-
-            // set dialog message
-            alertDialogBuilder
-                    .setMessage("Internet connection unavailable, please turn on data service or WIFI.")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-        }
-    }
-
-    public void getAllMessages() {
-        Log.d(TAG, "getAllMessages called");
-
-        this.checkInternetConnection();
-
-        // Do request
-        FacadeModule.getFacadeModule(this).SendRequestGetAllMessages();
-//        if (FacadeModule.getFacadeModule(this).LastRequestResult() == 1) {
-            _meeting = FacadeModule.getFacadeModule(this).GetMeeting();
-            _messages = _meeting.mMessages;
-
-//            for (int i = 0; i < _messages.size(); i++) {
-//                Message mMessage = _messages.get(i);
-//                Log.d(TAG, "Printing Message" + i + ": " + mMessage.mMessage);
-//            }
-//        } else {
-//            Log.d(TAG, "LastRequestResult != 1");
-//        }
     }
 
     @Override
@@ -165,43 +102,8 @@ public class MessengerActivity extends Activity
 
     // Pick the place
     public void onPickButtonClick(View view){
-        // Google Map
-//        Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?q=restaurants");
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        startActivity(mapIntent);
-
-        // Change the Intent
         Intent intent = new Intent(this, RestaurantListActivity.class);
         startActivity(intent);
-
-//        https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4&key=API_KEY
-
-
-
-
-//        mapIntent.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//
-//            @Override
-//            public void onMapClick(LatLng point) {
-//                Toast.makeText(getApplicationContext(), point.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        })
-
-        // Construct an intent for the place picker
-//        try {
-//            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//
-//            Intent intent = intentBuilder.build(this);
-//
-//            // Start the intent by requesting a result ,
-//            // identified by a request code.
-//            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-//        } catch (GooglePlayServicesRepairableException e) {
-//            Log.d(TAG, e.toString());
-//        } catch (GooglePlayServicesNotAvailableException e){
-//            Log.d(TAG, e.toString());
-//        }
     }
 
     @Override
@@ -217,21 +119,98 @@ public class MessengerActivity extends Activity
                 attributions = "";
             }
 
-//            TextView tv1 = (TextView)findViewById(R.id.mess_debug1);
-//            TextView tv2 = (TextView)findViewById(R.id.mess_debug2);
-//            TextView tv3 = (TextView)findViewById(R.id.mess_debug3);
-//            tv1.setText(name);
-//            tv2.setText(address);
-//            tv3.setText(Html.fromHtml(attributions));
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    private void getAllMessages() {
+        Log.d(TAG, "getAllMessages called");
 
-    // messageFragment Methods
-    @Override
-    public void onFragmentInteraction(String id) {
+        //this.checkInternetConnection();
+
+        // Do request
+        FacadeModule.getFacadeModule(this).SendRequestGetAllMessages();
+//        if (FacadeModule.getFacadeModule(this).LastRequestResult() == 1) {
+        _meeting = FacadeModule.getFacadeModule(this).GetMeeting();
+        _messages = _meeting.mMessages;
+        ListView listview = (ListView) findViewById(R.id.list);
+        MessengerAdapter adapter = new MessengerAdapter(_context, _messages);
+        listview.setAdapter(adapter);
 
     }
+
+    protected void checkInternetConnection() {
+        if (! FacadeModule.getFacadeModule(_context).isNetworkAvailable()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
+
+            // set title
+            alertDialogBuilder.setTitle("Warning");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Internet connection unavailable, please turn on data service or WIFI.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+        }
+    }
+
+    public class MessengerAdapter extends ArrayAdapter {
+        private final Context context;
+        private ArrayList<Message> messengers;
+
+        public MessengerAdapter(Context context, ArrayList values) {
+            super(context, -1, values);
+            this.context = context;
+            this.messengers = values;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return (messengers.get(position).mUserId == FacadeModule.getFacadeModule(context).GetUserId()) ? 0 : 1;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            int type = getItemViewType(position);
+            if (v == null) {
+                // Inflate the layout according to the view type
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                if (type == 0) {
+                    // Inflate the layout with image
+                    v = inflater.inflate(R.layout.senderlayout, parent, false);
+                }
+                else {
+                    v = inflater.inflate(R.layout.receiverlayout, parent, false);
+                }
+            }
+            Message m = messengers.get(position);
+
+            TextView name = (TextView) v.findViewById(R.id.name_text);
+            TextView message = (TextView) v.findViewById(R.id.message_text);
+
+            if (type == 0) name.setText(Integer.toString(m.mUserId));
+            else name.setText(Integer.toString(m.mToUserId));
+            message.setText(m.mMessage);
+
+            return v;
+        }
+    }
+
+
 }
