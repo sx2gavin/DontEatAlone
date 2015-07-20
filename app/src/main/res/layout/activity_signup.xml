@@ -2,11 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ff21201d">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#ff21201d">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +21,9 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:hint="@string/signup_firstname"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColor="#ffe4d19f"
+                android:textColorHint="#ffe4d19f" />
 
             <EditText
                 android:id="@+id/signup_lastname"
@@ -27,7 +31,9 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:hint="@string/signup_lastname"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColor="#ffe4d19f"
+                android:textColorHint="#ffe4d19f" />
 
             <EditText
                 android:id="@+id/signup_age"
@@ -35,7 +41,9 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:hint="@string/signup_age"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColorHint="#ffe4d19f"
+                android:textColor="#ffe4d19f" />
 
 
             <RadioGroup
@@ -48,19 +56,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/signup_gender" />
+                    android:text="@string/signup_gender"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f" />
 
                 <RadioButton
                     android:id="@+id/signup_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/signup_male"/>
+                    android:text="@string/signup_male"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f" />
 
                 <RadioButton
                     android:id="@+id/signup_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/signup_female"/>
+                    android:text="@string/signup_female"
+                    android:textColor="#ffe4d19f"
+                    android:textColorHint="#ffe4d19f" />
             </RadioGroup>
 
             <!--
@@ -79,7 +93,9 @@
                 android:singleLine="true"
                 android:inputType="textEmailAddress"
                 android:hint="@string/signup_email"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColor="#ffe4d19f"
+                android:textColorHint="#ffe4d19f" />
 
             <EditText
                 android:id="@+id/signup_password"
@@ -88,7 +104,9 @@
                 android:singleLine="true"
                 android:inputType="textPassword"
                 android:hint="@string/signup_password"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColor="#ffe4d19f"
+                android:textColorHint="#ffe4d19f" />
 
             <EditText
                 android:id="@+id/signup_confirm_password"
@@ -97,7 +115,9 @@
                 android:singleLine="true"
                 android:inputType="textPassword"
                 android:hint="@string/signup_confirm_password"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:textColor="#ffe4d19f"
+                android:textColorHint="#ffe4d19f" />
 
             <Button
                 android:id="@+id/signup_button"
@@ -105,7 +125,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_signup"
                 android:layout_margin="10dp"
-                android:onClick="SubmitSignUp"/>
+                android:onClick="SubmitSignUp"
+                android:background="#ff6f956d"
+                android:textColorHint="#ffe4d19f"
+                android:textColor="#ffe4d19f" />
 
             </LinearLayout>
     </ScrollView>
