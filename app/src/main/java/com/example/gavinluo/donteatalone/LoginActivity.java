@@ -289,8 +289,7 @@ public class LoginActivity extends ActionBarActivity {
         // We need to get our meeting before we can store messages for messenger
         FacadeModule.getFacadeModule(this).SendRequestGetMeeting();
 
-        Intent intent = new Intent (this, StartMatchingActivity.class);
-        Intent intent = new Intent (this, MatchesActivity.class);
+        Intent intent = new Intent(this, MatchesActivity.class);
         startActivity(intent);
     }
 }
