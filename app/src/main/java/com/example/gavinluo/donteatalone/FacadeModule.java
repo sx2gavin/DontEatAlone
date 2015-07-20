@@ -416,7 +416,7 @@ Log.d("tag", "preference url: " + url);
 						String sender_name = messageJson.getJSONObject("profile").getString("name");
 						String sender_url = messageJson.getJSONObject("profile").getString("image_url");
 						String message_str = messageJson.getString("message"); 
-						String timestamp = messageJson.getJSONObject("created_at").getString("date");
+						Timestamp timestamp = Timestamp.valueOf(messageJson.getJSONObject("created_at").getString("date"));
 						Message message = new Message(user_id, to_user_id, sender_name, sender_url,  message_str, timestamp);
 						mMeeting.mMessages.add(message);
 					}	

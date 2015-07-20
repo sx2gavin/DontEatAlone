@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -463,8 +465,16 @@ public class MessengerActivity extends ActionBarActivity
             Message m = messengers.get(position);
 
             TextView message = (TextView) v.findViewById(R.id.message_text);
-
             message.setText(m.mMessage);
+            TextView timestamp = (TextView) v.findViewById(R.id.timestamp);
+            String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(m.mTimestamp);
+            timestamp.setText(timeString);
+            if (type == 1) {
+                TextView from_text = (TextView) v.findViewById(R.id.from_text);
+                from_text.setText(m.mSenderName);
+                ImageView display_picture = (ImageView) v.findViewById(R.id.display_picture);
+                new DownloadImageTask((ImageView)display_picture).execute(m.mSenderPic);
+            }
 
             return v;
         }

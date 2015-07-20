@@ -11,11 +11,11 @@ public class Message {
 	public String mSenderName;
 	public String mSenderPic;
 	public String mMessage;
-	public String mTimestamp;
+	public Timestamp mTimestamp;
 	public int mTimezoneType;
 	public String mTimeZone;
 
-	public Message(int userId, int toUserId, String senderName, String senderPic, String message, String timestamp)
+	public Message(int userId, int toUserId, String senderName, String senderPic, String message, Timestamp timestamp)
 	{
 		mUserId = userId;
 		mToUserId = toUserId;
