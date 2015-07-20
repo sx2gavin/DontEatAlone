@@ -2,8 +2,10 @@ package com.example.gavinluo.donteatalone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.camera2.params.Face;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class MessengerActivity extends ActionBarActivity
 {
     private static final String TAG = "MESSENGER";
+    private final Context context = this;
 
     /**
      * Request code passed to the PlacePicker intent to identify its result when it returns.
@@ -61,11 +64,19 @@ public class MessengerActivity extends ActionBarActivity
             builder.setPositiveButton(R.string.messenger_endDialog_like, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     //TODO: like
+                    Meeting meeting = FacadeModule.getFacadeModule(context).GetMeeting();
+                    if (meeting != null) {
+                        FacadeModule.getFacadeModule(context).SendRequestLikeUser(meeting.mToUserId);
+                    }
                 }
             });
             builder.setNegativeButton(R.string.messenger_endDialog_dislike, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     //TODO: dislike
+                    Meeting meeting = FacadeModule.getFacadeModule(context).GetMeeting();
+                    if (meeting != null) {
+                        FacadeModule.getFacadeModule(context).SendRequestDislikeUser(meeting.mToUserId);
+                    }
                 }
             });
             // Create the AlertDialog

@@ -415,6 +415,7 @@ Log.d("tag", "preference url: " + url);
 					}	
 				} else if (request == RequestMode.GET_PREFERENCE) {
 					JSONObject preference = mSavedJSON.getJSONObject("preference");
+					mMatchId = Integer.parseInt(preference.getString("id"));
 					mPreference.m_user_id = Integer.parseInt(preference.getString("user_id"));
 					mPreference.m_max_distance = Integer.parseInt(preference.getString("max_distance"));
 					mPreference.m_min_age = Integer.parseInt(preference.getString("min_age"));
