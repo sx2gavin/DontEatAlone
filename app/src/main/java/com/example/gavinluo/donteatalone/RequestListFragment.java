@@ -127,62 +127,59 @@ public class RequestListFragment extends Fragment {
 //                String response = null;
 //                final int TIMEOUT = 3;
 //                int counter = 0;
-                boolean working = false;
 
                 // infinite loop to keep checking for new matches
-                while(!working && !stopFetchingRequests) {
+                while(!stopFetchingRequests) {
                     // create a new thread if the response is empty
 //                    if(response == null || response.compareTo("")!=0){
-                    if(!working || FacadeModule.getFacadeModule(context).LastRequestResult() != 0) {
-                        working = true;
-                        try {
-                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
-                            Thread checker = new Thread() {
-                                public void run() {
-                                    boolean running = true;
-                                    while (!stopFetchingRequests && running == true) {
-    //                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
-                                        try {
-                                            // Get the match list
-    //                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
-                                            if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
-                                                final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+                    try {
+                        FacadeModule.getFacadeModule(context).SendRequestForRequestList();
+                        Thread checker = new Thread() {
+                            public void run() {
+                                boolean running = true;
+                                while (!stopFetchingRequests && running == true) {
+//                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+                                    try {
+                                        // Get the match list
+//                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+                                        if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
+                                            final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
 
-                                                if(requests != null) {
-                                                    Log.d("tag", "requests-size:" + requests.size());
-                                                    Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
-    //                                                  listAdapter.setUserList(matches);
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            listAdapter.setUserList(requests);
-                                                            Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
-                                                        }
-                                                    });
-                                                }
-
-
-                                                running = false;
+                                            if(requests != null) {
+                                                Log.d("tag", "requests-size:" + requests.size());
+                                                Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+//                                                  listAdapter.setUserList(matches);
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        listAdapter.setUserList(requests);
+//                                                              listAdapter.notifyDataSetChanged();
+                                                        Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+                                                    }
+                                                });
                                             }
 
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
                                             running = false;
-                                            Thread.currentThread().interrupt();
                                         }
+
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        running = false;
+                                        Thread.currentThread().interrupt();
                                     }
                                 }
-                            };
-                            checker.start();
+                            }
+                        };
+                        checker.start();
 
-                            // sleep for 5 seconds
-                            Thread.sleep(5001);
-                        } catch (InterruptedException e){
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
+                        // sleep for 5 seconds
+                        Thread.sleep(5001);
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
+//                    }
 
 //                    response = FacadeModule.getFacadeModule(context).GetResponseMessage();
 //                    counter += 1;
@@ -191,6 +188,83 @@ public class RequestListFragment extends Fragment {
         };
         looper.start();
     }
+//    public void startUpdateRequests(){
+////        stopFetching = false;
+//        if(!stopFetchingRequests){
+//            // check if update already started
+//            return;
+//        }
+//        stopFetchingRequests = false;
+//
+//        Thread looper = new Thread() {
+//            public void run() {
+////                String response = null;
+////                final int TIMEOUT = 3;ƒ
+////                int counter = 0;
+//                boolean working = false;
+//
+//                // infinite loop to keep checking for new matches
+//                while(!working && !stopFetchingRequests) {
+//                    // create a new thread if the response is empty
+////                    if(response == null || response.compareTo("")!=0){
+//                    if(!working || FacadeModule.getFacadeModule(context).LastRequestResult() != 0) {
+//                        working = true;
+//                        try {
+//                            FacadeModule.getFacadeModule(context).SendRequestForRequestList();
+//                            Thread checker = new Thread() {
+//                                public void run() {
+//                                    boolean running = true;
+//                                    while (!stopFetchingRequests && running == true) {
+//    //                                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+//                                        try {
+//                                            // Get the match list
+//    //                                            if (FacadeModule.getFacadeModule(context).GetResponse().compareTo("") != 0) {
+//                                            if(FacadeModule.getFacadeModule(context).LastRequestResult() != 0){
+//                                                final ArrayList requests = FacadeModule.getFacadeModule(context).GetRequestList();
+//
+//                                                if(requests != null) {
+//                                                    Log.d("tag", "requests-size:" + requests.size());
+//                                                    Log.d("tag", "response: " + FacadeModule.getFacadeModule(context).GetResponse());
+//    //                                                  listAdapter.setUserList(matches);
+//                                                    getActivity().runOnUiThread(new Runnable() {
+//                                                        @Override
+//                                                        public void run() {
+//                                                            listAdapter.setUserList(requests);
+//                                                            Log.d("tag", "actual list size: " + listAdapter.getUserList().size());
+//                                                        }
+//                                                    });
+//                                                }
+//
+//
+//                                                running = false;
+//                                            }
+//
+//                                            Thread.sleep(1000);
+//                                        } catch (InterruptedException e) {
+//                                            e.printStackTrace();
+//                                            running = false;
+//                                            Thread.currentThread().interrupt();
+//                                        }
+//                                    }
+//                                }
+//                            };
+//                            checker.start();
+//
+//                            // sleep for 5 seconds
+//                            Thread.sleep(5001);
+//                        } catch (InterruptedException e){
+//                            e.printStackTrace();
+//                            Thread.currentThread().interrupt();
+//                        }
+//                    }
+//
+////                    response = FacadeModule.getFacadeModule(context).GetResponseMessage();
+////                    counter += 1;
+//                }
+//            }
+//        };
+//        looper.start();
+//    }
 
     public void DisplayMessage(final String message) {
         getActivity().runOnUiThread(new Runnable() {
@@ -212,8 +286,9 @@ public class RequestListFragment extends Fragment {
                 boolean running = true;
                 while (running == true) {
                     try {
-                        String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
-                        if (response.compareTo("User's request was successfully accepted. Meeting has been created.") == 0) {
+                        if (FacadeModule.getFacadeModule(context).LastRequestResult() == 1) {
+                            DisplayMessage("Accepted the request successfully.");
+                            running = false;
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -222,7 +297,15 @@ public class RequestListFragment extends Fragment {
                                     startActivity(intent);
                                 }
                             });
-                            DisplayMessage("Accepted the request successfully.");
+                        } else if (FacadeModule.getFacadeModule(context).LastRequestResult() == -1){
+                            DisplayMessage("Failed to accept the request.");
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // re-enable the button
+                                    acceptButton.setEnabled(true);
+                                }
+                            });
                             running = false;
                         }
                         Thread.sleep(1000);
