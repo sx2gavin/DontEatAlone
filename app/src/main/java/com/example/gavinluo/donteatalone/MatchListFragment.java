@@ -338,10 +338,10 @@ public class MatchListFragment extends Fragment {
                 while (running == true) {
                     String response = FacadeModule.getFacadeModule(context).GetResponseMessage();
                     try {
-                        if (FacadeModule.getFacadeModule(context).LoggedIn()) {
+                        if (FacadeModule.getFacadeModule(context).LastRequestResult()==1) {
                             DisplayMessage("User Invited Successfully");
                             running = false;
-                        } else if (response != "") {
+                        } else if (FacadeModule.getFacadeModule(context).LastRequestResult()==-1) {
                             DisplayMessage(response);
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
