@@ -141,7 +141,7 @@ public class SignupActivity extends ActionBarActivity {
     }
 
     public void LoginSuccessful() {
-        Intent intent = new Intent (context, StartMatchingActivity.class);
+        Intent intent = new Intent (context, MatchesActivity.class);
         startActivity(intent);
     }
 }
