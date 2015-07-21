@@ -162,7 +162,8 @@ public class RequestListFragment extends Fragment {
                                             running = false;
                                         }
 
-                                        Thread.sleep(1000);
+                                        // sleep for 100 milliseconds
+                                        Thread.sleep(100);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                         running = false;

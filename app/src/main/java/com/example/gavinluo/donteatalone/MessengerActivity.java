@@ -72,7 +72,7 @@ public class MessengerActivity extends ActionBarActivity
         _adapter = new MessengerAdapter(_context, _messages);
         _listview.setAdapter(_adapter);
 
-        startUpdate();
+        Log.d("messenger", "called oncreate");
     }
 
     @Override
@@ -188,8 +188,10 @@ public class MessengerActivity extends ActionBarActivity
     @Override
     public void onResume(){
         super.onResume();
-        handlingRequest = false;
+        stopUpdate();
         startUpdate();
+
+        Log.d("messenger", "caled onresume");
     }
 
     @Override
@@ -214,6 +216,9 @@ public class MessengerActivity extends ActionBarActivity
         if(message.compareTo("")==0){
             DisplayMessage("Cannot send an empty message.");
             return;
+        } else if (_meeting == null){
+            DisplayMessage("Please wait a moment to connect to the server.");
+            return;
         }
 
         // stop the update
@@ -228,6 +233,7 @@ public class MessengerActivity extends ActionBarActivity
                     try {
                         if (FacadeModule.getFacadeModule(_context).LastRequestResult()==1) {
                             Log.d(TAG, "sent message sucessfully");
+
                             _activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -244,7 +250,7 @@ public class MessengerActivity extends ActionBarActivity
                             DisplayMessage(response);
                             running = false;
                         }
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         running = false;
@@ -285,7 +291,6 @@ public class MessengerActivity extends ActionBarActivity
         }
     }
 
-    // Precondition: has to be run in UI thread
     private synchronized void getAllMessages() {
         Log.d(TAG, "getAllMessages called");
 
@@ -348,11 +353,14 @@ public class MessengerActivity extends ActionBarActivity
     }
 
     public void startUpdate(){
+        Log.d("messenger", "stopFetching: "+stopFetching);
         if(!stopFetching){
             // check if update already started
             return;
         }
         stopFetching = false;
+
+        Log.d("messenger", "start update successfully.");
 
         Thread looper = new Thread() {
             public void run() {
