@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -292,22 +293,28 @@ public class MessengerActivity extends ActionBarActivity
                                 @Override
                                 public void run() {
                                     _meeting = FacadeModule.getFacadeModule(_activity).GetMeeting();
-//                                    _messages.clear();
-                                    _messages = _meeting.mMessages;
 
-//                                    _adapter.setMessageList(_messages);
-                                    _adapter.setMessageList(_meeting.mMessages);
+                                    // do not update messages if the meeting is null
+                                    if(_meeting != null) {
+                                        _messages = _meeting.mMessages;
+                                        _adapter.setMessageList(_meeting.mMessages);
 
-                                    Log.d("list-size", "messenger list size: " + _messages.size());
-                                    Log.d("list-size", "adapter size: " +_adapter.getCount());
-                                    scrollMyListViewToBottom();
+                                        Log.d("list-size", "messenger list size: " + _messages.size());
+                                        Log.d("list-size", "adapter size: " + _adapter.getCount());
+                                        scrollMyListViewToBottom();
+                                    } else {
+                                        DisplayMessage("Cannot send the message. Please try again later.");
+                                    }
                                 }
                             });
                             running = false;
                         } else if (FacadeModule.getFacadeModule(_context).LastRequestResult()!=0){
+                            DisplayMessage("Cannot send the message. Please try again later.");
                             running = false;
                         }
-                        Thread.sleep(10000);
+
+                        // Sleep for 100 millisecond before checking the result again
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         running = false;
@@ -354,8 +361,8 @@ public class MessengerActivity extends ActionBarActivity
                         _activity.getAllMessages();
                         Log.d("refresh", "refreshing");
 
-                        // sleep for 500 milliseconds
-                        Thread.sleep(500);
+                        // sleep for 100 milliseconds
+                        Thread.sleep(100);
                     } catch (InterruptedException e){
                         e.printStackTrace();
                         Thread.currentThread().interrupt();
