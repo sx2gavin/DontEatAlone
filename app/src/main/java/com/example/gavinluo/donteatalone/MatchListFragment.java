@@ -452,8 +452,8 @@ public class MatchListFragment extends Fragment {
                         case R.id.matches_group_invite:
 //                            ImageView image = (ImageView) wholeView.findViewById(R.id.group_profile_image);
 //                            loadImage(image, "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg");
-                            String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
-                            new DownloadImageTask((ImageView)image).execute(url);
+//                            String url = "https://s-media-cache-ak0.pinimg.com/736x/a1/e3/6b/a1e36bcb8ce179bd8cc8db28ff4ef6fb.jpg";
+//                            new DownloadImageTask((ImageView)image).execute(url);
 
                             // disable button when clicked
                             listenerBtn.setEnabled(false);
