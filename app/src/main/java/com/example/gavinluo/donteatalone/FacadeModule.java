@@ -408,18 +408,20 @@ Log.d("tag", "preference url: " + url);
 					}	
 				} else if (request == RequestMode.GET_MESSAGES) {
 					JSONArray messagesList = mSavedJSON.getJSONArray("messages");
-					mMeeting.mMessages = new ArrayList<Message>();
-					for (int i = 0; i < messagesList.length(); i++) {
-						JSONObject messageJson = messagesList.getJSONObject(i);
-						int user_id = Integer.parseInt(messageJson.getString("user_id")); 
-						int to_user_id = Integer.parseInt(messageJson.getString("to_user_id"));
-						String sender_name = messageJson.getJSONObject("profile").getString("name");
-						String sender_url = messageJson.getJSONObject("profile").getString("image_url");
-						String message_str = messageJson.getString("message"); 
-						Timestamp timestamp = Timestamp.valueOf(messageJson.getJSONObject("created_at").getString("date"));
-						Message message = new Message(user_id, to_user_id, sender_name, sender_url,  message_str, timestamp);
-						mMeeting.mMessages.add(message);
-					}	
+					if(mMeeting != null) {
+						mMeeting.mMessages = new ArrayList<Message>();
+						for (int i = 0; i < messagesList.length(); i++) {
+							JSONObject messageJson = messagesList.getJSONObject(i);
+							int user_id = Integer.parseInt(messageJson.getString("user_id"));
+							int to_user_id = Integer.parseInt(messageJson.getString("to_user_id"));
+							String sender_name = messageJson.getJSONObject("profile").getString("name");
+							String sender_url = messageJson.getJSONObject("profile").getString("image_url");
+							String message_str = messageJson.getString("message");
+							Timestamp timestamp = Timestamp.valueOf(messageJson.getJSONObject("created_at").getString("date"));
+							Message message = new Message(user_id, to_user_id, sender_name, sender_url, message_str, timestamp);
+							mMeeting.mMessages.add(message);
+						}
+					}
 				} else if (request == RequestMode.GET_PREFERENCE) {
 					JSONObject preference = mSavedJSON.getJSONObject("preference");
 					mMatchId = Integer.parseInt(preference.getString("id"));

@@ -301,13 +301,17 @@ public class MessengerActivity extends ActionBarActivity
         }
         handlingRequest = true;
 
-        // Do request
+        // Do the request only if the meeting is not null
+        if(FacadeModule.getFacadeModule(this).GetMeeting() == null) {
+            Log.d(TAG, "The user is not in a meeting.");
+            return;
+        }
         FacadeModule.getFacadeModule(this).SendRequestGetAllMessages();
 
         Thread checker = new Thread() {
             public void run () {
                 boolean running = true;
-                while (running == true) {
+                while (!stopFetching && running == true) {
                     try {
                         Log.d("tag", "message result: " + FacadeModule.getFacadeModule(_context).LastRequestResult());
                         if (FacadeModule.getFacadeModule(_context).LastRequestResult()==1) {
