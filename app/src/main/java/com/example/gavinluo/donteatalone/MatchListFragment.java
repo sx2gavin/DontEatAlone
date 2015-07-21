@@ -57,8 +57,8 @@ public class MatchListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private ExpandableListView matchListExpand;
-    private MatchListAdapter listAdapter;
+    private static ExpandableListView matchListExpand;
+    private static MatchListAdapter listAdapter;
     private Context context;
 
     private FacadeModule facade;

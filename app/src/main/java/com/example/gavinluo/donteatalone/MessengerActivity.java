@@ -67,11 +67,12 @@ public class MessengerActivity extends ActionBarActivity
         _sendMsgBox = (EditText)findViewById(R.id.edit_text);
         _listview = (ListView) findViewById(R.id.list);
 
+        _meeting = FacadeModule.getFacadeModule(_context).GetMeeting();
         _messages = new ArrayList<Message>();
         _adapter = new MessengerAdapter(_context, _messages);
         _listview.setAdapter(_adapter);
 
-        this.getAllMessages();
+        startUpdate();
     }
 
     @Override
@@ -90,6 +91,9 @@ public class MessengerActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_end) {
+            // stop updating the messages when the alert dialog is shown
+            stopUpdate();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.messenger_endDialog_msg)
                     .setTitle(R.string.messenger_endDialog_title);
@@ -132,7 +136,7 @@ public class MessengerActivity extends ActionBarActivity
                     if (meeting != null) {
                         FacadeModule.getFacadeModule(_context).SendRequestDislikeUser(meeting.mToUserId);
                         Thread checker = new Thread() {
-                            public void run () {
+                            public void run() {
                                 boolean running = true;
                                 while (running == true) {
                                     int response = FacadeModule.getFacadeModule(_context).LastRequestResult();
@@ -156,8 +160,19 @@ public class MessengerActivity extends ActionBarActivity
                     }
                 }
             });
+
             // Create the AlertDialog
-            builder.create();
+            AlertDialog dialog = builder.create();
+
+            // add event listener to start updating the messages when it's shown
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    startUpdate();
+                }
+            });
+
+            // show the alert dialog
             builder.show();
             return true;
         }
