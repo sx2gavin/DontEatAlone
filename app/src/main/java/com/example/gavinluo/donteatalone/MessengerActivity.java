@@ -124,6 +124,7 @@ public class MessengerActivity extends ActionBarActivity
                         };
                         checker.start();
 
+                        stopUpdate();
                         FacadeModule.getFacadeModule(_context).SendRequestEndMeeting();
                         goBackToMatchList();
                     }
@@ -155,6 +156,7 @@ public class MessengerActivity extends ActionBarActivity
                         };
                         checker.start();
 
+                        stopUpdate();
                         FacadeModule.getFacadeModule(_context).SendRequestEndMeeting();
                         goBackToMatchList();
                     }
@@ -168,7 +170,7 @@ public class MessengerActivity extends ActionBarActivity
             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    startUpdate();
+//                    startUpdate();
                 }
             });
 
@@ -191,7 +193,7 @@ public class MessengerActivity extends ActionBarActivity
         stopUpdate();
         startUpdate();
 
-        Log.d("messenger", "caled onresume");
+        Log.d("messenger", "called onresume");
     }
 
     @Override
@@ -316,14 +318,21 @@ public class MessengerActivity extends ActionBarActivity
 
                                     // do not update messages if the meeting is null
                                     if(_meeting != null) {
+                                        int prevSize = _adapter.getCount();
                                         _messages = _meeting.mMessages;
                                         _adapter.setMessageList(_meeting.mMessages);
+                                        int size = _adapter.getCount();
 
                                         Log.d("list-size", "messenger list size: " + _messages.size());
                                         Log.d("list-size", "adapter size: " + _adapter.getCount());
-                                        scrollMyListViewToBottom();
+
+                                        // only scroll to bottom when the user get new messages
+                                        // include sending a new message
+                                        if(prevSize != size) {
+                                            scrollMyListViewToBottom();
+                                        }
                                     } else {
-                                        DisplayMessage("Cannot send the message. Please try again later.");
+                                        DisplayMessage("Cannot retrieve the message. Please try again later.");
                                     }
                                 }
                             });

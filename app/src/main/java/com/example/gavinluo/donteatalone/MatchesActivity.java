@@ -127,6 +127,8 @@ public class MatchesActivity extends ActionBarActivity
         setService(-1);     // stop all services
     }
 
+
+
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in

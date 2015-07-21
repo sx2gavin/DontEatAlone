@@ -288,16 +288,18 @@ public class RequestListFragment extends Fragment {
                 while (running == true) {
                     try {
                         if (FacadeModule.getFacadeModule(context).LastRequestResult() == 1) {
-                            DisplayMessage("Accepted the request successfully.");
                             running = false;
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // show the messenger page
-                                    Intent intent = new Intent (context, MessengerActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
+                            getMeeting();
+//                            DisplayMessage("Accepted the request successfully.");
+//                            running = false;
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    // show the messenger page
+//                                    Intent intent = new Intent (context, MessengerActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            });
                         } else if (FacadeModule.getFacadeModule(context).LastRequestResult() == -1){
                             DisplayMessage("Failed to accept the request.");
                             getActivity().runOnUiThread(new Runnable() {
@@ -319,6 +321,44 @@ public class RequestListFragment extends Fragment {
                                 acceptButton.setEnabled(true);
                             }
                         });
+                        e.printStackTrace();
+                        running = false;
+                        Thread.currentThread().interrupt();
+                    } finally{
+                        // resume the updating of the request list
+                        startUpdateRequests();
+                    }
+                }
+            }
+        };
+        checker.start();
+    }
+
+    public void getMeeting(){
+        stopUpdateRequests();
+
+        // We need to get our meeting before we can store messages for messenger
+        FacadeModule.getFacadeModule(context).SendRequestGetMeeting();
+
+        Thread checker = new Thread() {
+            public void run () {
+                boolean running = true;
+                while (running == true) {
+                    try {
+                        if (FacadeModule.getFacadeModule(context).GetMeeting() != null) {
+                            DisplayMessage("Accepted the request successfully.");
+                            running = false;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // show the messenger page
+                                    Intent intent = new Intent (context, MessengerActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                         running = false;
                         Thread.currentThread().interrupt();
