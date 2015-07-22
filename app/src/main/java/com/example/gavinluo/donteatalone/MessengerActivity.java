@@ -394,7 +394,9 @@ public class MessengerActivity extends ActionBarActivity
 //                            }
 //                        });
 
-                        _activity.getAllMessages();
+                        if(FacadeModule.getFacadeModule(_context).LastRequestResult() != 0){
+                            _activity.getAllMessages();
+                        }
                         Log.d("refresh", "refreshing");
 
                         // sleep for 100 milliseconds
